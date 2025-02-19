@@ -43,24 +43,25 @@ namespace _Game.Development.Item
             }
         }
 
-        public override GameObject CreateItem(ItemSaveData itemSaveData)
+        public override GameObject CreateItem(GridData gridData)
         {
             var item = GetOrCreateItemInPool(ref CreatedItemList, generatorPrefab.gameObject);
             var iGenerator = item.GetComponent<IGenerator>();
 
-            var dataSo = _itemDataListByGeneratorType[itemSaveData.categoryType][itemSaveData.uniqueId];
+            var itemDataSo = (GeneratorItemDataSo)gridData.itemDataSo;
+            var dataSo = _itemDataListByGeneratorType[itemDataSo.generatorType.ToInt()][itemDataSo.uniqueId];
 
             iGenerator.SetParent(transform);
-            iGenerator.SetPosition(itemSaveData.coordinate);
+            iGenerator.SetPosition(gridData.coordinate);
             iGenerator.SetSprite(dataSo.icon);
 
             return item;
         }
 
-        public override ItemSaveData CreateItemSaveData(LevelGridData levelGridData)
+        public override ItemSaveData CreateItemSaveData(GridData gridData)
         {
-            var generatorItemDataSo = (GeneratorItemDataSo)levelGridData.itemDataSo;
-            return new GeneratorItemSaveData(levelGridData.coordinate, generatorItemDataSo.uniqueId,
+            var generatorItemDataSo = (GeneratorItemDataSo)gridData.itemDataSo;
+            return new GeneratorItemSaveData(gridData.coordinate, generatorItemDataSo.uniqueId,
                 generatorItemDataSo.itemType.ToInt(), generatorItemDataSo.generatorType.ToInt(),
                 generatorItemDataSo.spawnAmount, MinDateTimeStr);
         }

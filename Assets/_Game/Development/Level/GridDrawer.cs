@@ -26,7 +26,7 @@ namespace _Game.Development.Level
         {
             if (_levelDataSo == null) return;
 
-            foreach (var tileLevelData in _levelDataSo.levelGridDataList)
+            foreach (var tileLevelData in _levelDataSo.gridDataList)
             {
                 if (tileLevelData.itemDataSo == null) continue;
 

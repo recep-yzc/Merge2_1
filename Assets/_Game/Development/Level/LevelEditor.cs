@@ -14,35 +14,35 @@ namespace _Game.Development.Level
         [SerializeField] private Transform parent;
         [SerializeField] private List<ItemDataSo> gridItemDataSoList;
 
-        private void UpdateGridItemDataSo(LevelGridData levelGridData, ItemDataSo itemDataSo)
+        private void UpdateGridItemDataSo(GridData gridData, ItemDataSo itemDataSo)
         {
-            levelGridData.itemDataSo = itemDataSo;
+            gridData.itemDataSo = itemDataSo;
         }
 
-        private LevelGridData GetLevelGridDataSoByCoordinate(Vector3 coordinate)
+        private GridData GetGridDataSoByCoordinate(Vector3 coordinate)
         {
-            foreach (var levelGridData in _levelDataSo.levelGridDataList)
+            foreach (var gridData in _levelDataSo.gridDataList)
             {
-                var bottomLeft = levelGridData.coordinate - VectorExtension.HalfSize;
-                var topRight = levelGridData.coordinate + VectorExtension.HalfSize;
+                var bottomLeft = gridData.coordinate - VectorExtension.HalfSize;
+                var topRight = gridData.coordinate + VectorExtension.HalfSize;
 
                 var isDotIn = VectorExtension.CheckOverlapWithDot(bottomLeft, topRight, coordinate);
                 if (!isDotIn) continue;
 
-                return levelGridData;
+                return gridData;
             }
 
             return null;
         }
 
-        private LevelGridData GetLevelGridData()
+        private GridData GetGridData()
         {
             var mousePosition = Input.mousePosition;
             mousePosition.z = _camera.transform.position.y;
 
             var inputPosition = _camera.ScreenToWorldPoint(mousePosition);
-            var levelGridData = GetLevelGridDataSoByCoordinate(inputPosition);
-            return levelGridData;
+            var gridData = GetGridDataSoByCoordinate(inputPosition);
+            return gridData;
         }
 
         #region Parameters
@@ -70,18 +70,18 @@ namespace _Game.Development.Level
         {
             if (Input.GetMouseButtonDown(0))
             {
-                var levelGridData = GetLevelGridData();
-                if (levelGridData == null) return;
+                var gridData = GetGridData();
+                if (gridData == null) return;
 
-                UpdateGridItemDataSo(levelGridData, SelectedItemDataSo);
+                UpdateGridItemDataSo(gridData, SelectedItemDataSo);
                 _levelDataSo.Save();
             }
             else if (Input.GetMouseButtonDown(1))
             {
-                var levelGridData = GetLevelGridData();
-                if (levelGridData == null) return;
+                var gridData = GetGridData();
+                if (gridData == null) return;
 
-                UpdateGridItemDataSo(levelGridData, null);
+                UpdateGridItemDataSo(gridData, null);
                 _levelDataSo.Save();
             }
         }

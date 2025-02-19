@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using _Game.Development.Extension;
+using _Game.Development.Item;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -10,28 +11,58 @@ namespace _Game.Development.Level
     [CreateAssetMenu(fileName = "LevelDataSo", menuName = "Game/Level/Data")]
     public class LevelDataSo : ScriptableObjectInstaller<LevelDataSo>
     {
-        public List<LevelGridData> levelGridDataList = new();
+        public ItemDataSo emptyItemDataSo;
 
         [MinValue(2)] [MaxValue(10)] public int rows;
         [MinValue(2)] [MaxValue(10)] public int columns;
 
+        public List<GridData> gridDataList = new();
+
         [Button]
         public void GenerateGridData()
         {
-            levelGridDataList.Clear();
+            CreateGridDataList();
+            // FetchGridNeighborList();
+        }
+
+        private void FetchGridNeighborList()
+        {
+            /* BoardGlobalValues.GridDataList = gridDataList;
+
+             foreach (var gridData in gridDataList)
+             {
+                 List<GridData> neighborList = new();
+
+                 foreach (var directionId in EnumExtension.ToArray<DirectionId>())
+                 {
+                     var direction = directionId.DirectionToVector();
+                     var coordinate = gridData.coordinate + direction;
+                     var neighborGridData = BoardExtension.GetGridDataByCoordinate(coordinate);
+
+                     if (neighborGridData == null) continue;
+                     neighborList.Add(neighborGridData);
+                 }
+
+                 gridData.SetNeighborGridData(neighborList.ToList());
+             }*/
+        }
+
+        private void CreateGridDataList()
+        {
+            gridDataList.Clear();
 
             var halfOfRows = rows * 0.5f;
             var halfOfColumns = columns * 0.5f;
             var offset = new Vector2(halfOfRows, halfOfColumns) - VectorExtension.HalfSize;
 
-            LevelGridData CreateTileData(int x, int y)
+            GridData CreateGridData(int x, int y)
             {
-                return new LevelGridData(new Vector2(x, y) - offset);
+                return new GridData(new Vector2(x, y) - offset, emptyItemDataSo);
             }
 
             for (var x = 0; x < rows; x++)
             for (var y = 0; y < columns; y++)
-                levelGridDataList.Add(CreateTileData(x, y));
+                gridDataList.Add(CreateGridData(x, y));
         }
 
         public override void InstallBindings()

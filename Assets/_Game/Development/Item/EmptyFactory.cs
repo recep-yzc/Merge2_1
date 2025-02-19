@@ -19,15 +19,15 @@ namespace _Game.Development.Item
 
         #endregion
 
-        public override GameObject CreateItem(ItemSaveData itemSaveData)
+        public override GameObject CreateItem(GridData gridData)
         {
             return null;
         }
 
-        public override ItemSaveData CreateItemSaveData(LevelGridData levelGridData)
+        public override ItemSaveData CreateItemSaveData(GridData gridData)
         {
-            var dataSo = (EmptyItemDataSo)levelGridData.itemDataSo;
-            return new EmptyItemSaveData(levelGridData.coordinate, dataSo.uniqueId, dataSo.itemType.ToInt(), 0);
+            var dataSo = (EmptyItemDataSo)gridData.itemDataSo;
+            return new EmptyItemSaveData(gridData.coordinate, dataSo.uniqueId, dataSo.itemType.ToInt(), 0);
         }
     }
 }

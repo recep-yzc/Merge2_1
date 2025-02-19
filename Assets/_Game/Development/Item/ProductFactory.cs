@@ -47,24 +47,25 @@ namespace _Game.Development.Item
             }
         }
 
-        public override GameObject CreateItem(ItemSaveData itemSaveData)
+        public override GameObject CreateItem(GridData gridData)
         {
             var item = GetOrCreateItemInPool(ref CreatedItemList, productPrefab.gameObject);
             var iProduct = item.GetComponent<IProduct>();
 
-            var dataSo = _itemDataListByProductType[itemSaveData.categoryType][itemSaveData.uniqueId];
+            var itemDataSo = (ProductItemDataSo)gridData.itemDataSo;
+            var dataSo = _itemDataListByProductType[itemDataSo.productType.ToInt()][itemDataSo.uniqueId];
 
             iProduct.SetParent(transform);
-            iProduct.SetPosition(itemSaveData.coordinate);
+            iProduct.SetPosition(gridData.coordinate);
             iProduct.SetSprite(dataSo.icon);
 
             return item;
         }
 
-        public override ItemSaveData CreateItemSaveData(LevelGridData levelGridData)
+        public override ItemSaveData CreateItemSaveData(GridData gridData)
         {
-            var dataSo = (ProductItemDataSo)levelGridData.itemDataSo;
-            return new ProductItemSaveData(levelGridData.coordinate, dataSo.uniqueId, dataSo.itemType.ToInt(),
+            var dataSo = (ProductItemDataSo)gridData.itemDataSo;
+            return new ProductItemSaveData(gridData.coordinate, dataSo.uniqueId, dataSo.itemType.ToInt(),
                 dataSo.productType.ToInt());
         }
     }

@@ -12,17 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f471d33243944527b5415acba1ceaf3b, type: 3}
   m_Name: LevelDataSo
   m_EditorClassIdentifier: 
-  levelGridDataList:
+  emptyItemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
+  rows: 5
+  columns: 5
+  gridDataList:
   - coordinate: {x: -2, y: -2}
-    itemDataSo: {fileID: 11400000, guid: 8c6d71504a7b5b24ea441b4547218e1c, type: 2}
+    itemDataSo: {fileID: 11400000, guid: 4d045cb3efc16c748a5cf1566ed54fe1, type: 2}
   - coordinate: {x: -2, y: -1}
     itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
   - coordinate: {x: -2, y: 0}
-    itemDataSo: {fileID: 11400000, guid: 222b15e12d1d5f541998e48e74630417, type: 2}
+    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
   - coordinate: {x: -2, y: 1}
     itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
   - coordinate: {x: -2, y: 2}
-    itemDataSo: {fileID: 11400000, guid: 9f38bb1eebdc00943a499849880fe086, type: 2}
+    itemDataSo: {fileID: 11400000, guid: 8c6d71504a7b5b24ea441b4547218e1c, type: 2}
   - coordinate: {x: -1, y: -2}
     itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
   - coordinate: {x: -1, y: -1}
@@ -63,5 +66,3 @@ MonoBehaviour:
     itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
   - coordinate: {x: 2, y: 2}
     itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  rows: 5
-  columns: 5

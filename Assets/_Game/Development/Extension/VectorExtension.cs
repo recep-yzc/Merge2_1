@@ -29,10 +29,5 @@ namespace _Game.Development.Extension
                 _ => throw new ArgumentOutOfRangeException(nameof(directionId))
             };
         }
-
-        public static DirectionId[] GetAsArray()
-        {
-            return (DirectionId[])Enum.GetValues(typeof(DirectionId));
-        }
     }
 }

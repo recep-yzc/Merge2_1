@@ -14,7 +14,6 @@ namespace _Game.Development.Zenject
 
             Container.BindInstance(FindObjectOfType<BoardController>());
             Container.BindInstance(FindObjectOfType<BoardLoadController>());
-            Container.BindInstance(FindObjectOfType<BoardCreateController>());
         }
     }
 }

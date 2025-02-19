@@ -8,8 +8,8 @@ namespace _Game.Development.Item
 {
     public abstract class ItemFactory : MonoBehaviour
     {
-        public abstract GameObject CreateItem(ItemSaveData itemSaveData);
-        public abstract ItemSaveData CreateItemSaveData(LevelGridData levelGridData);
+        public abstract GameObject CreateItem(GridData gridData);
+        public abstract ItemSaveData CreateItemSaveData(GridData gridData);
 
         protected GameObject GetOrCreateItemInPool(ref List<GameObject> createdGameObjectList, GameObject prefab)
         {
@@ -30,10 +30,10 @@ namespace _Game.Development.Item
 
         [Inject] private DiContainer _diContainer;
 
-        public static Dictionary<int, Func<LevelGridData, ItemSaveData>> CreateItemSaveDataByCategoryType { get; } =
+        public static Dictionary<int, Func<GridData, ItemSaveData>> CreateItemSaveDataByCategoryType { get; } =
             new();
 
-        public static Dictionary<int, Func<ItemSaveData, GameObject>> CreateItemByCategoryType { get; } = new();
+        public static Dictionary<int, Func<GridData, GameObject>> CreateItemByCategoryType { get; } = new();
 
         protected List<GameObject> CreatedItemList = new();
         protected ItemType ItemType { get; set; }

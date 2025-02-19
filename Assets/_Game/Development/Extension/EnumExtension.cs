@@ -1,22 +1,17 @@
-﻿using _Game.Development.Item;
+﻿using System;
 
 namespace _Game.Development.Extension
 {
     public static class EnumExtension
     {
-        public static int ToInt(this ItemType value)
+        public static int ToInt<T>(this T value) where T : Enum
         {
-            return (int)value;
+            return Convert.ToInt32(value);
         }
 
-        public static int ToInt(this ProductType value)
+        public static T[] ToArray<T>() where T : Enum
         {
-            return (int)value;
-        }
-
-        public static int ToInt(this GeneratorType value)
-        {
-            return (int)value;
+            return (T[])Enum.GetValues(typeof(T));
         }
     }
 }
