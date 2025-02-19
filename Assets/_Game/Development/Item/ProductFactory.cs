@@ -43,7 +43,7 @@ namespace _Game.Development.Item
                     _itemDataListByProductType[type] = dictionary;
                 }
 
-                dictionary[itemDataSo.uniqueId] = itemDataSo;
+                dictionary[itemDataSo.level] = itemDataSo;
             }
         }
 
@@ -53,7 +53,7 @@ namespace _Game.Development.Item
             var iProduct = item.GetComponent<IProduct>();
 
             var itemDataSo = (ProductItemDataSo)gridData.itemDataSo;
-            var dataSo = _itemDataListByProductType[itemDataSo.productType.ToInt()][itemDataSo.uniqueId];
+            var dataSo = _itemDataListByProductType[itemDataSo.productType.ToInt()][itemDataSo.level];
 
             iProduct.SetParent(transform);
             iProduct.SetPosition(gridData.coordinate);
@@ -65,7 +65,7 @@ namespace _Game.Development.Item
         public override ItemSaveData CreateItemSaveData(GridData gridData)
         {
             var dataSo = (ProductItemDataSo)gridData.itemDataSo;
-            return new ProductItemSaveData(gridData.coordinate, dataSo.uniqueId, dataSo.itemType.ToInt(),
+            return new ProductItemSaveData(gridData.coordinate, dataSo.level, dataSo.itemType.ToInt(),
                 dataSo.productType.ToInt());
         }
     }

@@ -13,7 +13,7 @@ namespace _Game.Development.Level
 
         #region Private
 
-        private ItemDataSo _ıtemDataSo;
+        private Item.ItemDataSo _itemDataSo;
 
         #endregion
 
@@ -26,15 +26,15 @@ namespace _Game.Development.Level
 
         #endregion
 
-        public void Init(ItemDataSo ıtemDataSo)
+        public void Init(Item.ItemDataSo itemDataSo)
         {
-            _ıtemDataSo = ıtemDataSo;
-            imgIcon.sprite = ıtemDataSo.icon;
+            _itemDataSo = itemDataSo;
+            imgIcon.sprite = itemDataSo.icon;
         }
 
         private void OnClicked()
         {
-            LevelEditor.SelectedItemDataSo = _ıtemDataSo;
+            LevelEditor.SelectedItemDataSo = _itemDataSo;
         }
     }
 }

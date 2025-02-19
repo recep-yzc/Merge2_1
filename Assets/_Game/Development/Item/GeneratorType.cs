@@ -2,6 +2,7 @@ namespace _Game.Development.Item
 {
     public enum GeneratorType
     {
-        G1
+        None = 0,
+        G1 = 1
     }
 }

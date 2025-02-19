@@ -1,6 +1,5 @@
 ﻿using System;
 using _Game.Development.Extension;
-using _Game.Development.Item;
 using UnityEngine;
 
 namespace _Game.Development.Level
@@ -9,9 +8,9 @@ namespace _Game.Development.Level
     public class GridData
     {
         public Vector2 coordinate;
-        public ItemDataSo itemDataSo;
+        public Item.ItemDataSo itemDataSo;
 
-        public GridData(Vector2 coordinate, ItemDataSo itemDataSo)
+        public GridData(Vector2 coordinate, Item.ItemDataSo itemDataSo)
         {
             this.coordinate = coordinate;
             this.itemDataSo = itemDataSo;

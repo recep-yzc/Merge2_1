@@ -1,0 +1,231 @@
+{
+    "rows": 5,
+    "columns": 5,
+    "gridJsonDataList": [
+        {
+            "coordinate": {
+                "x": -2.0,
+                "y": -2.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": -2.0,
+                "y": -1.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": -2.0,
+                "y": 0.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": -2.0,
+                "y": 1.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": -2.0,
+                "y": 2.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": -1.0,
+                "y": -2.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": -1.0,
+                "y": -1.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": -1.0,
+                "y": 0.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": -1.0,
+                "y": 1.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": -1.0,
+                "y": 2.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 0.0,
+                "y": -2.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 0.0,
+                "y": -1.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 0.0,
+                "y": 1.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 0.0,
+                "y": 2.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 1.0,
+                "y": -2.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 1.0,
+                "y": -1.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 1.0,
+                "y": 0.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 1.0,
+                "y": 1.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 1.0,
+                "y": 2.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 2.0,
+                "y": -2.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 2.0,
+                "y": -1.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 2.0,
+                "y": 0.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 2.0,
+                "y": 1.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        },
+        {
+            "coordinate": {
+                "x": 2.0,
+                "y": 2.0
+            },
+            "uniqueId": 0,
+            "specialId": 0,
+            "itemId": 0
+        }
+    ]
+}

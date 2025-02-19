@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using _Game.Development.Extension;
-using _Game.Development.Item;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -13,9 +12,27 @@ namespace _Game.Development.Level
     [CreateAssetMenu(fileName = "LevelDataSo", menuName = "Game/Level/Data")]
     public class LevelDataSo : ScriptableObjectInstaller<LevelDataSo>
     {
-        [TextArea] public string json;
+        public ItemDataSo itemDataSo;
 
-        public ItemDataSo emptyItemDataSo;
+        [Button("Load Board Json")]
+        public void LoadBoardJson(TextAsset boardJson)
+        {
+            var boardJsonData = JsonUtility.FromJson<BoardJsonData>(boardJson.text);
+
+            rows = boardJsonData.rows;
+            columns = boardJsonData.columns;
+            gridDataList.Clear();
+
+            foreach (var gridJsonData in boardJsonData.gridJsonDataList)
+            {
+                var itemTypeData = itemDataSo.itemDataSoList.First(x => x.itemType.ToInt() == gridJsonData.itemId);
+                var specialIdData = itemTypeData.specialIdDataList.First(x => x.specialId == gridJsonData.specialId);
+                var newItemDataSo = specialIdData.itemItemDataSoList.First(x => x.level == gridJsonData.level);
+
+                gridDataList.Add(new GridData(gridJsonData.coordinate, newItemDataSo));
+            }
+        }
+
 
         [MinValue(2)] [MaxValue(10)] public int rows;
         [MinValue(2)] [MaxValue(10)] public int columns;
@@ -28,8 +45,8 @@ namespace _Game.Development.Level
             CreateGridDataList();
         }
 
-        [Button]
-        public void GenerateJson()
+        [Button("Generate Board Json")]
+        public void GenerateBoardJson()
         {
             List<GridJsonData> gridJsonData = new();
             foreach (var gridData in gridDataList)
@@ -37,15 +54,17 @@ namespace _Game.Development.Level
                 var itemType = gridData.itemDataSo.itemType;
                 var coordinate = gridData.coordinate;
 
-                var uniqueId = gridData.itemDataSo.uniqueId;
+                var level = gridData.itemDataSo.level;
                 var itemId = itemType.ToInt();
                 var specialId = gridData.itemDataSo.GetSpecialId();
 
-                gridJsonData.Add(new GridJsonData(coordinate, uniqueId, specialId, itemId));
+                gridJsonData.Add(new GridJsonData(coordinate, level, specialId, itemId));
             }
 
-            var levelJsonData = new LevelJsonData(rows, columns, gridJsonData);
-            json = JsonUtility.ToJson(levelJsonData);
+            var json = JsonUtility.ToJson(new BoardJsonData(rows, columns, gridJsonData), true);
+            var filePath = Application.dataPath + "/Board.json";
+            File.WriteAllText(filePath, json);
+            AssetDatabase.SaveAssets();
         }
 
         private void FetchGridNeighborList()
@@ -80,7 +99,7 @@ namespace _Game.Development.Level
 
             GridData CreateGridData(int x, int y)
             {
-                return new GridData(new Vector2(x, y) - offset, emptyItemDataSo);
+                return new GridData(new Vector2(x, y) - offset, itemDataSo.itemDataSoList[0].specialIdDataList[0].itemItemDataSoList[0]);
             }
 
             for (var x = 0; x < rows; x++)

@@ -8,8 +8,8 @@ namespace _Game.Development.Item
     {
         [PreviewField] public Sprite icon;
 
-        public int uniqueId;
         public ItemType itemType;
+        public int level;
 
         public ItemDataSo nextItemDataSo;
 

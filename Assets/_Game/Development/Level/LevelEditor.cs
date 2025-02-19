@@ -12,9 +12,9 @@ namespace _Game.Development.Level
         private GridEditorItemButton gridEditorItemButton;
 
         [SerializeField] private Transform parent;
-        [SerializeField] private List<ItemDataSo> gridItemDataSoList;
+        [SerializeField] private List<Item.ItemDataSo> gridItemDataSoList;
 
-        private void UpdateGridItemDataSo(GridData gridData, ItemDataSo itemDataSo)
+        private void UpdateGridItemDataSo(GridData gridData, Item.ItemDataSo itemDataSo)
         {
             gridData.itemDataSo = itemDataSo;
         }
@@ -48,7 +48,7 @@ namespace _Game.Development.Level
         #region Parameters
 
         [Inject] private LevelDataSo _levelDataSo;
-        public static ItemDataSo SelectedItemDataSo;
+        public static Item.ItemDataSo SelectedItemDataSo;
         private Camera _camera;
 
         #endregion

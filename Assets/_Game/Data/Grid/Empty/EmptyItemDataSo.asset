@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: EmptyItemDataSo
   m_EditorClassIdentifier: 
   icon: {fileID: 0}
-  uniqueId: 
   itemType: 0
+  level: 0
   nextItemDataSo: {fileID: 0}

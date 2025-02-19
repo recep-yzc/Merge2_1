@@ -2,8 +2,8 @@
 {
     public enum ItemType
     {
-        None,
-        Generator,
-        Product
+        None = 0,
+        Generator = 1,
+        Product = 2
     }
 }

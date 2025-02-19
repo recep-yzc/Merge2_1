@@ -39,7 +39,7 @@ namespace _Game.Development.Item
                     _itemDataListByGeneratorType[type] = dictionary;
                 }
 
-                dictionary[itemDataSo.uniqueId] = itemDataSo;
+                dictionary[itemDataSo.level] = itemDataSo;
             }
         }
 
@@ -49,7 +49,7 @@ namespace _Game.Development.Item
             var iGenerator = item.GetComponent<IGenerator>();
 
             var itemDataSo = (GeneratorItemDataSo)gridData.itemDataSo;
-            var dataSo = _itemDataListByGeneratorType[itemDataSo.generatorType.ToInt()][itemDataSo.uniqueId];
+            var dataSo = _itemDataListByGeneratorType[itemDataSo.generatorType.ToInt()][itemDataSo.level];
 
             iGenerator.SetParent(transform);
             iGenerator.SetPosition(gridData.coordinate);
@@ -61,7 +61,7 @@ namespace _Game.Development.Item
         public override ItemSaveData CreateItemSaveData(GridData gridData)
         {
             var generatorItemDataSo = (GeneratorItemDataSo)gridData.itemDataSo;
-            return new GeneratorItemSaveData(gridData.coordinate, generatorItemDataSo.uniqueId,
+            return new GeneratorItemSaveData(gridData.coordinate, generatorItemDataSo.level,
                 generatorItemDataSo.itemType.ToInt(), generatorItemDataSo.generatorType.ToInt(),
                 generatorItemDataSo.spawnAmount, MinDateTimeStr);
         }

@@ -50,7 +50,7 @@ namespace _Game.Development.Board
                 return default;
             }
 
-            if (gridData.itemDataSo.itemType == _clickedGridData.itemDataSo.itemType && gridData.itemDataSo.uniqueId == _clickedGridData.itemDataSo.uniqueId)
+            if (gridData.itemDataSo.itemType == _clickedGridData.itemDataSo.itemType && gridData.itemDataSo.level == _clickedGridData.itemDataSo.level)
             {
                 if (gridData.coordinate == _clickedGridData.coordinate)
                 {

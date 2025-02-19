@@ -27,7 +27,7 @@ namespace _Game.Development.Item
         public override ItemSaveData CreateItemSaveData(GridData gridData)
         {
             var dataSo = (EmptyItemDataSo)gridData.itemDataSo;
-            return new EmptyItemSaveData(gridData.coordinate, dataSo.uniqueId, dataSo.itemType.ToInt(), 0);
+            return new EmptyItemSaveData(gridData.coordinate, dataSo.level, dataSo.itemType.ToInt(), 0);
         }
     }
 }

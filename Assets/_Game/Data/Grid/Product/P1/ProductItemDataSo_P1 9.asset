@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ProductItemDataSo_P1 9
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: bd968853d5410cc42b59990965134762, type: 3}
-  uniqueId: 9
   itemType: 2
+  level: 9
   nextItemDataSo: {fileID: 11400000, guid: adaed0a13cb58624d947f35a51818a80, type: 2}
-  productType: 0
+  productType: 1

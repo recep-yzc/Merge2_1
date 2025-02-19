@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: GeneratorItemDataSo_G1 6
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 41db065559a40794cac259c93503cda6, type: 3}
-  uniqueId: 6
   itemType: 1
+  level: 6
   nextItemDataSo: {fileID: 11400000, guid: 222b15e12d1d5f541998e48e74630417, type: 2}
-  generatorType: 0
+  generatorType: 1
   spawnAmount: 6
   chargeDuration: 28
   generateItemDataList:

@@ -7,15 +7,15 @@ namespace _Game.Development.Level
     public record GridJsonData
     {
         public Vector2 coordinate;
-        public int uniqueId;
+        public int level;
         public int specialId;
         public int itemId;
 
-        public GridJsonData(Vector2 coordinate, int uniqueId, int specialId, int itemId)
+        public GridJsonData(Vector2 coordinate, int level, int specialId, int itemId)
         {
             this.coordinate = coordinate;
 
-            this.uniqueId = uniqueId;
+            this.level = level;
             this.specialId = specialId;
             this.itemId = itemId;
         }

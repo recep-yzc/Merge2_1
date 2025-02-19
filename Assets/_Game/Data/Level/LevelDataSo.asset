@@ -12,58 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f471d33243944527b5415acba1ceaf3b, type: 3}
   m_Name: LevelDataSo
   m_EditorClassIdentifier: 
-  json: '{"rows":5,"columns":5,"gridJsonDataList":[{"coordinate":{"x":-2.0,"y":-2.0},"uniqueId":1,"specialId":0,"itemId":1},{"coordinate":{"x":-2.0,"y":-1.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":-2.0,"y":0.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":-2.0,"y":1.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":-2.0,"y":2.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":-1.0,"y":-2.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":-1.0,"y":-1.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":-1.0,"y":0.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":-1.0,"y":1.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":-1.0,"y":2.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":0.0,"y":-2.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":0.0,"y":-1.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":0.0,"y":0.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":0.0,"y":1.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":0.0,"y":2.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":1.0,"y":-2.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":1.0,"y":-1.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":1.0,"y":0.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":1.0,"y":1.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":1.0,"y":2.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":2.0,"y":-2.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":2.0,"y":-1.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":2.0,"y":0.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":2.0,"y":1.0},"uniqueId":0,"specialId":0,"itemId":0},{"coordinate":{"x":2.0,"y":2.0},"uniqueId":0,"specialId":0,"itemId":0}]}'
-  emptyItemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  rows: 5
-  columns: 5
+  itemDataSo: {fileID: 11400000, guid: 15e76371e89abf14097a07931eb61cc4, type: 2}
+  rows: 2
+  columns: 2
   gridDataList:
-  - coordinate: {x: -2, y: -2}
-    itemDataSo: {fileID: 11400000, guid: 1e3828726bfe16e42a1c14b4dc1ec9a7, type: 2}
-  - coordinate: {x: -2, y: -1}
+  - coordinate: {x: -0.5, y: -0.5}
+    itemDataSo: {fileID: 11400000, guid: 4582ee5b254735e4db2ce1258c7f96c1, type: 2}
+  - coordinate: {x: -0.5, y: 0.5}
     itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -2, y: 0}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -2, y: 1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -2, y: 2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -1, y: -2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -1, y: -1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -1, y: 0}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -1, y: 1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -1, y: 2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 0, y: -2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 0, y: -1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 0, y: 0}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 0, y: 1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 0, y: 2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 1, y: -2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 1, y: -1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 1, y: 0}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 1, y: 1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 1, y: 2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 2, y: -2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 2, y: -1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 2, y: 0}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 2, y: 1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 2, y: 2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
+  - coordinate: {x: 0.5, y: -0.5}
+    itemDataSo: {fileID: 11400000, guid: 8338d61db7ff5574e91ebfc481bcd876, type: 2}
+  - coordinate: {x: 0.5, y: 0.5}
+    itemDataSo: {fileID: 11400000, guid: 770bc246dbe92f2409d58ef623330b3b, type: 2}
