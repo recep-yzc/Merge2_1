@@ -1,4 +1,5 @@
 ﻿using System;
+using _Game.Development.Extension;
 using _Game.Development.Grid;
 using UnityEngine;
 
@@ -19,6 +20,11 @@ namespace _Game.Development.Item
         {
             itemType = ItemType.Generator;
             generateItemDataList = Array.Empty<PercentageData>();
+        }
+
+        public override int GetSpecialId()
+        {
+            return generatorType.ToInt();
         }
     }
 }

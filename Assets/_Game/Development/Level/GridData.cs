@@ -15,13 +15,14 @@ namespace _Game.Development.Level
         {
             this.coordinate = coordinate;
             this.itemDataSo = itemDataSo;
+            NeighborGridData = Array.Empty<GridData>();
         }
 
         public Vector2 BottomLeft => coordinate - VectorExtension.HalfSize;
         public Vector2 TopRight => coordinate + VectorExtension.HalfSize;
 
         public GameObject GameObject { get; set; }
-        public GridData[] NeighborGridData { get; private set; } = Array.Empty<GridData>();
+        public GridData[] NeighborGridData { get; set; } 
 
         public void SetNeighborGridData(GridData[] neighborGridData)
         {

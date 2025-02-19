@@ -17,5 +17,7 @@ namespace _Game.Development.Item
         {
             return icon ? AssetDatabase.GetAssetPath(icon) : string.Empty;
         }
+
+        public abstract int GetSpecialId();
     }
 }

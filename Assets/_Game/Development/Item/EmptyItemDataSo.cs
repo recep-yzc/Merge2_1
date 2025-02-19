@@ -9,5 +9,10 @@ namespace _Game.Development.Item
         {
             itemType = ItemType.None;
         }
+
+        public override int GetSpecialId()
+        {
+            return 0;
+        }
     }
 }

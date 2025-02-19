@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using _Game.Development.Extension;
+using UnityEngine;
 
 namespace _Game.Development.Item
 {
@@ -10,6 +11,11 @@ namespace _Game.Development.Item
         public ProductItemDataSo()
         {
             itemType = ItemType.Product;
+        }
+
+        public override int GetSpecialId()
+        {
+            return productType.ToInt();
         }
     }
 }

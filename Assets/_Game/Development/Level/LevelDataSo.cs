@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using _Game.Development.Extension;
 using _Game.Development.Item;
 using Sirenix.OdinInspector;
@@ -11,6 +13,8 @@ namespace _Game.Development.Level
     [CreateAssetMenu(fileName = "LevelDataSo", menuName = "Game/Level/Data")]
     public class LevelDataSo : ScriptableObjectInstaller<LevelDataSo>
     {
+        [TextArea] public string json;
+
         public ItemDataSo emptyItemDataSo;
 
         [MinValue(2)] [MaxValue(10)] public int rows;
@@ -22,7 +26,26 @@ namespace _Game.Development.Level
         public void GenerateGridData()
         {
             CreateGridDataList();
-            // FetchGridNeighborList();
+        }
+
+        [Button]
+        public void GenerateJson()
+        {
+            List<GridJsonData> gridJsonData = new();
+            foreach (var gridData in gridDataList)
+            {
+                var itemType = gridData.itemDataSo.itemType;
+                var coordinate = gridData.coordinate;
+
+                var uniqueId = gridData.itemDataSo.uniqueId;
+                var itemId = itemType.ToInt();
+                var specialId = gridData.itemDataSo.GetSpecialId();
+
+                gridJsonData.Add(new GridJsonData(coordinate, uniqueId, specialId, itemId));
+            }
+
+            var levelJsonData = new LevelJsonData(rows, columns, gridJsonData);
+            json = JsonUtility.ToJson(levelJsonData);
         }
 
         private void FetchGridNeighborList()

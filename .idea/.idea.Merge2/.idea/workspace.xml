@@ -4,7 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="efcf63b0-f470-48f3-b67d-de10845d6a28" name="Changes" comment="" />
+    <list default="true" id="efcf63b0-f470-48f3-b67d-de10845d6a28" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/_Game/Development/Level/GridJsonData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Game/Development/Level/GridJsonData.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Game/Development/Level/LevelJsonData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/_Game/Development/Level/LevelJsonData.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Merge2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Merge2/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Game/Data/Level/LevelDataSo.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Game/Data/Level/LevelDataSo.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Game/Development/Board/BoardInputController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Game/Development/Board/BoardInputController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Game/Development/Item/ItemFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Game/Development/Item/ItemFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Game/Development/Item/ProductFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Game/Development/Item/ProductFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Game/Development/Level/GridData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Game/Development/Level/GridData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Game/Development/Level/LevelDataSo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Game/Development/Level/LevelDataSo.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,29 +25,33 @@
   <component name="DpaMonitoringSettings">
     <option name="autoShow" value="false" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 7
-}]]></component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2tEQy1H3kFQWoKjXQDNuTMpmcEV" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Attach to Unity Editor.Attach to Unity Editor.executor": "Debug",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/user/Desktop/Merge2/Assets/_Game/Development",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "CodeLensConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Attach to Unity Editor.Attach to Unity Editor.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/user/Desktop/Merge2/Assets/_Game/Development&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CodeLensConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2022.3.12f1\Editor\Unity.exe" />
@@ -63,10 +79,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="28836">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="28836" />
+      <option name="pid" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -83,6 +99,8 @@
       <option name="presentableId" value="Default" />
       <updated>1739915004914</updated>
       <workItem from="1739915006490" duration="4984000" />
+      <workItem from="1739983611460" duration="9000" />
+      <workItem from="1739983698824" duration="28000" />
     </task>
     <servers />
   </component>
@@ -107,10 +125,10 @@
           <line>54</line>
           <properties documentPath="C:\Users\user\Desktop\Merge2\Assets\_Game\Development\Item\ProductFactory.cs" containingFunctionPresentation="Method 'CreateItem'">
             <startOffsets>
-              <option value="1681" />
+              <option value="1673" />
             </startOffsets>
             <endOffsets>
-              <option value="1771" />
+              <option value="1729" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="3" />
