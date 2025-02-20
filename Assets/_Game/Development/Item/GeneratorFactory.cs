@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using _Game.Development.Extension;
-using _Game.Development.Grid;
-using _Game.Development.Level;
+using _Game.Development.Board.Edit.Serializable;
+using _Game.Development.Extension.Static;
+using _Game.Development.Grid.Serializable;
+using _Game.Development.Item.Scriptable;
+using _Game.Development.Item.Serializable;
 using UnityEngine;
 
 namespace _Game.Development.Item
@@ -22,8 +24,8 @@ namespace _Game.Development.Item
             ItemType = ItemType.Generator;
             FetchItemDataList();
 
-            CreateItemSaveDataByCategoryType.TryAdd(ItemType.ToInt(), CreateItemSaveData);
-            CreateItemByCategoryType.TryAdd(ItemType.ToInt(), CreateItem);
+            CreateItemSaveDataBySpecialId.TryAdd(ItemType.ToInt(), CreateItemSaveData);
+            CreateItemBySpecialId.TryAdd(ItemType.ToInt(), CreateItem);
         }
 
         #endregion
@@ -48,22 +50,21 @@ namespace _Game.Development.Item
             var item = GetOrCreateItemInPool(ref CreatedItemList, generatorPrefab.gameObject);
             var iGenerator = item.GetComponent<IGenerator>();
 
-            var itemDataSo = (GeneratorItemDataSo)gridData.itemDataSo;
+            var itemDataSo = (GeneratorItemDataSo)gridData.ItemDataSo;
             var dataSo = _itemDataListByGeneratorType[itemDataSo.generatorType.ToInt()][itemDataSo.level];
 
             iGenerator.SetParent(transform);
-            iGenerator.SetPosition(gridData.coordinate);
+            iGenerator.SetPosition(gridData.Coordinate);
             iGenerator.SetSprite(dataSo.icon);
 
             return item;
         }
 
-        public override ItemSaveData CreateItemSaveData(GridData gridData)
+        public override ItemSaveData CreateItemSaveData(GridInspectorData gridInspectorData)
         {
-            var generatorItemDataSo = (GeneratorItemDataSo)gridData.itemDataSo;
-            return new GeneratorItemSaveData(gridData.coordinate, generatorItemDataSo.level,
-                generatorItemDataSo.itemType.ToInt(), generatorItemDataSo.generatorType.ToInt(),
-                generatorItemDataSo.spawnAmount, MinDateTimeStr);
+            var generatorItemDataSo = (GeneratorItemDataSo)gridInspectorData.itemDataSo;
+            return new GeneratorItemSaveData(gridInspectorData.coordinate, generatorItemDataSo.level,
+                generatorItemDataSo.itemType.ToInt(), generatorItemDataSo.generatorType.ToInt(), MinDateTimeStr);
         }
 
         #region Parameters

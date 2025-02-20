@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
-using _Game.Development.Extension;
-using _Game.Development.Grid;
-using _Game.Development.Level;
+using _Game.Development.Board.Edit.Serializable;
+using _Game.Development.Extension.Static;
+using _Game.Development.Grid.Serializable;
+using _Game.Development.Item.Scriptable;
+using _Game.Development.Item.Serializable;
 using UnityEngine;
 
 namespace _Game.Development.Item
@@ -26,8 +28,8 @@ namespace _Game.Development.Item
             ItemType = ItemType.Product;
             FetchItemDataList();
 
-            CreateItemSaveDataByCategoryType.TryAdd(ItemType.ToInt(), CreateItemSaveData);
-            CreateItemByCategoryType.TryAdd(ItemType.ToInt(), CreateItem);
+            CreateItemSaveDataBySpecialId.TryAdd(ItemType.ToInt(), CreateItemSaveData);
+            CreateItemBySpecialId.TryAdd(ItemType.ToInt(), CreateItem);
         }
 
         #endregion
@@ -52,20 +54,20 @@ namespace _Game.Development.Item
             var item = GetOrCreateItemInPool(ref CreatedItemList, productPrefab.gameObject);
             var iProduct = item.GetComponent<IProduct>();
 
-            var itemDataSo = (ProductItemDataSo)gridData.itemDataSo;
+            var itemDataSo = (ProductItemDataSo)gridData.ItemDataSo;
             var dataSo = _itemDataListByProductType[itemDataSo.productType.ToInt()][itemDataSo.level];
 
             iProduct.SetParent(transform);
-            iProduct.SetPosition(gridData.coordinate);
+            iProduct.SetPosition(gridData.Coordinate);
             iProduct.SetSprite(dataSo.icon);
 
             return item;
         }
 
-        public override ItemSaveData CreateItemSaveData(GridData gridData)
+        public override ItemSaveData CreateItemSaveData(GridInspectorData gridInspectorData)
         {
-            var dataSo = (ProductItemDataSo)gridData.itemDataSo;
-            return new ProductItemSaveData(gridData.coordinate, dataSo.level, dataSo.itemType.ToInt(),
+            var dataSo = (ProductItemDataSo)gridInspectorData.itemDataSo;
+            return new ProductItemSaveData(gridInspectorData.coordinate, dataSo.level, dataSo.itemType.ToInt(),
                 dataSo.productType.ToInt());
         }
     }

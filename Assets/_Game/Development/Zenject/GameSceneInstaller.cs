@@ -1,4 +1,4 @@
-﻿using _Game.Development.Board;
+﻿using _Game.Development.Board.Controller;
 using _Game.Development.Item;
 using Zenject;
 

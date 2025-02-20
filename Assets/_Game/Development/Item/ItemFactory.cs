@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using _Game.Development.Level;
+using _Game.Development.Board.Edit.Serializable;
+using _Game.Development.Grid.Serializable;
+using _Game.Development.Item.Serializable;
 using UnityEngine;
 using Zenject;
 
@@ -9,8 +11,8 @@ namespace _Game.Development.Item
     public abstract class ItemFactory : MonoBehaviour
     {
         public abstract GameObject CreateItem(GridData gridData);
-        public abstract ItemSaveData CreateItemSaveData(GridData gridData);
-        
+        public abstract ItemSaveData CreateItemSaveData(GridInspectorData gridInspectorData);
+
         protected GameObject GetOrCreateItemInPool(ref List<GameObject> createdGameObjectList, GameObject prefab)
         {
             var find = createdGameObjectList.Find(x => !x.activeInHierarchy);
@@ -30,10 +32,10 @@ namespace _Game.Development.Item
 
         [Inject] private DiContainer _diContainer;
 
-        public static Dictionary<int, Func<GridData, ItemSaveData>> CreateItemSaveDataByCategoryType { get; } =
+        public static Dictionary<int, Func<GridInspectorData, ItemSaveData>> CreateItemSaveDataBySpecialId { get; } =
             new();
 
-        public static Dictionary<int, Func<GridData, GameObject>> CreateItemByCategoryType { get; } = new();
+        public static Dictionary<int, Func<GridData, GameObject>> CreateItemBySpecialId { get; } = new();
 
         protected List<GameObject> CreatedItemList = new();
         protected ItemType ItemType { get; set; }

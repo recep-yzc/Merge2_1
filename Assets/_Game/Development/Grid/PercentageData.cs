@@ -1,5 +1,5 @@
 ﻿using System;
-using _Game.Development.Item;
+using _Game.Development.Item.Scriptable;
 using Sirenix.OdinInspector;
 
 namespace _Game.Development.Grid
