@@ -28,8 +28,8 @@ namespace _Game.Development.Board.Controller
 
         private async UniTaskVoid Init()
         {
-            _boardLoadController.FetchLevelData();
-            await _boardLoadController.Create();
+            _boardLoadController.InitBoardJsonData();
+            await _boardLoadController.CreateBoard();
 
             //_boardSpawnController.CreateGridData();
             //_boardSpawnController.FetchGridNeighbor();

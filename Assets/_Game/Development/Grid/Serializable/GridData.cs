@@ -1,6 +1,7 @@
 ﻿using System;
 using _Game.Development.Extension.Static;
 using _Game.Development.Item.Scriptable;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace _Game.Development.Grid.Serializable
@@ -8,29 +9,18 @@ namespace _Game.Development.Grid.Serializable
     [Serializable]
     public class GridData
     {
-        public GridData(Vector2 coordinate, GameObject gameObject, ItemDataSo itemDataSo)
-        {
-            Coordinate = coordinate;
-            GameObject = gameObject;
-            ItemDataSo = itemDataSo;
+        public Vector2 Coordinate;
+        public GameObject GameObject;
+        public ItemDataSo ItemDataSo;
 
-            NeighborGridData = Array.Empty<GridData>();
-        }
+        [NonSerialized] public GridData[] NeighborGridData;
 
-        public void SetNeighborGridData(GridData[] neighborGridData)
-        {
-            Array.Copy(neighborGridData, NeighborGridData, NeighborGridData.Length);
-        }
-
-        #region Parameters
-
-        public Vector2 Coordinate { get; set; }
-        public ItemDataSo ItemDataSo { get; set; }
-        public GameObject GameObject { get; set; }
-        public GridData[] NeighborGridData { get; set; }
         public Vector2 BottomLeft => Coordinate - VectorExtension.HalfSize;
         public Vector2 TopRight => Coordinate + VectorExtension.HalfSize;
 
-        #endregion
+        public T GetComponent<T>()
+        {
+            return GameObject.GetComponent<T>();
+        }
     }
 }

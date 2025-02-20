@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using _Game.Development.Board.Edit.Serializable;
+using _Game.Development.Extension.Serializable;
 using _Game.Development.Extension.Static;
 using _Game.Development.Grid.Serializable;
 using _Game.Development.Item.Scriptable;
-using _Game.Development.Item.Serializable;
 using UnityEngine;
+using Zenject;
 
 namespace _Game.Development.Item
 {
@@ -17,6 +18,7 @@ namespace _Game.Development.Item
 
         #region Parameters
 
+        [Inject] AllItemDataSo _allItemDataSo;
         private readonly Dictionary<int, Dictionary<int, ProductItemDataSo>> _itemDataListByProductType = new();
 
         #endregion
@@ -28,8 +30,8 @@ namespace _Game.Development.Item
             ItemType = ItemType.Product;
             FetchItemDataList();
 
-            CreateItemSaveDataBySpecialId.TryAdd(ItemType.ToInt(), CreateItemSaveData);
-            CreateItemBySpecialId.TryAdd(ItemType.ToInt(), CreateItem);
+            CreateItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateItemSaveData);
+            CreateItemByItemId.TryAdd(ItemType.ToInt(), CreateItem);
         }
 
         #endregion
@@ -49,25 +51,25 @@ namespace _Game.Development.Item
             }
         }
 
-        public override GameObject CreateItem(GridData gridData)
+        protected override GameObject CreateItem(ItemSaveData itemSaveData)
         {
-            var item = GetOrCreateItemInPool(ref CreatedItemList, productPrefab.gameObject);
+            var item = GetOrCreateItemInPool(productPrefab.gameObject);
             var iProduct = item.GetComponent<IProduct>();
+            
+            iProduct.AddBackPool(() => BackPool(item));
 
-            var itemDataSo = (ProductItemDataSo)gridData.ItemDataSo;
-            var dataSo = _itemDataListByProductType[itemDataSo.productType.ToInt()][itemDataSo.level];
-
+            var productItemDataSo = _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
             iProduct.SetParent(transform);
-            iProduct.SetPosition(gridData.Coordinate);
-            iProduct.SetSprite(dataSo.icon);
+            iProduct.SetPosition(itemSaveData.coordinate.ToVector2());
+            iProduct.SetSprite(productItemDataSo.icon);
 
             return item;
         }
 
-        public override ItemSaveData CreateItemSaveData(GridInspectorData gridInspectorData)
+        protected override ItemSaveData CreateItemSaveData(SerializableVector2 coordinate, ItemDataSo itemDataSo)
         {
-            var dataSo = (ProductItemDataSo)gridInspectorData.itemDataSo;
-            return new ProductItemSaveData(gridInspectorData.coordinate, dataSo.level, dataSo.itemType.ToInt(),
+            var dataSo = (ProductItemDataSo)itemDataSo;
+            return new ProductItemSaveData(coordinate, dataSo.level, dataSo.itemType.ToInt(),
                 dataSo.productType.ToInt());
         }
     }

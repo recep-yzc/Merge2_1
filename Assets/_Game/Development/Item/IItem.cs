@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace _Game.Development.Item
 {
@@ -8,5 +9,17 @@ namespace _Game.Development.Item
         public void SetPosition(Vector2 position);
 
         public void SetSprite(Sprite icon);
+
+        #region Pool
+
+        public void PlayBackPool();
+        public void AddBackPool(Action action);
+        public void RemoveBackPool(Action action);
+        
+        public Action GetBackPool();
+
+
+        #endregion
+   
     }
 }

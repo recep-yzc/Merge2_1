@@ -23,13 +23,15 @@ namespace _Game.Development.Board.Edit.Object
 
         private void DrawIcon()
         {
-            var levelDataSo = boardEditController.GetLevelDataSo();
-            foreach (var gridInspectorData in levelDataSo.gridInspectorDataList)
+            var boardJsonData = boardEditController.GetBoardJsonData();
+            if (boardJsonData == null) return;
+            
+            foreach (var itemSaveData in boardJsonData.itemSaveDataList)
             {
-                if (gridInspectorData.itemDataSo == null) continue;
+                var itemDataSo = boardEditController.GetItemDataSoByItemSaveData(itemSaveData);
 
-                var iconPath = gridInspectorData.itemDataSo.GetIconPath();
-                var coordinate = gridInspectorData.coordinate;
+                var iconPath = itemDataSo.GetIconPath();
+                var coordinate = itemSaveData.coordinate;
 
                 Gizmos.DrawIcon(coordinate.ToVector2(), iconPath, true);
                 Gizmos.DrawWireCube(coordinate.ToVector2(), VectorExtension.Size);

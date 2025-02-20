@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using _Game.Development.Item.Serializable;
 
 namespace _Game.Development.Board.Edit.Serializable
 {
@@ -9,13 +8,13 @@ namespace _Game.Development.Board.Edit.Serializable
     {
         public int rows;
         public int columns;
-        public List<ItemSaveData> gridJsonDataList;
+        public List<ItemSaveData> itemSaveDataList;
 
-        public BoardJsonData(int rows, int columns, List<ItemSaveData> gridJsonDataList)
+        public BoardJsonData(int rows, int columns, List<ItemSaveData> itemSaveDataList)
         {
             this.rows = rows;
             this.columns = columns;
-            this.gridJsonDataList = gridJsonDataList;
+            this.itemSaveDataList = itemSaveDataList;
         }
     }
 }

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Globalization;
 using _Game.Development.Board.Edit.Serializable;
+using _Game.Development.Extension.Serializable;
 using _Game.Development.Extension.Static;
 using _Game.Development.Grid.Serializable;
 using _Game.Development.Item.Scriptable;
-using _Game.Development.Item.Serializable;
 using UnityEngine;
+using Zenject;
 
 namespace _Game.Development.Item
 {
@@ -24,8 +25,8 @@ namespace _Game.Development.Item
             ItemType = ItemType.Generator;
             FetchItemDataList();
 
-            CreateItemSaveDataBySpecialId.TryAdd(ItemType.ToInt(), CreateItemSaveData);
-            CreateItemBySpecialId.TryAdd(ItemType.ToInt(), CreateItem);
+            CreateItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateItemSaveData);
+            CreateItemByItemId.TryAdd(ItemType.ToInt(), CreateItem);
         }
 
         #endregion
@@ -45,30 +46,31 @@ namespace _Game.Development.Item
             }
         }
 
-        public override GameObject CreateItem(GridData gridData)
+        protected override GameObject CreateItem(ItemSaveData itemSaveData)
         {
-            var item = GetOrCreateItemInPool(ref CreatedItemList, generatorPrefab.gameObject);
+            var item = GetOrCreateItemInPool(generatorPrefab.gameObject);
             var iGenerator = item.GetComponent<IGenerator>();
-
-            var itemDataSo = (GeneratorItemDataSo)gridData.ItemDataSo;
-            var dataSo = _itemDataListByGeneratorType[itemDataSo.generatorType.ToInt()][itemDataSo.level];
+            iGenerator.AddBackPool(() => BackPool(item));
+            
+            var generatorItemDataSo = _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
 
             iGenerator.SetParent(transform);
-            iGenerator.SetPosition(gridData.Coordinate);
-            iGenerator.SetSprite(dataSo.icon);
+            iGenerator.SetPosition(itemSaveData.coordinate.ToVector2());
+            iGenerator.SetSprite(generatorItemDataSo.icon);
 
             return item;
         }
 
-        public override ItemSaveData CreateItemSaveData(GridInspectorData gridInspectorData)
+        protected override ItemSaveData CreateItemSaveData(SerializableVector2 coordinate, ItemDataSo itemDataSo)
         {
-            var generatorItemDataSo = (GeneratorItemDataSo)gridInspectorData.itemDataSo;
-            return new GeneratorItemSaveData(gridInspectorData.coordinate, generatorItemDataSo.level,
-                generatorItemDataSo.itemType.ToInt(), generatorItemDataSo.generatorType.ToInt(), MinDateTimeStr);
+            var dataSo = (GeneratorItemDataSo)itemDataSo;
+            return new GeneratorItemSaveData(coordinate, dataSo.level, dataSo.itemType.ToInt(),
+                dataSo.generatorType.ToInt(), MinDateTimeStr);
         }
 
         #region Parameters
 
+        [Inject] private AllItemDataSo _allItemDataSo;
         private readonly Dictionary<int, Dictionary<int, GeneratorItemDataSo>> _itemDataListByGeneratorType = new();
         private static readonly string MinDateTimeStr = DateTime.MinValue.ToString(CultureInfo.InvariantCulture);
 

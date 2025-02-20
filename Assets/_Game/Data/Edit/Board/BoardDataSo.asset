@@ -12,56 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f471d33243944527b5415acba1ceaf3b, type: 3}
   m_Name: BoardDataSo
   m_EditorClassIdentifier: 
-  rows: 5
-  columns: 5
+  rows: 2
+  columns: 2
   gridInspectorDataList:
-  - coordinate: {x: -2, y: -2}
+  - coordinate:
+      x: -0.5
+      y: -0.5
     itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -2, y: -1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -2, y: 0}
-    itemDataSo: {fileID: 11400000, guid: 57cae48c31392eb419d89cec1bdd5aae, type: 2}
-  - coordinate: {x: -2, y: 1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -2, y: 2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -1, y: -2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -1, y: -1}
-    itemDataSo: {fileID: 11400000, guid: 770bc246dbe92f2409d58ef623330b3b, type: 2}
-  - coordinate: {x: -1, y: 0}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -1, y: 1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: -1, y: 2}
-    itemDataSo: {fileID: 11400000, guid: 8236096266605df4eb52616da34b6bcd, type: 2}
-  - coordinate: {x: 0, y: -2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 0, y: -1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 0, y: 0}
-    itemDataSo: {fileID: 11400000, guid: 9f38bb1eebdc00943a499849880fe086, type: 2}
-  - coordinate: {x: 0, y: 1}
+  - coordinate:
+      x: -0.5
+      y: 0.5
     itemDataSo: {fileID: 11400000, guid: 1e3828726bfe16e42a1c14b4dc1ec9a7, type: 2}
-  - coordinate: {x: 0, y: 2}
+  - coordinate:
+      x: 0.5
+      y: -0.5
     itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 1, y: -2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 1, y: -1}
-    itemDataSo: {fileID: 11400000, guid: 4d045cb3efc16c748a5cf1566ed54fe1, type: 2}
-  - coordinate: {x: 1, y: 0}
-    itemDataSo: {fileID: 11400000, guid: 4582ee5b254735e4db2ce1258c7f96c1, type: 2}
-  - coordinate: {x: 1, y: 1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 1, y: 2}
-    itemDataSo: {fileID: 11400000, guid: 8236096266605df4eb52616da34b6bcd, type: 2}
-  - coordinate: {x: 2, y: -2}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 2, y: -1}
-    itemDataSo: {fileID: 11400000, guid: 4e2ed56a27f321c49ad094515707e576, type: 2}
-  - coordinate: {x: 2, y: 0}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 2, y: 1}
-    itemDataSo: {fileID: 11400000, guid: b2cb5e4bd2abb4f41908628ce1719776, type: 2}
-  - coordinate: {x: 2, y: 2}
-    itemDataSo: {fileID: 11400000, guid: 8236096266605df4eb52616da34b6bcd, type: 2}
+  - coordinate:
+      x: 0.5
+      y: 0.5
+    itemDataSo: {fileID: 11400000, guid: 770bc246dbe92f2409d58ef623330b3b, type: 2}

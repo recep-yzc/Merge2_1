@@ -1,6 +1,7 @@
 ﻿using System;
+using _Game.Development.Extension.Serializable;
 
-namespace _Game.Development.Item.Serializable
+namespace _Game.Development.Board.Edit.Serializable
 {
     [Serializable]
     public class ProductItemSaveData : ItemSaveData

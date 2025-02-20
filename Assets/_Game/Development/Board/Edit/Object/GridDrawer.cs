@@ -22,9 +22,11 @@ namespace _Game.Development.Board.Edit.Object
 
         private void DrawGrid()
         {
-            var levelDataSo = boardEditController.GetLevelDataSo();
-            var row = (float)levelDataSo.rows;
-            var column = (float)levelDataSo.columns;
+            var boardJsonData = boardEditController.GetBoardJsonData();
+            if (boardJsonData == null) return;
+
+            var row = (float)boardJsonData.rows;
+            var column = (float)boardJsonData.columns;
 
             var gridCenterOffset = new Vector2(-row / 2, -column / 2);
             for (var x = 0; x < row; x++)

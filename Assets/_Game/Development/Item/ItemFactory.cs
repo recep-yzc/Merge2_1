@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Game.Development.Board.Edit.Serializable;
+using _Game.Development.Extension.Serializable;
 using _Game.Development.Grid.Serializable;
-using _Game.Development.Item.Serializable;
+using _Game.Development.Item.Scriptable;
 using UnityEngine;
 using Zenject;
 
@@ -10,12 +11,12 @@ namespace _Game.Development.Item
 {
     public abstract class ItemFactory : MonoBehaviour
     {
-        public abstract GameObject CreateItem(GridData gridData);
-        public abstract ItemSaveData CreateItemSaveData(GridInspectorData gridInspectorData);
+        protected abstract GameObject CreateItem(ItemSaveData itemSaveData);
+        protected abstract ItemSaveData CreateItemSaveData(SerializableVector2 coordinate, ItemDataSo itemDataSo);
 
-        protected GameObject GetOrCreateItemInPool(ref List<GameObject> createdGameObjectList, GameObject prefab)
+        protected GameObject GetOrCreateItemInPool(GameObject prefab)
         {
-            var find = createdGameObjectList.Find(x => !x.activeInHierarchy);
+            var find = CreatedItemList.Find(x => !x.activeInHierarchy);
             if (find != null)
             {
                 find.SetActive(true);
@@ -23,19 +24,26 @@ namespace _Game.Development.Item
             }
 
             find = _diContainer.InstantiatePrefab(prefab);
-            createdGameObjectList.Add(find);
+            CreatedItemList.Add(find);
 
             return find;
+        }
+
+        protected void BackPool(GameObject prefab)
+        {
+            prefab.SetActive(false);
         }
 
         #region Parameters
 
         [Inject] private DiContainer _diContainer;
 
-        public static Dictionary<int, Func<GridInspectorData, ItemSaveData>> CreateItemSaveDataBySpecialId { get; } =
-            new();
+        public static Dictionary<int, Func<SerializableVector2, ItemDataSo, ItemSaveData>> CreateItemSaveDataByItemId
+        {
+            get;
+        } = new();
 
-        public static Dictionary<int, Func<GridData, GameObject>> CreateItemBySpecialId { get; } = new();
+        public static Dictionary<int, Func<ItemSaveData, GameObject>> CreateItemByItemId { get; } = new();
 
         protected List<GameObject> CreatedItemList = new();
         protected ItemType ItemType { get; set; }

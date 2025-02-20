@@ -1,17 +1,18 @@
 ﻿using System;
-using UnityEngine;
+using _Game.Development.Extension.Serializable;
 
 namespace _Game.Development.Board.Edit.Serializable
 {
     [Serializable]
-    public record GridJsonData
+    public class ItemSaveData
     {
-        public Vector2 coordinate;
+        public SerializableVector2 coordinate;
+
         public int level;
         public int specialId;
         public int itemId;
 
-        public GridJsonData(Vector2 coordinate, int level, int specialId, int itemId)
+        public ItemSaveData(SerializableVector2 coordinate, int level, int itemId, int specialId)
         {
             this.coordinate = coordinate;
 

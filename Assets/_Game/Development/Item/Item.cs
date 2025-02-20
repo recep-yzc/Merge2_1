@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace _Game.Development.Item
@@ -6,6 +7,12 @@ namespace _Game.Development.Item
     {
         [Header("References")] [SerializeField]
         private SpriteRenderer sprIcon;
+
+        #region Parameters
+
+        private Action _backPoolAction;
+
+        #endregion
 
         public void SetParent(Transform parent)
         {
@@ -21,5 +28,35 @@ namespace _Game.Development.Item
         {
             sprIcon.sprite = icon;
         }
+
+
+        public void SetSpriteOrder(int order)
+        {
+            sprIcon.sortingOrder = order;
+        }
+
+        #region Pool
+
+        public Action GetBackPool()
+        {
+            return _backPoolAction;
+        }
+
+        public void AddBackPool(Action action)
+        {
+            _backPoolAction += action;
+        }
+
+        public void RemoveBackPool(Action action)
+        {
+            _backPoolAction -= action;
+        }
+
+        public void PlayBackPool()
+        {
+            _backPoolAction?.Invoke();
+        }
+
+        #endregion
     }
 }

@@ -1,138 +1,99 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using _Game.Development.Board.Edit.Scriptable;
 using _Game.Development.Board.Edit.Serializable;
+using _Game.Development.Board.Edit.Static;
 using _Game.Development.Board.Edit.Ui;
+using _Game.Development.Extension.Serializable;
 using _Game.Development.Extension.Static;
 using _Game.Development.Item;
 using _Game.Development.Item.Scriptable;
-using _Game.Development.Item.Serializable;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
+using Zenject;
 
 namespace _Game.Development.Board.Edit.Controller
 {
     public class BoardEditController : MonoBehaviour
     {
+        [Header("References")] [SerializeField]
+        private GridEditorItemButton gridEditorItemButton;
+
+        [SerializeField] private Transform parent;
+
         #region Parameters
 
-        private string JsonPath => Application.dataPath + "/Board.json";
+        [Inject] private AllItemDataSo _allItemDataSo;
+        private BoardJsonData _boardJsonData;
 
         #endregion
 
-        [Header("References")] [SerializeField]
-        private AllItemDataSo allItemDataSo;
-
-        [SerializeField] private BoardDataSo boardDataSo;
-
-        [SerializeField] private GridEditorItemButton gridEditorItemButton;
-        [SerializeField] private Transform parent;
-
-        [Button("Load Board Json")]
-        public void LoadBoardJson(TextAsset boardJson)
+        [Button]
+        public void LoadBoardJson(TextAsset json)
         {
-            var boardJsonData = JsonConvert.DeserializeObject<BoardJsonData>(boardJson.text, new JsonSerializerSettings
+            if (json == null)
             {
-                TypeNameHandling = TypeNameHandling.All
-            });
+                Debug.LogWarning("json Can not null!");
+                return;
+            }
 
-            boardDataSo.rows = boardJsonData.rows;
-            boardDataSo.columns = boardJsonData.columns;
-            boardDataSo.gridInspectorDataList.Clear();
-
-            foreach (var gridJsonData in boardJsonData.gridJsonDataList)
+            if (!Application.isPlaying)
             {
-                var itemTypeData = allItemDataSo.itemDataSoList.First(x => x.itemType.ToInt() == gridJsonData.itemId);
-                var specialIdData = itemTypeData.specialIdDataList.First(x => x.specialId == gridJsonData.specialId);
-                var itemDataSo = specialIdData.itemItemDataSoList.First(x => x.level == gridJsonData.level);
+                Debug.LogWarning("Only Play Mode");
+                return;
+            }
 
-                boardDataSo.gridInspectorDataList.Add(new GridInspectorData
+            _boardJsonData = json.ConvertToBoardJsonData();
+        }
+
+        [Button]
+        public void GenerateBoardJson(int rows, int columns)
+        {
+            if (!Application.isPlaying)
+            {
+                Debug.LogWarning("Only Play Mode");
+                return;
+            }
+
+            _boardJsonData = new BoardJsonData(rows, columns, new List<ItemSaveData>());
+
+            var halfOfRows = _boardJsonData.rows * 0.5f;
+            var halfOfColumns = _boardJsonData.columns * 0.5f;
+            var offset = new Vector2(halfOfRows, halfOfColumns) - VectorExtension.HalfSize;
+
+            var emptyItemDataSo = _allItemDataSo.GetEmptyItemDataSo();
+            var level = emptyItemDataSo.level;
+            var itemId = emptyItemDataSo.itemType.ToInt();
+            var specialId = emptyItemDataSo.GetSpecialId();
+
+            for (var x = 0; x < _boardJsonData.rows; x++)
+            {
+                for (var y = 0; y < _boardJsonData.columns; y++)
                 {
-                    coordinate = gridJsonData.coordinate,
-                    itemDataSo = itemDataSo
-                });
+                    var itemDataSo = _allItemDataSo.GetItemDataByIds(itemId, specialId, level);
+                    var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemId]
+                        .Invoke(new SerializableVector2(new Vector2(x, y) - offset), itemDataSo);
+                    _boardJsonData.itemSaveDataList.Add(itemSaveData);
+                }
             }
         }
 
         [Button]
-        public void GenerateGridData()
+        public void SaveBoardJson()
         {
-            boardDataSo.gridInspectorDataList.Clear();
-
-            var halfOfRows = boardDataSo.rows * 0.5f;
-            var halfOfColumns = boardDataSo.columns * 0.5f;
-            var offset = new Vector2(halfOfRows, halfOfColumns) - VectorExtension.HalfSize;
-
-            GridInspectorData CreateGridData(int x, int y)
-            {
-                return new GridInspectorData
-                {
-                    coordinate = new SerializableVector2(new Vector2(x, y) - offset),
-                    itemDataSo = allItemDataSo.GetEmptyItemDataSo()
-                };
-            }
-
-            for (var x = 0; x < boardDataSo.rows; x++)
-            for (var y = 0; y < boardDataSo.columns; y++)
-                boardDataSo.gridInspectorDataList.Add(CreateGridData(x, y));
-        }
-
-        [Button("Generate Board Json")]
-        public void GenerateBoardJson()
-        {
-            List<ItemSaveData> gridJsonData = new();
-
-            foreach (var gridData in boardDataSo.gridInspectorDataList)
-            {
-                var specialId = gridData.itemDataSo.GetSpecialId();
-
-                var func = ItemFactory.CreateItemSaveDataBySpecialId[specialId];
-                var itemSaveData = func.Invoke(gridData);
-
-                gridJsonData.Add(itemSaveData);
-            }
-
             var json = JsonConvert.SerializeObject(
-                new BoardJsonData(boardDataSo.rows, boardDataSo.columns, gridJsonData), Formatting.Indented,
-                new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+                new BoardJsonData(_boardJsonData.rows, _boardJsonData.columns, _boardJsonData.itemSaveDataList),
+                Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
-            File.WriteAllText(JsonPath, json);
+            File.WriteAllText(EditGlobalValues.JsonPath, json);
             AssetDatabase.SaveAssets();
         }
-
-        private void FetchGridNeighborList()
-        {
-            /* BoardGlobalValues.GridDataList = gridDataList;
-
-             foreach (var gridData in gridDataList)
-             {
-                 List<GridData> neighborList = new();
-
-                 foreach (var directionId in EnumExtension.ToArray<DirectionId>())
-                 {
-                     var direction = directionId.DirectionToVector();
-                     var coordinate = gridData.coordinate + direction;
-                     var neighborGridData = BoardExtension.GetGridDataByCoordinate(coordinate);
-
-                     if (neighborGridData == null) continue;
-                     neighborList.Add(neighborGridData);
-                 }
-
-                 gridData.SetNeighborGridData(neighborList.ToList());
-             }*/
-        }
-
-        private void ChangeGridItemDataSo(GridInspectorData gridInspectorData, ItemDataSo itemDataSo)
-        {
-            gridInspectorData.itemDataSo = itemDataSo;
-        }
-
+        
         private void CreateUiElements()
         {
-            foreach (var itemTypeData in allItemDataSo.itemDataSoList)
+            foreach (var itemTypeData in _allItemDataSo.itemDataSoList)
             foreach (var specialIdData in itemTypeData.specialIdDataList)
             foreach (var itemDataSo in specialIdData.itemItemDataSoList)
             {
@@ -143,27 +104,30 @@ namespace _Game.Development.Board.Edit.Controller
 
         #region Getter Setter
 
-        private GridInspectorData GetGridInspectorDataByCoordinate(Vector3 coordinate)
+        private ItemSaveData GetItemSaveDataByCoordinate(Vector3 coordinate, out int index)
         {
-            foreach (var gridData in boardDataSo.gridInspectorDataList)
+            for (var i = 0; i < _boardJsonData.itemSaveDataList.Count; i++)
             {
-                var bottomLeft = gridData.coordinate.ToVector2() - VectorExtension.HalfSize;
-                var topRight = gridData.coordinate.ToVector2() + VectorExtension.HalfSize;
+                var itemSaveData = _boardJsonData.itemSaveDataList[i];
+
+                var bottomLeft = itemSaveData.coordinate.ToVector2() - VectorExtension.HalfSize;
+                var topRight = itemSaveData.coordinate.ToVector2() + VectorExtension.HalfSize;
 
                 var isDotIn = VectorExtension.CheckOverlapWithDot(bottomLeft, topRight, coordinate);
                 if (!isDotIn) continue;
 
-                return gridData;
+                index = i;
+                return itemSaveData;
             }
 
+            index = -1;
             return null;
         }
 
-        private GridInspectorData GetGridInspectorData()
+        private ItemSaveData GetItemSaveData(out int index)
         {
             var coordinate = _camera.GetCoordinate();
-            var gridInspectorData = GetGridInspectorDataByCoordinate(coordinate);
-            return gridInspectorData;
+            return GetItemSaveDataByCoordinate(coordinate, out index);
         }
 
         public Camera GetCamera()
@@ -171,9 +135,9 @@ namespace _Game.Development.Board.Edit.Controller
             return _camera;
         }
 
-        public BoardDataSo GetLevelDataSo()
+        public BoardJsonData GetBoardJsonData()
         {
-            return boardDataSo;
+            return _boardJsonData;
         }
 
         public void SetSelectedItemDataSo(ItemDataSo itemDataSo)
@@ -184,6 +148,11 @@ namespace _Game.Development.Board.Edit.Controller
         public ItemDataSo GetSelectedGridItemDataSo()
         {
             return _selectedItemDataSo;
+        }
+
+        public ItemDataSo GetItemDataSoByItemSaveData(ItemSaveData itemSaveData)
+        {
+            return _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
         }
 
         #endregion
@@ -205,24 +174,31 @@ namespace _Game.Development.Board.Edit.Controller
         private void Start()
         {
             CreateUiElements();
-            SetSelectedItemDataSo(allItemDataSo.GetEmptyItemDataSo());
+            SetSelectedItemDataSo(_allItemDataSo.GetEmptyItemDataSo());
         }
 
         private void Update()
         {
             if (Input.GetMouseButtonDown(0))
             {
-                var gridInspectorData = GetGridInspectorData();
-                if (gridInspectorData == null) return;
+                var itemSaveData = GetItemSaveData(out var index);
+                if (itemSaveData == null || index == -1) return;
 
-                ChangeGridItemDataSo(gridInspectorData, _selectedItemDataSo);
+                var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[_selectedItemDataSo.itemType.ToInt()].Invoke(itemSaveData.coordinate, _selectedItemDataSo);
+                _boardJsonData.itemSaveDataList[index] = newItemSaveData;
+
+                SaveBoardJson();
             }
             else if (Input.GetMouseButtonDown(1))
             {
-                var gridInspectorData = GetGridInspectorData();
-                if (gridInspectorData == null) return;
+                var itemSaveData = GetItemSaveData(out var index);
+                if (itemSaveData == null || index == -1) return;
 
-                ChangeGridItemDataSo(gridInspectorData, allItemDataSo.GetEmptyItemDataSo());
+                var itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
+                var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemDataSo.itemType.ToInt()].Invoke(itemSaveData.coordinate, itemDataSo);
+                _boardJsonData.itemSaveDataList[index] = newItemSaveData;
+
+                SaveBoardJson();
             }
         }
 

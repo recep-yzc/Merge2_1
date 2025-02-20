@@ -1,6 +1,7 @@
 ﻿using System;
+using _Game.Development.Extension.Serializable;
+using _Game.Development.Extension.Static;
 using _Game.Development.Item.Scriptable;
-using _Game.Development.Item.Serializable;
 
 namespace _Game.Development.Board.Edit.Serializable
 {

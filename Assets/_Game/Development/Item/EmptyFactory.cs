@@ -1,8 +1,8 @@
 ﻿using _Game.Development.Board.Edit.Serializable;
+using _Game.Development.Extension.Serializable;
 using _Game.Development.Extension.Static;
 using _Game.Development.Grid.Serializable;
 using _Game.Development.Item.Scriptable;
-using _Game.Development.Item.Serializable;
 using UnityEngine;
 
 namespace _Game.Development.Item
@@ -15,21 +15,21 @@ namespace _Game.Development.Item
         {
             ItemType = ItemType.None;
 
-            CreateItemSaveDataBySpecialId.TryAdd(ItemType.ToInt(), CreateItemSaveData);
-            CreateItemBySpecialId.TryAdd(ItemType.ToInt(), CreateItem);
+            CreateItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateItemSaveData);
+            CreateItemByItemId.TryAdd(ItemType.ToInt(), CreateItem);
         }
 
         #endregion
 
-        public override GameObject CreateItem(GridData gridData)
+        protected override GameObject CreateItem(ItemSaveData itemSaveData)
         {
             return null;
         }
 
-        public override ItemSaveData CreateItemSaveData(GridInspectorData gridInspectorData)
+        protected override ItemSaveData CreateItemSaveData(SerializableVector2 coordinate, ItemDataSo itemDataSo)
         {
-            var dataSo = (EmptyItemDataSo)gridInspectorData.itemDataSo;
-            return new EmptyItemSaveData(gridInspectorData.coordinate, dataSo.level, dataSo.itemType.ToInt(), 0);
+            var dataSo = (EmptyItemDataSo)itemDataSo;
+            return new EmptyItemSaveData(coordinate, dataSo.level, dataSo.itemType.ToInt(), 0);
         }
     }
 }

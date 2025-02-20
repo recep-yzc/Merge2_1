@@ -30,5 +30,5 @@ namespace _Game.Development.Extension.Static
                 _ => throw new ArgumentOutOfRangeException(nameof(directionId))
             };
         }
-    }
+        }
 }
