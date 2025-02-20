@@ -1,5 +1,5 @@
-﻿using _Game.Development.Board.Controller;
-using _Game.Development.Item;
+﻿using _Game.Development.Controller.Board;
+using _Game.Development.Factory.Item;
 using Zenject;
 
 namespace _Game.Development.Zenject

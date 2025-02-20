@@ -321,12 +321,12 @@ SpriteRenderer:
   m_SortingLayerID: -249192159
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 778ab80937250224789cea8c65567708, type: 3}
+  m_Sprite: {fileID: -90925202, guid: 778ab80937250224789cea8c65567708, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 21.34, y: 21.34}
+  m_Size: {x: 14.9, y: 15}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -789,22 +789,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   productPrefab: {fileID: 786749058107280114, guid: ed9fa167cb00dfe41a1c1972ce0ca751,
     type: 3}
-  itemDataSoList:
-  - {fileID: 11400000, guid: 2e77857af95a5e949bbe383ae60730cd, type: 2}
-  - {fileID: 11400000, guid: 4d045cb3efc16c748a5cf1566ed54fe1, type: 2}
-  - {fileID: 11400000, guid: 8338d61db7ff5574e91ebfc481bcd876, type: 2}
-  - {fileID: 11400000, guid: 5f6c7c2e326342f408f971e3e0129aa1, type: 2}
-  - {fileID: 11400000, guid: bbe54aed387be4143b7d1fd0862bcab1, type: 2}
-  - {fileID: 11400000, guid: 594f4e6c3fd9c394099b6f79b9eb7bca, type: 2}
-  - {fileID: 11400000, guid: 1e61ba09fc2d74c4d85f5d4808f3d96b, type: 2}
-  - {fileID: 11400000, guid: 9f38bb1eebdc00943a499849880fe086, type: 2}
-  - {fileID: 11400000, guid: 1f80a18c7c672574aba380a83b90138e, type: 2}
-  - {fileID: 11400000, guid: adaed0a13cb58624d947f35a51818a80, type: 2}
-  - {fileID: 11400000, guid: 770bc246dbe92f2409d58ef623330b3b, type: 2}
-  - {fileID: 11400000, guid: 79c09ab4852ea224da139667dff67beb, type: 2}
-  - {fileID: 11400000, guid: 57cae48c31392eb419d89cec1bdd5aae, type: 2}
-  - {fileID: 11400000, guid: 6843019aeae13c243aacc8ad84f10512, type: 2}
-  - {fileID: 11400000, guid: 8c6d71504a7b5b24ea441b4547218e1c, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
