@@ -1,13 +1,17 @@
 ﻿using _Game.Development.Controller.Board;
 using _Game.Development.Static;
 using UnityEngine;
+using Zenject;
 
 namespace _Game.Development.Object.Grid
 {
     public class IconDrawer : MonoBehaviour
     {
-        [Header("References")] [SerializeField]
-        private BoardEditController boardEditController;
+        #region Parameters
+
+        [Inject] private BoardEditController _boardEditController;
+
+        #endregion
 
         #region Unity Actions
 
@@ -23,12 +27,12 @@ namespace _Game.Development.Object.Grid
 
         private void DrawIcon()
         {
-            var boardJsonData = boardEditController.GetBoardJsonData();
+            var boardJsonData = _boardEditController.GetBoardJsonData();
             if (boardJsonData == null) return;
 
             foreach (var itemSaveData in boardJsonData.itemSaveDataList)
             {
-                var itemDataSo = boardEditController.GetItemDataSoByItemSaveData(itemSaveData);
+                var itemDataSo = _boardEditController.GetItemDataSoByItemSaveData(itemSaveData);
 
                 var iconPath = itemDataSo.GetIconPath();
                 var coordinate = itemSaveData.coordinate;
@@ -40,10 +44,10 @@ namespace _Game.Development.Object.Grid
 
         private void DrawMouseIcon()
         {
-            var itemDataSo = boardEditController.GetSelectedGridItemDataSo();
+            var itemDataSo = _boardEditController.GetSelectedGridItemDataSo();
             if (itemDataSo == null) return;
 
-            var coordinate = boardEditController.GetCamera().GetCoordinate();
+            var coordinate = _boardEditController.GetCamera().GetCameraPosition();
             var iconPath = itemDataSo.GetIconPath();
 
             Gizmos.DrawIcon(coordinate, iconPath, true);

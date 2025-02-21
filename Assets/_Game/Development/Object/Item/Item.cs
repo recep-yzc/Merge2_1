@@ -14,15 +14,6 @@ namespace _Game.Development.Object.Item
         [Header("References")] [SerializeField]
         private SpriteRenderer sprIcon;
 
-        #region Parameters
-
-        private Action _backPoolAction;
-        protected readonly float DragMoveSpeed = 15f;
-        private CancellationTokenSource _cancellationScaleUpDownToken;
-        private CancellationTokenSource _cancellationMoveToken;
-
-        #endregion
-
         #region Unity Action
 
         private void OnDestroy()
@@ -30,6 +21,15 @@ namespace _Game.Development.Object.Item
             DisposeScaleUpDownToken();
             DisposeMoveToken();
         }
+
+        #endregion
+
+        #region Parameters
+
+        private Action _backPoolAction;
+        protected readonly float DragMoveSpeed = 15f;
+        private CancellationTokenSource _cancellationScaleUpDownToken;
+        private CancellationTokenSource _cancellationMoveToken;
 
         #endregion
 

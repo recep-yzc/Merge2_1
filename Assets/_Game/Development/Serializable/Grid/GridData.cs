@@ -9,16 +9,16 @@ namespace _Game.Development.Serializable.Grid
     public class GridData
     {
         public Vector2 coordinate;
-        public GameObject gameObject;
+        public GameObject item;
         public ItemDataSo itemDataSo;
 
         [NonSerialized] public GridData[] NeighborGridDataList;
 
-        public GridData(Vector2 coordinate, GameObject gameObject, ItemDataSo itemDataSo,
+        public GridData(Vector2 coordinate, GameObject item, ItemDataSo itemDataSo,
             GridData[] neighborGridDataList)
         {
             this.coordinate = coordinate;
-            this.gameObject = gameObject;
+            this.item = item;
             this.itemDataSo = itemDataSo;
             NeighborGridDataList = neighborGridDataList;
         }
@@ -28,7 +28,7 @@ namespace _Game.Development.Serializable.Grid
 
         public T GetComponent<T>()
         {
-            return gameObject.GetComponent<T>();
+            return item.GetComponent<T>();
         }
     }
 }

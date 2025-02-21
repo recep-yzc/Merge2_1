@@ -40,8 +40,7 @@ namespace _Game.Development.Controller.Board
                 var itemDataSo = _allItemDataSo.GetItemDataByIds(itemId, specialId, level);
                 var itemGameObject = func.Invoke(itemSaveData);
 
-                var gridData = new GridData(itemSaveData.coordinate.ToVector2(), itemGameObject, itemDataSo,
-                    neighborGridDataList);
+                var gridData = new GridData(itemSaveData.coordinate.ToVector2(), itemGameObject, itemDataSo, neighborGridDataList);
 
                 BoardExtension.LiveGridDataList.Add(gridData);
             }

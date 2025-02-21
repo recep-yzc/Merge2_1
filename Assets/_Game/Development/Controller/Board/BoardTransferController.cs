@@ -2,7 +2,6 @@
 using _Game.Development.Scriptable.Ability;
 using _Game.Development.Serializable.Grid;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using UnityEngine;
 using Zenject;
 
@@ -12,20 +11,19 @@ namespace _Game.Development.Controller.Board
     {
         #region Parameters
 
-        [Inject] private BoardMergeController _boardMergeController;
         [Inject] private MoveDataSo _moveDataSo;
 
         #endregion
 
         private void SwapGridDataProperties(GridData gridData, GridData newGridData)
         {
-            (newGridData.gameObject, gridData.gameObject) = (gridData.gameObject, newGridData.gameObject);
+            (newGridData.item, gridData.item) = (gridData.item, newGridData.item);
             (newGridData.itemDataSo, gridData.itemDataSo) = (gridData.itemDataSo, newGridData.itemDataSo);
         }
 
         public async UniTask<bool> TryTransfer(GridData targetGridData, GridData clickedGridData)
         {
-            if (clickedGridData?.gameObject is null) return false;
+            if (clickedGridData?.item is null) return false;
             var iClickedMove = clickedGridData.GetComponent<IMove>();
 
             if (targetGridData is null)
@@ -34,19 +32,17 @@ namespace _Game.Development.Controller.Board
                 return false;
             }
 
-            var iMove = targetGridData.gameObject != null ? targetGridData.GetComponent<IMove>() : null;
+            var iMove = targetGridData.item != null ? targetGridData.GetComponent<IMove>() : null;
 
             var checkIsMaxLevel = targetGridData.itemDataSo.nextItemDataSo == null;
             var checkIsSameItemType = targetGridData.itemDataSo.itemType == clickedGridData.itemDataSo.itemType;
-            var checkIsSameSpecialId = targetGridData.itemDataSo.GetSpecialId() == clickedGridData.itemDataSo.GetSpecialId();
+            var checkIsSameSpecialId =
+                targetGridData.itemDataSo.GetSpecialId() == clickedGridData.itemDataSo.GetSpecialId();
             var checkIsSameLevel = targetGridData.itemDataSo.level == clickedGridData.itemDataSo.level;
             var isSameGrid = targetGridData.coordinate == clickedGridData.coordinate;
-            
-            if (!checkIsMaxLevel && checkIsSameItemType && checkIsSameSpecialId && checkIsSameLevel && !isSameGrid)
-            {
-                var merged = _boardMergeController.TryMerge(targetGridData, clickedGridData);
-                if (merged) return true;
-            }
+
+            if (!checkIsMaxLevel && checkIsSameItemType && checkIsSameSpecialId && checkIsSameLevel &&
+                !isSameGrid) return true;
 
             SwapGridDataProperties(targetGridData, clickedGridData);
             iMove?.MoveAsync(clickedGridData.coordinate, _moveDataSo).Forget();

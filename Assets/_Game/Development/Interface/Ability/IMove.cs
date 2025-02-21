@@ -6,6 +6,6 @@ namespace _Game.Development.Interface.Ability
 {
     public interface IMove
     {
-        public UniTask MoveAsync(Vector2 coordinate ,MoveDataSo moveDataSo);
+        public UniTask MoveAsync(Vector2 coordinate, MoveDataSo moveDataSo);
     }
 }

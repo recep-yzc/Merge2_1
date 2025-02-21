@@ -123,7 +123,7 @@ namespace _Game.Development.Controller.Board
 
         private ItemSaveData GetItemSaveData(out int index)
         {
-            var coordinate = _camera.GetCoordinate();
+            var coordinate = _camera.GetCameraPosition();
             return GetItemSaveDataByCoordinate(coordinate, out index);
         }
 
@@ -157,16 +157,11 @@ namespace _Game.Development.Controller.Board
         #region Parameters
 
         private ItemDataSo _selectedItemDataSo;
-        private Camera _camera;
+        [Inject] private Camera _camera;
 
         #endregion
 
         #region Unity Action
-
-        private void Awake()
-        {
-            _camera = Camera.main;
-        }
 
         private void Start()
         {
@@ -181,8 +176,7 @@ namespace _Game.Development.Controller.Board
                 var itemSaveData = GetItemSaveData(out var index);
                 if (itemSaveData == null || index == -1) return;
 
-                var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[_selectedItemDataSo.itemType.ToInt()]
-                    .Invoke(itemSaveData.coordinate, _selectedItemDataSo);
+                var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[_selectedItemDataSo.itemType.ToInt()].Invoke(itemSaveData.coordinate, _selectedItemDataSo);
                 _boardJsonData.itemSaveDataList[index] = newItemSaveData;
 
                 SaveBoardJson();
@@ -193,8 +187,7 @@ namespace _Game.Development.Controller.Board
                 if (itemSaveData == null || index == -1) return;
 
                 var itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
-                var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemDataSo.itemType.ToInt()]
-                    .Invoke(itemSaveData.coordinate, itemDataSo);
+                var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemDataSo.itemType.ToInt()].Invoke(itemSaveData.coordinate, itemDataSo);
                 _boardJsonData.itemSaveDataList[index] = newItemSaveData;
 
                 SaveBoardJson();

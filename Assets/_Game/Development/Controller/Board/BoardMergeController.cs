@@ -1,7 +1,6 @@
 ﻿using _Game.Development.Interface.Item;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Grid;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -15,12 +14,7 @@ namespace _Game.Development.Controller.Board
 
         #endregion
 
-        public bool TryMerge(GridData gridData, GridData clickedGridData)
-        {
-            return gridData is not null && Merge(gridData, clickedGridData);
-        }
-
-        private bool Merge(GridData gridData, GridData clickedGridData)
+        public void TryMerge(GridData gridData, GridData clickedGridData)
         {
             var nexItemDataSo = gridData.itemDataSo.nextItemDataSo;
 
@@ -30,9 +24,7 @@ namespace _Game.Development.Controller.Board
 
             clickedGridData.itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
             clickedGridData.GetComponent<IPool>().PlayDespawnPool();
-            clickedGridData.gameObject = null;
-
-            return true;
+            clickedGridData.item = null;
         }
     }
 }

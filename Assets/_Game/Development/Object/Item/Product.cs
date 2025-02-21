@@ -19,6 +19,5 @@ namespace _Game.Development.Object.Item
         {
             transform.position = Vector2.Lerp(transform.position, vector2, Time.deltaTime * DragMoveSpeed);
         }
-        
     }
 }

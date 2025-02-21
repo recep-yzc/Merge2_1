@@ -46,6 +46,9 @@ TagManager:
   - name: Board
     uniqueID: 4045775137
     locked: 0
+  - name: Select
+    uniqueID: 4005213947
+    locked: 0
   - name: Item
     uniqueID: 3891091311
     locked: 0

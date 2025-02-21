@@ -1,13 +1,17 @@
 ﻿using _Game.Development.Controller.Board;
 using _Game.Development.Static;
 using UnityEngine;
+using Zenject;
 
 namespace _Game.Development.Object.Grid
 {
     public class GridDrawer : MonoBehaviour
     {
-        [Header("References")] [SerializeField]
-        private BoardEditController boardEditController;
+        #region Parameters
+
+        [Inject] private BoardEditController _boardEditController;
+
+        #endregion
 
         #region Unity Actions
 
@@ -22,7 +26,7 @@ namespace _Game.Development.Object.Grid
 
         private void DrawGrid()
         {
-            var boardJsonData = boardEditController.GetBoardJsonData();
+            var boardJsonData = _boardEditController.GetBoardJsonData();
             if (boardJsonData == null) return;
 
             var row = (float)boardJsonData.rows;

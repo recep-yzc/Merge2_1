@@ -1,5 +1,4 @@
 ﻿using System.Threading;
-using System.Threading.Tasks;
 using _Game.Development.Scriptable.Ability;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -47,7 +46,7 @@ namespace _Game.Development.Static
                 var normalizedTime = elapsedTime / duration;
                 var curveValue = animationCurve.Evaluate(normalizedTime);
                 var newPosition = startPosition + (targetPosition - startPosition) * curveValue;
-                
+
                 transform.position = newPosition;
                 await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken);
             }
