@@ -3,22 +3,22 @@ using UnityEngine;
 
 namespace _Game.Development.Object.Item
 {
-    public class Product : Item, IProduct, IClickable
+    public class Product : Item, IProduct
     {
-        public void OnDown()
+        public override void OnDown()
         {
             SetSpriteOrder(1);
         }
 
-        public void OnUp(bool wasIsTransferred)
+        public override void OnUp()
         {
             SetSpriteOrder(0);
-            ScaleUpDown();
         }
 
-        public void OnDrag(Vector2 vector2)
+        public override void OnDrag(Vector2 vector2)
         {
             transform.position = Vector2.Lerp(transform.position, vector2, Time.deltaTime * DragMoveSpeed);
         }
+        
     }
 }

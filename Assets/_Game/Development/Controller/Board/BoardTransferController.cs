@@ -1,4 +1,6 @@
-﻿using _Game.Development.Serializable.Grid;
+﻿using _Game.Development.Interface.Ability;
+using _Game.Development.Scriptable.Ability;
+using _Game.Development.Serializable.Grid;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -8,7 +10,12 @@ namespace _Game.Development.Controller.Board
 {
     public class BoardTransferController : MonoBehaviour
     {
+        #region Parameters
+
         [Inject] private BoardMergeController _boardMergeController;
+        [Inject] private MoveDataSo _moveDataSo;
+
+        #endregion
 
         private void SwapGridDataProperties(GridData gridData, GridData newGridData)
         {
@@ -16,52 +23,36 @@ namespace _Game.Development.Controller.Board
             (newGridData.itemDataSo, gridData.itemDataSo) = (gridData.itemDataSo, newGridData.itemDataSo);
         }
 
-        public async UniTask<bool> TryTransfer(GridData gridData, GridData clickedGridData)
+        public async UniTask<bool> TryTransfer(GridData targetGridData, GridData clickedGridData)
         {
-            if (clickedGridData is null)
+            if (clickedGridData?.gameObject is null) return false;
+            var iClickedMove = clickedGridData.GetComponent<IMove>();
+
+            if (targetGridData is null)
             {
+                await iClickedMove.MoveAsync(clickedGridData.coordinate, _moveDataSo);
                 return false;
             }
 
-            if (gridData is null)
-            {
-                await clickedGridData.gameObject.transform.DOMove(clickedGridData.coordinate, 0.3f)
-                    .AsyncWaitForCompletion();
-                return false;
-            }
+            var iMove = targetGridData.gameObject != null ? targetGridData.GetComponent<IMove>() : null;
 
-            var checkIsSelf = gridData.coordinate == clickedGridData.coordinate;
-            if (checkIsSelf)
+            var checkIsMaxLevel = targetGridData.itemDataSo.nextItemDataSo == null;
+            var checkIsSameItemType = targetGridData.itemDataSo.itemType == clickedGridData.itemDataSo.itemType;
+            var checkIsSameSpecialId = targetGridData.itemDataSo.GetSpecialId() == clickedGridData.itemDataSo.GetSpecialId();
+            var checkIsSameLevel = targetGridData.itemDataSo.level == clickedGridData.itemDataSo.level;
+            var isSameGrid = targetGridData.coordinate == clickedGridData.coordinate;
+            
+            if (!checkIsMaxLevel && checkIsSameItemType && checkIsSameSpecialId && checkIsSameLevel && !isSameGrid)
             {
-                await clickedGridData.gameObject.transform.DOMove(clickedGridData.coordinate, 0.3f)
-                    .AsyncWaitForCompletion();
-                return false;
-            }
-
-            var checkIsMaxLevel = gridData.itemDataSo.nextItemDataSo == null;
-            var checkIsSameItemType = gridData.itemDataSo.itemType == clickedGridData.itemDataSo.itemType;
-            var checkIsSameSpecialId = gridData.itemDataSo.GetSpecialId() == clickedGridData.itemDataSo.GetSpecialId();
-            var checkIsSameLevel = gridData.itemDataSo.level == clickedGridData.itemDataSo.level;
-
-            if (!checkIsMaxLevel && checkIsSameItemType && checkIsSameSpecialId && checkIsSameLevel)
-            {
-                var merged = _boardMergeController.TryMerge(gridData, clickedGridData);
+                var merged = _boardMergeController.TryMerge(targetGridData, clickedGridData);
                 if (merged) return true;
             }
 
-            if (gridData.gameObject is not null)
-            {
-                SwapGridDataProperties(gridData, clickedGridData);
+            SwapGridDataProperties(targetGridData, clickedGridData);
+            iMove?.MoveAsync(clickedGridData.coordinate, _moveDataSo).Forget();
+            iClickedMove?.MoveAsync(targetGridData.coordinate, _moveDataSo).Forget();
 
-                gridData.gameObject?.transform.DOMove(gridData.coordinate, 0.3f);
-                clickedGridData.gameObject?.transform.DOMove(clickedGridData.coordinate, 0.3f);
-                return true;
-            }
-
-            SwapGridDataProperties(gridData, clickedGridData);
-            clickedGridData.gameObject?.transform.DOMove(gridData.coordinate, 0.3f);
-            gridData.gameObject?.transform.DOMove(gridData.coordinate, 0.3f);
-            return true;
+            return false;
         }
     }
 }

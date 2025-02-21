@@ -35,13 +35,14 @@ namespace _Game.Development.Factory.Item
         {
             var item = GetOrCreateItemInPool(generatorPrefab.gameObject);
             var iGenerator = item.GetComponent<IGenerator>();
+            var iPool = item.GetComponent<IPool>();
 
-            void BackPoolAction()
+            void DespawnPoolAction()
             {
-                BackPool(item);
+                Despawn(item);
             }
 
-            iGenerator.AddBackPool(BackPoolAction);
+            iPool.AddDespawnPool(DespawnPoolAction);
 
             var generatorItemDataSo =
                 _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);

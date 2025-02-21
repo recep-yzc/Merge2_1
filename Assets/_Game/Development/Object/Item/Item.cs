@@ -1,11 +1,15 @@
 using System;
+using System.Threading;
+using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
-using DG.Tweening;
+using _Game.Development.Scriptable.Ability;
+using _Game.Development.Static;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Game.Development.Object.Item
 {
-    public abstract class Item : MonoBehaviour, IItem
+    public abstract class Item : MonoBehaviour, IItem, IPool, IClickable, IScaleUpDown, IMove
     {
         [Header("References")] [SerializeField]
         private SpriteRenderer sprIcon;
@@ -14,8 +18,22 @@ namespace _Game.Development.Object.Item
 
         private Action _backPoolAction;
         protected readonly float DragMoveSpeed = 15f;
+        private CancellationTokenSource _cancellationScaleUpDownToken;
+        private CancellationTokenSource _cancellationMoveToken;
 
         #endregion
+
+        #region Unity Action
+
+        private void OnDestroy()
+        {
+            DisposeScaleUpDownToken();
+            DisposeMoveToken();
+        }
+
+        #endregion
+
+        #region Item
 
         public void SetParent(Transform parent)
         {
@@ -32,37 +50,79 @@ namespace _Game.Development.Object.Item
             sprIcon.sprite = icon;
         }
 
-        public void ScaleUpDown()
-        {
-            transform.DOScale(1.1f, 0.2f).SetLoops(2, LoopType.Yoyo).From(1).SetEase(Ease.Unset);
-        }
-
         protected void SetSpriteOrder(int order)
         {
             sprIcon.sortingOrder = order;
         }
 
+        #endregion
+
         #region Pool
 
-        public Action GetBackPool()
-        {
-            return _backPoolAction;
-        }
-
-        public void AddBackPool(Action action)
+        public void AddDespawnPool(Action action)
         {
             _backPoolAction += action;
         }
 
-        public void RemoveBackPool(Action action)
+        public void RemoveDespawnPool(Action action)
         {
             _backPoolAction -= action;
         }
 
-        public void PlayBackPool()
+        public void PlayDespawnPool()
         {
             _backPoolAction?.Invoke();
         }
+
+        #endregion
+
+        #region Clickable
+
+        public abstract void OnDown();
+        public abstract void OnUp();
+        public abstract void OnDrag(Vector2 vector2);
+
+        #endregion
+
+        #region Ability
+
+        #region ScaleUpDown
+
+        public UniTaskVoid ScaleUpDownAsync(ScaleUpDownDataSo scaleUpDownDataSo)
+        {
+            DisposeScaleUpDownToken();
+
+            _cancellationScaleUpDownToken = new CancellationTokenSource();
+            return AbilityExtension.ScaleUpDownHandle(transform, scaleUpDownDataSo,
+                _cancellationScaleUpDownToken.Token);
+        }
+
+        private void DisposeScaleUpDownToken()
+        {
+            _cancellationScaleUpDownToken?.Cancel();
+            _cancellationScaleUpDownToken?.Dispose();
+        }
+
+        #endregion
+
+        #region Move
+
+        public async UniTask MoveAsync(Vector2 coordinate, MoveDataSo moveDataSo)
+        {
+            DisposeMoveToken();
+
+            _cancellationMoveToken = new CancellationTokenSource();
+            await AbilityExtension.MoveHandle(transform, coordinate, moveDataSo,
+                _cancellationMoveToken.Token);
+        }
+
+        private void DisposeMoveToken()
+        {
+            _cancellationMoveToken?.Cancel();
+            _cancellationMoveToken?.Dispose();
+        }
+
+        #endregion
 
         #endregion
     }

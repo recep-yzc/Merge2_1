@@ -1,4 +1,6 @@
-﻿using _Game.Development.Interface.Item;
+﻿using _Game.Development.Interface.Ability;
+using _Game.Development.Interface.Item;
+using _Game.Development.Scriptable.Ability;
 using _Game.Development.Serializable.Grid;
 using _Game.Development.Static;
 using Cysharp.Threading.Tasks;
@@ -14,6 +16,7 @@ namespace _Game.Development.Controller.Board
             var gridData = BoardExtension.GetGridDataByCoordinate(coordinate);
             if (gridData?.gameObject is null) return default;
 
+            _scaleUpDown = gridData.GetComponent<IScaleUpDown>();
             _clickable = gridData.GetComponent<IClickable>();
             _clickable?.OnDown();
 
@@ -25,11 +28,18 @@ namespace _Game.Development.Controller.Board
         private async UniTaskVoid ClickUp(Vector3 coordinate)
         {
             var gridData = BoardExtension.GetGridDataByCoordinate(coordinate);
-            var wasIsTransferred = await _boardTransferController.TryTransfer(gridData, _clickedGridData);
+            var wasMerged = await _boardTransferController.TryTransfer(gridData, _clickedGridData);
 
-            _clickable?.OnUp(wasIsTransferred);
-            
+            if (wasMerged)
+            {
+                gridData.GetComponent<IScaleUpDown>().ScaleUpDownAsync(_scaleUpDownDataSo);
+            }
+
+            _clickable?.OnUp();
+            _scaleUpDown?.ScaleUpDownAsync(_scaleUpDownDataSo);
+
             _clickable = null;
+            _scaleUpDown = null;
             _clickedGridData = null;
         }
 
@@ -50,12 +60,15 @@ namespace _Game.Development.Controller.Board
 
         private GridData _clickedGridData;
         private IClickable _clickable;
+        private IScaleUpDown _scaleUpDown;
 
         private Vector2 _firstClickedCoordinate;
         private readonly float _moveThreshold = 0.1f;
 
         [Inject] private BoardTransferController _boardTransferController;
         [Inject] private BoardMergeController _boardMergeController;
+
+        [Inject] private ScaleUpDownDataSo _scaleUpDownDataSo;
 
         #endregion
 

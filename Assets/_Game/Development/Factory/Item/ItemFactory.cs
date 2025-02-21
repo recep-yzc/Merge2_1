@@ -28,7 +28,7 @@ namespace _Game.Development.Factory.Item
             return find;
         }
 
-        protected void BackPool(GameObject prefab)
+        protected void Despawn(GameObject prefab)
         {
             prefab.SetActive(false);
         }

@@ -27,10 +27,9 @@ namespace _Game.Development.Controller.Board
             gridData.itemDataSo = nexItemDataSo;
             var iItem = gridData.GetComponent<IItem>();
             iItem.SetSprite(nexItemDataSo.icon);
-            iItem.ScaleUpDown();
 
             clickedGridData.itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
-            clickedGridData.GetComponent<IItem>().PlayBackPool();
+            clickedGridData.GetComponent<IPool>().PlayDespawnPool();
             clickedGridData.gameObject = null;
 
             return true;

@@ -37,13 +37,14 @@ namespace _Game.Development.Factory.Item
         {
             var item = GetOrCreateItemInPool(productPrefab.gameObject);
             var iProduct = item.GetComponent<IProduct>();
+            var iPool = item.GetComponent<IPool>();
 
-            void BackPoolAction()
+            void DespawnPoolAction()
             {
-                BackPool(item);
+                Despawn(item);
             }
 
-            iProduct.AddBackPool(BackPoolAction);
+            iPool.AddDespawnPool(DespawnPoolAction);
 
             var productItemDataSo =
                 _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
