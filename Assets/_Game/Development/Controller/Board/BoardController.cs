@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using _Game.Development.Static;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -12,19 +13,22 @@ namespace _Game.Development.Controller.Board
 
         #endregion
 
-        private void Start()
+        private async void Start()
         {
             Application.targetFrameRate = 60;
             Input.multiTouchEnabled = false;
 
-            Init().Forget();
+            await Initialize();
+            
+            // sahne yüklenebilir
         }
 
-        private async UniTaskVoid Init()
+        private async UniTask Initialize()
         {
-            _boardLoadController.InitBoardJsonData();
-            await _boardLoadController.CreateBoard(); // board oluşturulmasını bekler 
-            // sahne yüklenebilir
+            _boardLoadController.FetchBoardJsonData();
+            await _boardLoadController.InitializeBoard(); // board oluşturulmasını bekler 
+            BoardExtension.Statics.IsBoardInitialized = true;
+
         }
     }
 }

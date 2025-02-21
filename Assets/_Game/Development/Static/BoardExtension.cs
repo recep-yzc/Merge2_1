@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using _Game.Development.Enum.Grid;
 using _Game.Development.Serializable.Board;
 using _Game.Development.Serializable.Grid;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Game.Development.Static
@@ -10,12 +12,10 @@ namespace _Game.Development.Static
     public static class BoardExtension
     {
         public static string JsonPath => Application.dataPath + "/Board.json";
-        public static List<GridData> LiveGridDataList { get; } = new();
-        public static BoardJsonData BoardJsonData { get; set; }
-
+        
         public static GridData GetGridDataByCoordinate(Vector2 coordinate)
         {
-            return LiveGridDataList.FirstOrDefault(tileData =>
+            return Statics.GridDataList.FirstOrDefault(tileData =>
                 VectorExtension.CheckOverlapWithDot(tileData.BottomLeft, tileData.TopRight, coordinate));
         }
 
@@ -26,13 +26,31 @@ namespace _Game.Development.Static
 
             for (var i = 0; i < directionIdArray.Length; i++)
             {
-                var direction = directionIdArray[i];
-                var newCoordinate = coordinate + direction.DirectionToVector();
+                var directionId = directionIdArray[i];
+                var newCoordinate = coordinate + directionId.DirectionToVector();
 
                 gridDataArray[i] = GetGridDataByCoordinate(newCoordinate);
             }
 
             return gridDataArray;
+        }
+        
+        
+        public static class Statics
+        {
+            public static List<GridData> GridDataList { get; set; }
+            public static BoardJsonData BoardJsonData { get; set; }
+            public static bool IsBoardInitialized { get; set; }
+        }
+        
+     
+        
+        
+        public abstract class Selector
+        {
+            public static Action<bool> RequestChangeVisibility { get; set; }
+            public static Action<Vector2> RequestSetPosition { get; set; }
+            public static Func<UniTask> RequestScaleUpDown { get; set; }
         }
     }
 }

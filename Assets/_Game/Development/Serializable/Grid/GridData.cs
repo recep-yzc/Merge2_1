@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Static;
 using UnityEngine;
@@ -12,15 +13,18 @@ namespace _Game.Development.Serializable.Grid
         public GameObject item;
         public ItemDataSo itemDataSo;
 
-        [NonSerialized] public GridData[] NeighborGridDataList;
+        [NonSerialized] public GridData[] NeighborGridDataArray;
 
-        public GridData(Vector2 coordinate, GameObject item, ItemDataSo itemDataSo,
-            GridData[] neighborGridDataList)
+        public GridData(Vector2 coordinate, GameObject item, ItemDataSo itemDataSo)
         {
             this.coordinate = coordinate;
             this.item = item;
             this.itemDataSo = itemDataSo;
-            NeighborGridDataList = neighborGridDataList;
+        }
+
+        public void CopyNeighborGridData(GridData[] gridDataArray)
+        {
+            NeighborGridDataArray = gridDataArray.ToArray();
         }
 
         public Vector2 BottomLeft => coordinate - VectorExtension.HalfSize;

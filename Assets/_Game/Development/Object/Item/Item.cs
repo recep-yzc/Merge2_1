@@ -26,6 +26,7 @@ namespace _Game.Development.Object.Item
 
         #region Parameters
 
+        protected bool IsHolding { get; set; }
         private Action _backPoolAction;
         protected readonly float DragMoveSpeed = 15f;
         private CancellationTokenSource _cancellationScaleUpDownToken;
@@ -78,8 +79,16 @@ namespace _Game.Development.Object.Item
 
         #region Clickable
 
-        public abstract void OnDown();
-        public abstract void OnUp();
+        public virtual void OnDown()
+        {
+            IsHolding = true;
+        }
+
+        public virtual void OnUp()
+        {
+            IsHolding = false;
+        }
+
         public abstract void OnDrag(Vector2 vector2);
 
         #endregion

@@ -1,5 +1,4 @@
-﻿using _Game.Development.Abstract.Board;
-using _Game.Development.Enum.Board;
+﻿using System;
 using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
 using _Game.Development.Scriptable.Ability;
@@ -15,39 +14,38 @@ namespace _Game.Development.Controller.Board
     {
         #region Unity Action
 
-        private void Update()
+        private void OnEnable()
         {
-            if (!Input.GetMouseButton(0) && !Input.GetMouseButtonDown(0) && !Input.GetMouseButtonUp(0))
-                return;
-
-            switch (GetMouseAction())
-            {
-                case MouseAction.Down:
-                    HandleClickDown().Forget();
-                    break;
-                case MouseAction.Hold:
-                    HandleDrag();
-                    break;
-                case MouseAction.Up:
-                    HandleClickUp().Forget();
-                    break;
-            }
+            InputExtension.OnMouseUpEvent += OnMouseUpEvent;
+            InputExtension.OnMouseDragEvent += OnMouseDragEvent;
+            InputExtension.OnMouseDownEvent += OnMouseDownEvent;
+        }
+        
+        private void OnDisable()
+        {
+            InputExtension.OnMouseUpEvent -= OnMouseUpEvent;
+            InputExtension.OnMouseDragEvent -= OnMouseDragEvent;
+            InputExtension.OnMouseDownEvent -= OnMouseDownEvent;
         }
 
         #endregion
-
-        private UniTaskVoid HandleClickDown()
+        
+        private void OnMouseDownEvent(Vector2 vector2)
         {
             var cameraPosition = _mainCamera.GetCameraPosition();
             var gridData = BoardExtension.GetGridDataByCoordinate(cameraPosition);
             if (gridData.item is null)
             {
-                BoardActions.Selector.RequestChangeVisibility.Invoke(false);
-                return default;
+                _scaleUpDown = null;
+                _clickable = null;
+                _firstClickedGridData = null;
+                
+                BoardExtension.Selector.RequestChangeVisibility.Invoke(false);
+                return;
             }
 
-            BoardActions.Selector.RequestSetPosition.Invoke(gridData.coordinate);
-            BoardActions.Selector.RequestChangeVisibility.Invoke(true);
+            BoardExtension.Selector.RequestSetPosition.Invoke(gridData.coordinate);
+            BoardExtension.Selector.RequestChangeVisibility.Invoke(true);
 
             if (_firstClickedGridData == gridData) _doubleClickGridData = gridData;
 
@@ -57,19 +55,18 @@ namespace _Game.Development.Controller.Board
             _clickable = gridData.GetComponent<IClickable>();
 
             _clickable?.OnDown();
-            //_doubleClickGridData?.OnDoubleDown();
-
             _firstClickedGridData = gridData;
-
-            return default;
+            
+            Debug.Log("OnMouseDownEvent");
         }
 
-        private void HandleDrag()
+        private void OnMouseDragEvent(Vector2 vector2)
         {
             var cameraPosition = _mainCamera.GetCameraPosition();
 
             if (_isDragging)
             {
+                Debug.Log("_isDragging");
                 _clickable?.OnDrag(cameraPosition);
                 return;
             }
@@ -78,54 +75,48 @@ namespace _Game.Development.Controller.Board
             if (magnitude > _moveThreshold)
             {
                 _isDragging = true;
-                BoardActions.Selector.RequestChangeVisibility.Invoke(false);
+                BoardExtension.Selector.RequestChangeVisibility.Invoke(false);
             }
         }
 
-        private async UniTaskVoid HandleClickUp()
+        private void OnMouseUpEvent(Vector2 vector2)
         {
+            Debug.Log("OnMouseUpEvent");
+
+            HandleClickUp().Forget();
+        }
+ 
+        private async UniTask HandleClickUp()
+        {
+            _isDragging = false;
+            
             var cameraPosition = _mainCamera.GetCameraPosition();
             var currentGridData = BoardExtension.GetGridDataByCoordinate(cameraPosition);
 
             var canMerge = await _boardTransferController.TryTransfer(currentGridData, _firstClickedGridData);
             if (canMerge)
             {
-                _boardMergeController.TryMerge(currentGridData, _firstClickedGridData);
+                _boardMergeController.TryMerge(currentGridData,_firstClickedGridData);
 
                 currentGridData.GetComponent<IClickable>().OnUp();
                 currentGridData.GetComponent<IScaleUpDown>().ScaleUpDownAsync(_scaleUpDownDataSo).Forget();
 
-                BoardActions.Selector.RequestSetPosition.Invoke(currentGridData.coordinate);
-                BoardActions.Selector.RequestChangeVisibility.Invoke(true);
+                BoardExtension.Selector.RequestSetPosition.Invoke(currentGridData.coordinate);
+                BoardExtension.Selector.RequestChangeVisibility.Invoke(true);
             }
             else
             {
-                BoardActions.Selector.RequestSetPosition.Invoke(currentGridData.coordinate);
-                BoardActions.Selector.RequestChangeVisibility.Invoke(true);
-                await BoardActions.Selector.RequestScaleUpDown.Invoke();
-
+                if (_firstClickedGridData is not null)
+                {
+                    BoardExtension.Selector.RequestSetPosition.Invoke(currentGridData.coordinate);
+                    BoardExtension.Selector.RequestChangeVisibility.Invoke(true);
+                    await BoardExtension.Selector.RequestScaleUpDown.Invoke();
+                }
+                
                 _clickable?.OnUp();
                 _scaleUpDown?.ScaleUpDownAsync(_scaleUpDownDataSo).Forget();
             }
-
-
-            _clickable = null;
-            _scaleUpDown = null;
-            _firstClickedGridData = null;
-            _isDragging = false;
         }
-
-        #region Getter Setter
-
-        private MouseAction GetMouseAction()
-        {
-            if (Input.GetMouseButtonDown(0)) return MouseAction.Down;
-            if (Input.GetMouseButton(0)) return MouseAction.Hold;
-            if (Input.GetMouseButtonUp(0)) return MouseAction.Up;
-            return MouseAction.None;
-        }
-
-        #endregion
 
         //SaveInBackground(BoardExtension.JsonPath, BoardExtension.BoardJsonData).Forget();
 
@@ -165,5 +156,6 @@ namespace _Game.Development.Controller.Board
         private GridData _doubleClickGridData;
 
         #endregion
+        
     }
 }

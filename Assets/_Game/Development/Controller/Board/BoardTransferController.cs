@@ -23,9 +23,10 @@ namespace _Game.Development.Controller.Board
 
         public async UniTask<bool> TryTransfer(GridData targetGridData, GridData clickedGridData)
         {
-            if (clickedGridData?.item is null) return false;
+            if (clickedGridData?.item is null)return false;
+            
             var iClickedMove = clickedGridData.GetComponent<IMove>();
-
+            
             if (targetGridData is null)
             {
                 await iClickedMove.MoveAsync(clickedGridData.coordinate, _moveDataSo);
@@ -45,8 +46,9 @@ namespace _Game.Development.Controller.Board
                 !isSameGrid) return true;
 
             SwapGridDataProperties(targetGridData, clickedGridData);
+            
             iMove?.MoveAsync(clickedGridData.coordinate, _moveDataSo).Forget();
-            iClickedMove?.MoveAsync(targetGridData.coordinate, _moveDataSo).Forget();
+            iClickedMove.MoveAsync(targetGridData.coordinate, _moveDataSo).Forget();
 
             return false;
         }

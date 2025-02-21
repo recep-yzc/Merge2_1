@@ -16,9 +16,7 @@ namespace _Game.Development.Factory.Item
     {
         [Header("References")] [SerializeField]
         private Generator generatorPrefab;
-
-        [SerializeField] private List<GeneratorItemDataSo> itemDataSoList;
-
+        
         #region Unity Action
 
         private void Awake()

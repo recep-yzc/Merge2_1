@@ -1,4 +1,4 @@
-﻿using _Game.Development.Abstract.Board;
+﻿using _Game.Development.Static;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -40,16 +40,16 @@ namespace _Game.Development.Object.Board
 
         private void OnEnable()
         {
-            BoardActions.Selector.RequestChangeVisibility += RequestChangeVisibility;
-            BoardActions.Selector.RequestSetPosition += RequestSetPosition;
-            BoardActions.Selector.RequestScaleUpDown += RequestScaleUpDown;
+            BoardExtension.Selector.RequestChangeVisibility += RequestChangeVisibility;
+            BoardExtension.Selector.RequestSetPosition += RequestSetPosition;
+            BoardExtension.Selector.RequestScaleUpDown += RequestScaleUpDown;
         }
 
         private void OnDisable()
         {
-            BoardActions.Selector.RequestChangeVisibility -= RequestChangeVisibility;
-            BoardActions.Selector.RequestSetPosition -= RequestSetPosition;
-            BoardActions.Selector.RequestScaleUpDown -= RequestScaleUpDown;
+            BoardExtension.Selector.RequestChangeVisibility -= RequestChangeVisibility;
+            BoardExtension.Selector.RequestSetPosition -= RequestSetPosition;
+            BoardExtension.Selector.RequestScaleUpDown -= RequestScaleUpDown;
         }
 
         #endregion
