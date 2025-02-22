@@ -22,6 +22,7 @@ namespace _Game.Development.Object.Item
         {
             DisposeScaleUpDownToken();
             DisposeMoveToken();
+            DisposeJumpToken();
         }
 
         #endregion
@@ -35,6 +36,7 @@ namespace _Game.Development.Object.Item
         private Action _backPoolAction;
         private CancellationTokenSource _cancellationScaleUpDownTokenSource;
         private CancellationTokenSource _cancellationMoveTokenSource;
+        private CancellationTokenSource _cancellationJumpTokenSource;
 
         #endregion
 
@@ -60,8 +62,7 @@ namespace _Game.Development.Object.Item
         {
             sprIcon.sortingOrder = order;
         }
-
-
+        
         public virtual void SetItemDataSo(ItemDataSo itemDataSo)
         {
             ItemDataSo = itemDataSo;
@@ -69,6 +70,11 @@ namespace _Game.Development.Object.Item
 
         public virtual void FetchItemData()
         {
+        }
+
+        public virtual void LevelUp()
+        {
+            
         }
 
         public abstract ItemSaveData CreateItemSaveData();
@@ -109,8 +115,11 @@ namespace _Game.Development.Object.Item
 
         private void DisposeScaleUpDownToken()
         {
-            _cancellationScaleUpDownTokenSource?.Cancel();
-            _cancellationScaleUpDownTokenSource?.Dispose();
+            if (_cancellationScaleUpDownTokenSource is not { IsCancellationRequested: false }) return;
+            
+            _cancellationScaleUpDownTokenSource.Cancel();
+            _cancellationScaleUpDownTokenSource.Dispose();
+            _cancellationScaleUpDownTokenSource = null;  
         }
 
         #endregion
@@ -123,14 +132,25 @@ namespace _Game.Development.Object.Item
             DisposeMoveToken();
 
             _cancellationMoveTokenSource = new CancellationTokenSource();
-            await AbilityExtension.MoveHandle(transform, coordinate, moveDataSo,
-                _cancellationMoveTokenSource.Token);
+            await AbilityExtension.MoveHandle(transform, coordinate, moveDataSo, _cancellationMoveTokenSource.Token);
         }
-
+        
         private void DisposeMoveToken()
         {
-            _cancellationMoveTokenSource?.Cancel();
-            _cancellationMoveTokenSource?.Dispose();
+            if (_cancellationMoveTokenSource is not { IsCancellationRequested: false }) return;
+            
+            _cancellationMoveTokenSource.Cancel();
+            _cancellationMoveTokenSource.Dispose();
+            _cancellationMoveTokenSource = null;  
+        }
+
+        private void DisposeJumpToken()
+        {
+            if (_cancellationJumpTokenSource is not { IsCancellationRequested: false }) return;
+            
+            _cancellationJumpTokenSource.Cancel();
+            _cancellationJumpTokenSource.Dispose();
+            _cancellationJumpTokenSource = null;  
         }
 
         #endregion

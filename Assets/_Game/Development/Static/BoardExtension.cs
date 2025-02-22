@@ -37,26 +37,7 @@ namespace _Game.Development.Static
 
             return gridDataArray;
         }
-
-        public static T GetRandomItem<T>(this IEnumerable<T> enumerable)
-        {
-            using var enumerator = enumerable.GetEnumerator();
-            
-            var selected = enumerator.Current;
-            var count = 1;
-
-            while (enumerator.MoveNext())
-            {
-                count++;
-                if (Random.Next(count) == 0)
-                {
-                    selected = enumerator.Current;
-                }
-            }
-
-            return selected;
-        }
-
+        
         public static class Statics
         {
             public static List<GridData> GridDataList { get; set; }

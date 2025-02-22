@@ -28,7 +28,7 @@ namespace _Game.Development.Serializable.Grid
 
         public bool IsEmpty()
         {
-            return itemDataSo.itemType is ItemType.None;
+            return itemDataSo.itemType is ItemType.Empty;
         }
 
         public void CopyNeighborGridData(GridData[] gridDataArray)

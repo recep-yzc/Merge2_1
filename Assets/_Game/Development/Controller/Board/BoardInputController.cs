@@ -27,7 +27,11 @@ namespace _Game.Development.Controller.Board
             _mouseDownGridData = gridData;
 
             var iClickable = gridData.GetComponent<IClickable>();
-            if (iClickable is null) return;
+            if (iClickable is null)
+            {
+                BoardExtension.Selector.RequestChangeVisibility.Invoke(false);
+                return;
+            }
 
             _isDoubleClick = _mouseDownGridData == gridData;
 
@@ -60,7 +64,14 @@ namespace _Game.Development.Controller.Board
         {
             var mouseDownGridData = _mouseDownGridData;
             if (mouseDownGridData?.item is null) return;
-
+            
+            var iClickable = mouseDownGridData.GetComponent<IClickable>();
+            if (iClickable is null)
+            {
+                BoardExtension.Selector.RequestChangeVisibility.Invoke(false);
+                return;
+            }
+            
             var cameraPosition = _mainCamera.GetCameraPosition();
             var mouseUpGridData = BoardExtension.GetGridDataByCoordinate(cameraPosition);
 
@@ -147,7 +158,7 @@ namespace _Game.Development.Controller.Board
 
         private void HandleItemMerge(GridData mouseDownGridData, GridData mouseUpGridData)
         {
-            _boardMergeController.TryMerge(mouseDownGridData, mouseUpGridData);
+            _boardMergeController.Merge(mouseDownGridData, mouseUpGridData);
 
             _isDragActive = false;
             _draggable = null;

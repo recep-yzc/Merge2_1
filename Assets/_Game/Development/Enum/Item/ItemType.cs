@@ -2,7 +2,7 @@
 {
     public enum ItemType
     {
-        None = 0,
+        Empty = 0,
         Generator = 1,
         Product = 2
     }

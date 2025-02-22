@@ -1,9 +1,11 @@
-﻿using _Game.Development.Factory.Item;
+﻿using _Game.Development.Enum.Item;
+using _Game.Development.Factory.Item;
 using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
 using _Game.Development.Scriptable.Ability;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Grid;
+using _Game.Development.Static;
 using UnityEngine;
 using Zenject;
 
@@ -11,23 +13,32 @@ namespace _Game.Development.Controller.Board
 {
     public class BoardMergeController : MonoBehaviour
     {
-        public void TryMerge(GridData mouseDownGridData, GridData mouseUpGridData)
+        public void Merge(GridData mouseDownGridData, GridData mouseUpGridData)
         {
-            var nexItemDataSo = mouseUpGridData.itemDataSo.nextItemDataSo;
+            UpgradeItem(mouseUpGridData);
+            CreateEmptyItem(mouseDownGridData);
+        }
 
-            mouseUpGridData.itemDataSo = nexItemDataSo;
-            mouseUpGridData.GetComponent<IScaleUpDown>().ScaleUpDownAsync(_scaleUpDownDataSo).Forget();
+        private void CreateEmptyItem(GridData gridData)
+        {
+            gridData.GetComponent<IPool>().PlayDespawnPool();
+            gridData.itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
+            
+            var itemId = ItemType.Empty.ToInt();
+            var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemId].Invoke(gridData.coordinate, gridData.itemDataSo);
+            gridData.item = ItemFactory.CreateItemByItemId[itemId].Invoke(itemSaveData);
+        }
 
-            var iItem = mouseUpGridData.GetComponent<IItem>();
-            iItem.SetSprite(nexItemDataSo.icon);
-            iItem.SetItemDataSo(mouseUpGridData.itemDataSo);
+        private void UpgradeItem(GridData gridData)
+        {
+            gridData.GetComponent<IScaleUpDown>().ScaleUpDownAsync(_scaleUpDownDataSo).Forget();
+            gridData.itemDataSo = gridData.itemDataSo.nextItemDataSo;
+            
+            var iItem = gridData.GetComponent<IItem>();
+            iItem.SetItemDataSo(gridData.itemDataSo);
+            iItem.SetSprite(gridData.itemDataSo.icon);
             iItem.FetchItemData();
-
-            mouseDownGridData.itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
-            mouseDownGridData.GetComponent<IPool>().PlayDespawnPool();
-
-            var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[0].Invoke(mouseDownGridData.coordinate, mouseDownGridData.itemDataSo);
-            mouseDownGridData.item = ItemFactory.CreateItemByItemId[0].Invoke(itemSaveData);
+            iItem.LevelUp();
         }
 
         #region Parameters

@@ -71,7 +71,6 @@ namespace _Game.Development.Object.Item
             var leftDuration = totalSeconds - _generatorItemDataSo.chargeDuration;
             if (leftDuration > 0)
             {
-                FetchLastUsingDate(DateTime.Now.DateTimeToString());
                 RefillSpawnAmount();
             }
             else
@@ -83,6 +82,18 @@ namespace _Game.Development.Object.Item
         #endregion
 
         #region Generator
+
+        public override void LevelUp()
+        {
+            StopRegenerate();
+            ResetLastUsingDate();
+            RefillSpawnAmount();
+        }
+
+        private void ResetLastUsingDate()
+        {
+            _lastUsingDate = DateTime.Now.AddSeconds(_generatorItemDataSo.chargeDuration).DateTimeToString();
+        }
 
         public void FetchLastUsingDate(string date)
         {
@@ -148,10 +159,19 @@ namespace _Game.Development.Object.Item
             RefillSpawnAmount();
         }
 
+        private void StopRegenerate()
+        {
+            DisposeRegenerateToken();
+            regenerateCanvas.SetActive(false);
+        }
+
         private void DisposeRegenerateToken()
         {
-            _regenerateCancellationTokenSource?.Cancel();
-            _regenerateCancellationTokenSource?.Dispose();
+            if (_regenerateCancellationTokenSource is not { IsCancellationRequested: false }) return;
+            
+            _regenerateCancellationTokenSource.Cancel();
+            _regenerateCancellationTokenSource.Dispose();
+            _regenerateCancellationTokenSource = null;  
         }
 
         #endregion

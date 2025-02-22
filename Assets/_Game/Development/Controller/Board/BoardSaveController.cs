@@ -10,6 +10,8 @@ namespace _Game.Development.Controller.Board
     {
         private void Save()
         {
+            if (!BoardExtension.Statics.IsBoardInitialized) return;
+            
             var itemSaveDataList = CreateItemSaveDataList();
 
             BoardExtension.Statics.BoardJsonData.itemSaveDataList = itemSaveDataList;

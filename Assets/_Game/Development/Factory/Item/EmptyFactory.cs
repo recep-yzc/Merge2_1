@@ -20,7 +20,7 @@ namespace _Game.Development.Factory.Item
 
         private void Awake()
         {
-            ItemType = ItemType.None;
+            ItemType = ItemType.Empty;
 
             CreateItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateItemSaveData<EmptyItemSaveData>);
             CreateItemByItemId.TryAdd(ItemType.ToInt(), CreateItem);

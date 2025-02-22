@@ -54,7 +54,7 @@ namespace _Game.Development.Factory.Item
 
             return item;
         }
-
+        
         protected override T CreateItemSaveData<T>(Vector2 coordinate, ItemDataSo itemDataSo)
         {
             var dataSo = (GeneratorItemDataSo)itemDataSo;

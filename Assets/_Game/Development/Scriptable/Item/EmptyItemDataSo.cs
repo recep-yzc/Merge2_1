@@ -8,7 +8,7 @@ namespace _Game.Development.Scriptable.Item
     {
         public EmptyItemDataSo()
         {
-            itemType = ItemType.None;
+            itemType = ItemType.Empty;
         }
 
         public override int GetSpecialId()
