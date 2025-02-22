@@ -35,10 +35,10 @@ namespace _Game.Development.Object.Grid
                 var itemDataSo = _boardEditController.GetItemDataSoByItemSaveData(itemSaveData);
 
                 var iconPath = itemDataSo.GetIconPath();
-                var coordinate = itemSaveData.coordinate;
+                var coordinate = itemSaveData.coordinate.ToVector2();
 
-                Gizmos.DrawIcon(coordinate.ToVector2(), iconPath, true);
-                Gizmos.DrawWireCube(coordinate.ToVector2(), VectorExtension.Size);
+                Gizmos.DrawIcon(coordinate, iconPath, true);
+                Gizmos.DrawWireCube(coordinate, VectorExtension.Size);
             }
         }
 

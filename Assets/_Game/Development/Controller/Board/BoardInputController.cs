@@ -24,15 +24,18 @@ namespace _Game.Development.Controller.Board
                 return;
             }
 
+            _mouseDownGridData = gridData;
+
+            var iClickable = gridData.GetComponent<IClickable>();
+            if (iClickable is null) return;
+
             _isDoubleClick = _mouseDownGridData == gridData;
 
             BoardExtension.Selector.RequestSetPosition.Invoke(gridData.coordinate);
             BoardExtension.Selector.RequestChangeVisibility.Invoke(true);
 
-            gridData.GetComponent<IClickable>()?.MouseDown();
+            iClickable.MouseDown();
             _draggable = gridData.GetComponent<IDraggable>();
-
-            _mouseDownGridData = gridData;
         }
 
         private void OnMouseDragEvent(Vector2 vector2)
@@ -54,10 +57,10 @@ namespace _Game.Development.Controller.Board
         }
 
         private void OnMouseUpEvent(Vector2 vector2)
-        { 
+        {
             var mouseDownGridData = _mouseDownGridData;
             if (mouseDownGridData?.item is null) return;
-            
+
             var cameraPosition = _mainCamera.GetCameraPosition();
             var mouseUpGridData = BoardExtension.GetGridDataByCoordinate(cameraPosition);
 
@@ -74,16 +77,11 @@ namespace _Game.Development.Controller.Board
                 BoardExtension.Selector.RequestSetPosition.Invoke(mouseDownGridData.coordinate);
                 BoardExtension.Selector.RequestChangeVisibility.Invoke(true);
                 BoardExtension.Selector.RequestScaleUpDown.Invoke();
-                
+
                 if (!_isDragActive && _isDoubleClick)
-                {
                     HandleGenerateItem(mouseDownGridData);
-                }
                 else
-                {
                     HandleMouseUpOnSameGrid(mouseDownGridData);
-                }
-                _boardSaveController.TrySaveBoardData();
                 return;
             }
 
@@ -94,14 +92,12 @@ namespace _Game.Development.Controller.Board
 
             BoardExtension.Selector.RequestSetPosition.Invoke(mouseUpGridData.coordinate);
             BoardExtension.Selector.RequestChangeVisibility.Invoke(true);
-
-            _boardSaveController.TrySaveBoardData();
         }
 
         private void HandleGenerateItem(GridData mouseDownGridData)
         {
             _boardGenerateController.TryGenerate(mouseDownGridData);
-            
+
             _isDragActive = false;
             _draggable = null;
         }
@@ -109,7 +105,7 @@ namespace _Game.Development.Controller.Board
         private void HandleMouseUpOnEmptyGrid(GridData mouseDownGridData)
         {
             _boardTransferController.TryTransfer(TransferAction.Move, mouseDownGridData);
-            
+
             _isDragActive = false;
             _draggable = null;
         }
@@ -119,8 +115,8 @@ namespace _Game.Development.Controller.Board
             _boardTransferController.TryTransfer(TransferAction.Move, mouseDownGridData);
             _boardScaleUpDownController.TryScaleUpDown(mouseDownGridData);
 
-            mouseDownGridData.GetComponent<IClickable>().MouseUp();
-            
+            mouseDownGridData.GetComponent<IClickable>()?.MouseUp();
+
             _isDragActive = false;
             _draggable = null;
         }
@@ -143,8 +139,8 @@ namespace _Game.Development.Controller.Board
             _boardTransferController.TryTransfer(TransferAction.Swap, mouseDownGridData, mouseUpGridData);
             _boardScaleUpDownController.TryScaleUpDown(mouseUpGridData);
 
-            mouseUpGridData.GetComponent<IClickable>().MouseUp();
-            
+            mouseUpGridData.GetComponent<IClickable>()?.MouseUp();
+
             _isDragActive = false;
             _draggable = null;
         }
@@ -152,7 +148,7 @@ namespace _Game.Development.Controller.Board
         private void HandleItemMerge(GridData mouseDownGridData, GridData mouseUpGridData)
         {
             _boardMergeController.TryMerge(mouseDownGridData, mouseUpGridData);
-            
+
             _isDragActive = false;
             _draggable = null;
         }

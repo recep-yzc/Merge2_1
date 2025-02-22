@@ -1,5 +1,5 @@
 ﻿using System;
-using _Game.Development.Serializable.Grid;
+using _Game.Development.Static;
 
 namespace _Game.Development.Serializable.Item
 {
@@ -8,7 +8,7 @@ namespace _Game.Development.Serializable.Item
     {
         public string lastUsingDate;
 
-        public GeneratorItemSaveData(SerializableVector2 coordinate, int level, int itemId, int specialId,
+        public GeneratorItemSaveData(VectorExtension.JsonVector2 coordinate, int level, int itemId, int specialId,
             string lastUsingDate) : base(coordinate, level, itemId, specialId)
         {
             this.lastUsingDate = lastUsingDate;

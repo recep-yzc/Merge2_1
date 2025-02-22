@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace _Game.Development.Object.Item
 {
-    public abstract class Item : MonoBehaviour, IItem, IPool, IClickable, IDraggable, IScaleUpDown, IMoveable
+    public abstract class Item : MonoBehaviour, IItem, IPool, IScaleUpDown, IMoveable
     {
         [Header("References")] [SerializeField]
         private SpriteRenderer sprIcon;
@@ -29,7 +29,8 @@ namespace _Game.Development.Object.Item
         #region Parameters
 
         protected readonly float DragMoveSpeed = 15f;
-        protected ItemDataSo ItemDataSo { get; set; }
+        protected Vector2 Position;
+        protected ItemDataSo ItemDataSo { get; private set; }
 
         private Action _backPoolAction;
         private CancellationTokenSource _cancellationScaleUpDownTokenSource;
@@ -60,16 +61,12 @@ namespace _Game.Development.Object.Item
         }
 
 
-        public virtual void SetItemDataSo(ItemDataSo itemDataSo)
+        public void SetItemDataSo(ItemDataSo itemDataSo)
         {
             ItemDataSo = itemDataSo;
         }
 
         public virtual void FetchItemData()
-        {
-        }
-
-        public virtual void FetchCustomParameters(params object[] parameters)
         {
         }
 
@@ -93,14 +90,6 @@ namespace _Game.Development.Object.Item
         {
             _backPoolAction?.Invoke();
         }
-
-        #endregion
-
-        #region Clickable
-
-        public abstract void MouseDown();
-        public abstract void MouseUp();
-        public abstract void Drag(Vector2 vector2);
 
         #endregion
 
@@ -129,6 +118,7 @@ namespace _Game.Development.Object.Item
 
         public async UniTask MoveAsync(Vector2 coordinate, MoveDataSo moveDataSo)
         {
+            Position = coordinate;
             DisposeMoveToken();
 
             _cancellationMoveTokenSource = new CancellationTokenSource();

@@ -1,54 +1,41 @@
-﻿using _Game.Development.Interface.Item;
-using _Game.Development.Scriptable.Item;
-using _Game.Development.Serializable.Grid;
+﻿using _Game.Development.Interface.Ability;
+using _Game.Development.Interface.Item;
 using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
 using UnityEngine;
 
 namespace _Game.Development.Object.Item
 {
-    public class Product : Item, IProduct
+    public class Product : Item, IProduct, IDraggable, IClickable
     {
-        #region Parameters
-
-        private ProductItemDataSo _productItemDataSo;
-
-        #endregion
-
-        #region Item
-
-        public override void SetItemDataSo(ItemDataSo itemDataSo)
-        {
-            base.SetItemDataSo(itemDataSo);
-            _productItemDataSo = (ProductItemDataSo)itemDataSo;
-        }
-        
-        public override ItemSaveData GetItemSaveData()
-        {
-            var gridData = BoardExtension.GetGridDataByCoordinate(transform.position);
-            return new ProductItemSaveData(new SerializableVector2(gridData.coordinate), gridData.itemDataSo.level,
-                gridData.itemDataSo.itemType.ToInt(), gridData.itemDataSo.GetSpecialId());
-        }
-        
-        #endregion
-
         #region Draggable
 
-        public override void Drag(Vector2 vector2)
+        public void Drag(Vector2 vector2)
         {
             transform.position = Vector2.Lerp(transform.position, vector2, Time.deltaTime * DragMoveSpeed);
         }
 
         #endregion
 
+        #region Item
+
+        public override ItemSaveData GetItemSaveData()
+        {
+            var gridData = BoardExtension.GetGridDataByCoordinate(transform.position);
+            return new ProductItemSaveData(gridData.coordinate.ToJsonVector2(), gridData.itemDataSo.level,
+                gridData.itemDataSo.itemType.ToInt(), gridData.itemDataSo.GetSpecialId());
+        }
+
+        #endregion
+
         #region Clickable
 
-        public override void MouseDown()
+        public void MouseDown()
         {
             SetSpriteOrder(1);
         }
 
-        public override void MouseUp()
+        public void MouseUp()
         {
             SetSpriteOrder(0);
         }

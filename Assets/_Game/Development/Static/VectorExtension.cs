@@ -30,5 +30,33 @@ namespace _Game.Development.Static
                 _ => throw new ArgumentOutOfRangeException(nameof(directionId))
             };
         }
+
+        public static JsonVector2 ToJsonVector2(this Vector2 vector)
+        {
+            return new JsonVector2(vector.x, vector.y);
+        }
+
+        public static Vector2 ToVector2(this JsonVector2 jsonVector)
+        {
+            return new Vector2(jsonVector.x, jsonVector.y);
+        }
+
+        [Serializable]
+        public class JsonVector2
+        {
+            public float x;
+            public float y;
+
+            public JsonVector2(float x, float y)
+            {
+                this.x = x;
+                this.y = y;
+            }
+
+            public Vector2 ToVector2()
+            {
+                return new Vector2(x, y);
+            }
+        }
     }
 }

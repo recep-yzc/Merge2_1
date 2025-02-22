@@ -6,5 +6,7 @@ namespace _Game.Development.Interface.Item
     {
         public int GetSpawnAmount();
         public ItemDataSo Generate();
+
+        public void FetchLastUsingDate(string date);
     }
 }

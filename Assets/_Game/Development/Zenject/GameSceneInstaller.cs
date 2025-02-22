@@ -17,7 +17,7 @@ namespace _Game.Development.Zenject
             Container.BindInstance(FindObjectOfType<ProductFactory>());
 
             #endregion
-            
+
             #region Board
 
             Container.BindInstance(FindObjectOfType<BoardEditController>());

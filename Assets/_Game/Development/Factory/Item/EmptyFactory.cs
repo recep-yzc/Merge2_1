@@ -2,7 +2,6 @@
 using _Game.Development.Interface.Item;
 using _Game.Development.Object.Item;
 using _Game.Development.Scriptable.Item;
-using _Game.Development.Serializable.Grid;
 using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
 using UnityEngine;
@@ -34,8 +33,9 @@ namespace _Game.Development.Factory.Item
             var item = GetOrCreateItemInPool(itemPrefab.gameObject);
             var iEmpty = item.GetComponent<IEmpty>();
 
-            var generatorItemSaveData = (EmptyItemSaveData)itemSaveData;
-            var itemDataSo = _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
+            var emptyItemSaveData = (EmptyItemSaveData)itemSaveData;
+            var itemDataSo =
+                _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
 
             iEmpty.SetParent(transform);
             iEmpty.SetPosition(itemSaveData.coordinate.ToVector2());
@@ -47,10 +47,10 @@ namespace _Game.Development.Factory.Item
             return item;
         }
 
-        protected override T CreateItemSaveData<T>(SerializableVector2 coordinate, ItemDataSo itemDataSo)
+        protected override T CreateItemSaveData<T>(Vector2 coordinate, ItemDataSo itemDataSo)
         {
             var dataSo = (EmptyItemDataSo)itemDataSo;
-            return new EmptyItemSaveData(coordinate, dataSo.level, dataSo.itemType.ToInt(), 0) as T;
+            return new EmptyItemSaveData(coordinate.ToJsonVector2(), dataSo.level, dataSo.itemType.ToInt(), 0) as T;
         }
     }
 }

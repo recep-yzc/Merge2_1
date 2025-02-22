@@ -25,9 +25,10 @@ namespace _Game.Development.Controller.Board
 
             mouseDownGridData.itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
             mouseDownGridData.GetComponent<IPool>().PlayDespawnPool();
-            
-           var itemSaveData= ItemFactory.CreateItemSaveDataByItemId[0].Invoke(new SerializableVector2(mouseDownGridData.coordinate),mouseDownGridData.itemDataSo);
-           mouseDownGridData.item = ItemFactory.CreateItemByItemId[0].Invoke(itemSaveData);
+
+            var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[0]
+                .Invoke(mouseDownGridData.coordinate, mouseDownGridData.itemDataSo);
+            mouseDownGridData.item = ItemFactory.CreateItemByItemId[0].Invoke(itemSaveData);
         }
 
         #region Parameters

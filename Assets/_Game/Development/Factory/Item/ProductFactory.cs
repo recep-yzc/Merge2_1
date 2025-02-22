@@ -2,7 +2,6 @@
 using _Game.Development.Interface.Item;
 using _Game.Development.Object.Item;
 using _Game.Development.Scriptable.Item;
-using _Game.Development.Serializable.Grid;
 using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
 using UnityEngine;
@@ -59,10 +58,11 @@ namespace _Game.Development.Factory.Item
             return item;
         }
 
-        protected override T CreateItemSaveData<T>(SerializableVector2 coordinate, ItemDataSo itemDataSo)
+        protected override T CreateItemSaveData<T>(Vector2 coordinate, ItemDataSo itemDataSo)
         {
             var dataSo = (ProductItemDataSo)itemDataSo;
-            return new ProductItemSaveData(coordinate, dataSo.level, dataSo.itemType.ToInt(), dataSo.productType.ToInt()) as T;
+            return new ProductItemSaveData(coordinate.ToJsonVector2(), dataSo.level, dataSo.itemType.ToInt(),
+                dataSo.productType.ToInt()) as T;
         }
     }
 }

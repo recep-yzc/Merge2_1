@@ -12,6 +12,8 @@ namespace _Game.Development.Controller.Board
 {
     public class BoardLoadController : MonoBehaviour
     {
+        public List<GridData> GridDataList = new();
+
         #region Parameters
 
         [Inject] private AllItemDataSo _allItemDataSo;
@@ -23,7 +25,6 @@ namespace _Game.Development.Controller.Board
             var json = BoardExtension.GetBoardJson();
             var boardJsonData = await UniTask.RunOnThreadPool(() => json.ConvertToBoardJsonData());
             BoardExtension.Statics.BoardJsonData = boardJsonData;
-
             await UniTask.DelayFrame(1);
         }
 
@@ -44,6 +45,8 @@ namespace _Game.Development.Controller.Board
                 var gridData = CreateGridDataByItemSaveData(itemSaveData);
                 if (gridData != null) BoardExtension.Statics.GridDataList.Add(gridData);
             }
+
+            GridDataList = BoardExtension.Statics.GridDataList;
         }
 
         private static void FetchGridNeighbors()
@@ -57,7 +60,8 @@ namespace _Game.Development.Controller.Board
             if (!ItemFactory.CreateItemByItemId.TryGetValue(itemSaveData.itemId, out var createItemFunc))
                 return null;
 
-            var itemDataSo = _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
+            var itemDataSo =
+                _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
             var itemGameObject = createItemFunc.Invoke(itemSaveData);
 
             return new GridData(itemSaveData.coordinate.ToVector2(), itemGameObject, itemDataSo);

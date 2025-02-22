@@ -3,7 +3,6 @@ using System.IO;
 using _Game.Development.Factory.Item;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Board;
-using _Game.Development.Serializable.Grid;
 using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
 using _Game.Development.Ui.Grid;
@@ -63,7 +62,8 @@ namespace _Game.Development.Controller.Board
             for (var y = 0; y < _boardJsonData.columns; y++)
             {
                 var itemDataSo = _allItemDataSo.GetItemDataByIds(itemId, specialId, level);
-                var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemId].Invoke(new SerializableVector2(new Vector2(x, y) - offset), itemDataSo);
+                var coordinate = new Vector2(x, y) - offset;
+                var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemId].Invoke(coordinate, itemDataSo);
                 _boardJsonData.itemSaveDataList.Add(itemSaveData);
             }
         }
@@ -173,7 +173,7 @@ namespace _Game.Development.Controller.Board
                 if (itemSaveData == null || index == -1) return;
 
                 var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[_selectedItemDataSo.itemType.ToInt()]
-                    .Invoke(itemSaveData.coordinate, _selectedItemDataSo);
+                    .Invoke(itemSaveData.coordinate.ToVector2(), _selectedItemDataSo);
                 _boardJsonData.itemSaveDataList[index] = newItemSaveData;
 
                 SaveBoardJson();
@@ -185,7 +185,7 @@ namespace _Game.Development.Controller.Board
 
                 var itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
                 var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemDataSo.itemType.ToInt()]
-                    .Invoke(itemSaveData.coordinate, itemDataSo);
+                    .Invoke(itemSaveData.coordinate.ToVector2(), itemDataSo);
                 _boardJsonData.itemSaveDataList[index] = newItemSaveData;
 
                 SaveBoardJson();
