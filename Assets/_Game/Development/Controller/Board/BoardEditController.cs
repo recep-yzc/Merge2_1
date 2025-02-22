@@ -7,7 +7,6 @@ using _Game.Development.Serializable.Grid;
 using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
 using _Game.Development.Ui.Grid;
-using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -73,10 +72,8 @@ namespace _Game.Development.Controller.Board
         [Button]
         public void SaveBoardJson()
         {
-            var json = JsonConvert.SerializeObject(
-                new BoardJsonData(_boardJsonData.rows, _boardJsonData.columns, _boardJsonData.itemSaveDataList),
-                Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
-
+            var json = new BoardJsonData(_boardJsonData.rows, _boardJsonData.columns, _boardJsonData.itemSaveDataList)
+                .ConvertToJson();
             File.WriteAllText(BoardExtension.JsonPath, json);
             AssetDatabase.SaveAssets();
         }
@@ -176,7 +173,8 @@ namespace _Game.Development.Controller.Board
                 var itemSaveData = GetItemSaveData(out var index);
                 if (itemSaveData == null || index == -1) return;
 
-                var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[_selectedItemDataSo.itemType.ToInt()].Invoke(itemSaveData.coordinate, _selectedItemDataSo);
+                var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[_selectedItemDataSo.itemType.ToInt()]
+                    .Invoke(itemSaveData.coordinate, _selectedItemDataSo);
                 _boardJsonData.itemSaveDataList[index] = newItemSaveData;
 
                 SaveBoardJson();
@@ -187,7 +185,8 @@ namespace _Game.Development.Controller.Board
                 if (itemSaveData == null || index == -1) return;
 
                 var itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
-                var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemDataSo.itemType.ToInt()].Invoke(itemSaveData.coordinate, itemDataSo);
+                var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemDataSo.itemType.ToInt()]
+                    .Invoke(itemSaveData.coordinate, itemDataSo);
                 _boardJsonData.itemSaveDataList[index] = newItemSaveData;
 
                 SaveBoardJson();

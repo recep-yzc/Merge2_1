@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using _Game.Development.Enum.Item;
 using _Game.Development.Interface.Item;
 using _Game.Development.Object.Item;
@@ -16,7 +15,7 @@ namespace _Game.Development.Factory.Item
     {
         [Header("References")] [SerializeField]
         private Generator generatorPrefab;
-        
+
         #region Unity Action
 
         private void Awake()

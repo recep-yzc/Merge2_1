@@ -19,16 +19,15 @@ namespace _Game.Development.Controller.Board
             Input.multiTouchEnabled = false;
 
             await Initialize();
-            
+
             // sahne yüklenebilir
         }
 
         private async UniTask Initialize()
         {
-            _boardLoadController.FetchBoardJsonData();
+            await _boardLoadController.InitializeBoardJsonData();
             await _boardLoadController.InitializeBoard(); // board oluşturulmasını bekler 
             BoardExtension.Statics.IsBoardInitialized = true;
-
         }
     }
 }

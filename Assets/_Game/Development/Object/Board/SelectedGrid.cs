@@ -28,12 +28,13 @@ namespace _Game.Development.Object.Board
 
         private async UniTask RequestScaleUpDown()
         {
-            await transform.DOScale(force, duration)
+            var tween = transform.DOScale(force, duration)
                 .From(1)
                 .SetLoops(2, LoopType.Yoyo)
                 .SetLink(gameObject)
-                .SetEase(ease)
-                .AsyncWaitForCompletion();
+                .SetEase(ease);
+
+            await tween.AsyncWaitForCompletion();
         }
 
         #region Unity Action

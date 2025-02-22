@@ -1,4 +1,7 @@
-﻿using _Game.Development.Interface.Ability;
+﻿using System;
+using System.Collections.Generic;
+using _Game.Development.Enum.Board;
+using _Game.Development.Interface.Ability;
 using _Game.Development.Scriptable.Ability;
 using _Game.Development.Serializable.Grid;
 using Cysharp.Threading.Tasks;
@@ -9,48 +12,48 @@ namespace _Game.Development.Controller.Board
 {
     public class BoardTransferController : MonoBehaviour
     {
-        #region Parameters
+        #region Unity Action
 
-        [Inject] private MoveDataSo _moveDataSo;
+        private void Start()
+        {
+            TransferActionDict.Add(TransferAction.Move, Move);
+            TransferActionDict.Add(TransferAction.Swap, Swap);
+        }
 
         #endregion
 
-        private void SwapGridDataProperties(GridData gridData, GridData newGridData)
+        private void Move(params object[] parameters)
         {
-            (newGridData.item, gridData.item) = (gridData.item, newGridData.item);
-            (newGridData.itemDataSo, gridData.itemDataSo) = (gridData.itemDataSo, newGridData.itemDataSo);
+            if (parameters[0] is not GridData gridData) return;
+
+            gridData.GetComponent<IMoveable>().MoveAsync(gridData.coordinate, _moveDataSo).Forget();
         }
 
-        public async UniTask<bool> TryTransfer(GridData targetGridData, GridData clickedGridData)
+        private void Swap(params object[] parameters)
         {
-            if (clickedGridData?.item is null)return false;
-            
-            var iClickedMove = clickedGridData.GetComponent<IMove>();
-            
-            if (targetGridData is null)
-            {
-                await iClickedMove.MoveAsync(clickedGridData.coordinate, _moveDataSo);
-                return false;
-            }
+            if (parameters[0] is not GridData gridDataFirst || parameters[1] is not GridData gridDataSecond) return;
 
-            var iMove = targetGridData.item != null ? targetGridData.GetComponent<IMove>() : null;
+            (gridDataSecond.item, gridDataFirst.item) = (gridDataFirst.item, gridDataSecond.item);
+            (gridDataSecond.itemDataSo, gridDataFirst.itemDataSo) =
+                (gridDataFirst.itemDataSo, gridDataSecond.itemDataSo);
 
-            var checkIsMaxLevel = targetGridData.itemDataSo.nextItemDataSo == null;
-            var checkIsSameItemType = targetGridData.itemDataSo.itemType == clickedGridData.itemDataSo.itemType;
-            var checkIsSameSpecialId =
-                targetGridData.itemDataSo.GetSpecialId() == clickedGridData.itemDataSo.GetSpecialId();
-            var checkIsSameLevel = targetGridData.itemDataSo.level == clickedGridData.itemDataSo.level;
-            var isSameGrid = targetGridData.coordinate == clickedGridData.coordinate;
+            if (gridDataFirst.item is not null)
+                gridDataFirst.GetComponent<IMoveable>().MoveAsync(gridDataFirst.coordinate, _moveDataSo).Forget();
 
-            if (!checkIsMaxLevel && checkIsSameItemType && checkIsSameSpecialId && checkIsSameLevel &&
-                !isSameGrid) return true;
-
-            SwapGridDataProperties(targetGridData, clickedGridData);
-            
-            iMove?.MoveAsync(clickedGridData.coordinate, _moveDataSo).Forget();
-            iClickedMove.MoveAsync(targetGridData.coordinate, _moveDataSo).Forget();
-
-            return false;
+            if (gridDataSecond.item is not null)
+                gridDataSecond.GetComponent<IMoveable>().MoveAsync(gridDataSecond.coordinate, _moveDataSo).Forget();
         }
+
+        public void TryTransfer(TransferAction transferAction, params object[] parameters)
+        {
+            TransferActionDict[transferAction]?.Invoke(parameters);
+        }
+
+        #region Parameters
+
+        [Inject] private MoveDataSo _moveDataSo;
+        private readonly Dictionary<TransferAction, Action<object[]>> TransferActionDict = new();
+
+        #endregion
     }
 }

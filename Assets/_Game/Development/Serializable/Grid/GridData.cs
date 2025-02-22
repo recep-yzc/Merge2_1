@@ -22,13 +22,13 @@ namespace _Game.Development.Serializable.Grid
             this.itemDataSo = itemDataSo;
         }
 
+        public Vector2 BottomLeft => coordinate - VectorExtension.HalfSize;
+        public Vector2 TopRight => coordinate + VectorExtension.HalfSize;
+
         public void CopyNeighborGridData(GridData[] gridDataArray)
         {
             NeighborGridDataArray = gridDataArray.ToArray();
         }
-
-        public Vector2 BottomLeft => coordinate - VectorExtension.HalfSize;
-        public Vector2 TopRight => coordinate + VectorExtension.HalfSize;
 
         public T GetComponent<T>()
         {

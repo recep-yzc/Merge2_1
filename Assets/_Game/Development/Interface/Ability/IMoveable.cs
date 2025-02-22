@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Game.Development.Interface.Ability
 {
-    public interface IMove
+    public interface IMoveable
     {
         public UniTask MoveAsync(Vector2 coordinate, MoveDataSo moveDataSo);
     }

@@ -288,17 +288,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generatorPrefab: {fileID: 7171969435475136944, guid: b029989dad5849e44bf7d2c3ce8f0612,
     type: 3}
-  itemDataSoList:
-  - {fileID: 11400000, guid: 1e3828726bfe16e42a1c14b4dc1ec9a7, type: 2}
-  - {fileID: 11400000, guid: 4582ee5b254735e4db2ce1258c7f96c1, type: 2}
-  - {fileID: 11400000, guid: 8195981ec0de6084eae9402aabe8981d, type: 2}
-  - {fileID: 11400000, guid: 4e2ed56a27f321c49ad094515707e576, type: 2}
-  - {fileID: 11400000, guid: 8236096266605df4eb52616da34b6bcd, type: 2}
-  - {fileID: 11400000, guid: cf93f6f5d7f3b8e41951b9b2049930ad, type: 2}
-  - {fileID: 11400000, guid: 222b15e12d1d5f541998e48e74630417, type: 2}
-  - {fileID: 11400000, guid: 9eccb9469783aed45a86603f5b0be8f4, type: 2}
-  - {fileID: 11400000, guid: faea5f3e6220867449363d3787d79850, type: 2}
-  - {fileID: 11400000, guid: e4ef475a5ae79554884c82007f3b9270, type: 2}
 --- !u!1 &735006703
 GameObject:
   m_ObjectHideFlags: 0
@@ -666,7 +655,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9061170fc85849bcbbcc4d3605b81729, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardEditController: {fileID: 1095182653}
 --- !u!114 &1095182656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -679,7 +667,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c9a4fa7da9647fd90ef381c48c1bb66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardEditController: {fileID: 1095182653}
 --- !u!1 &1548303013
 GameObject:
   m_ObjectHideFlags: 0

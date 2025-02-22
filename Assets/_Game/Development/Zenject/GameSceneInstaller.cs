@@ -18,10 +18,11 @@ namespace _Game.Development.Zenject
 
             Container.BindInstance(FindObjectOfType<BoardController>());
             Container.BindInstance(FindObjectOfType<BoardLoadController>());
-
+            Container.BindInstance(FindObjectOfType<BoardSaveController>());
 
             Container.BindInstance(FindObjectOfType<BoardTransferController>());
             Container.BindInstance(FindObjectOfType<BoardMergeController>());
+            Container.BindInstance(FindObjectOfType<BoardScaleUpDownController>());
         }
     }
 }

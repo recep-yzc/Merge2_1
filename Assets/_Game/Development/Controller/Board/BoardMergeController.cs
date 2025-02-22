@@ -1,4 +1,6 @@
-﻿using _Game.Development.Interface.Item;
+﻿using _Game.Development.Interface.Ability;
+using _Game.Development.Interface.Item;
+using _Game.Development.Scriptable.Ability;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Grid;
 using UnityEngine;
@@ -8,23 +10,28 @@ namespace _Game.Development.Controller.Board
 {
     public class BoardMergeController : MonoBehaviour
     {
+        public void TryMerge(GridData mouseDownGridData, GridData mouseUpGridData)
+        {
+            var nexItemDataSo = mouseUpGridData.itemDataSo.nextItemDataSo;
+
+            mouseUpGridData.itemDataSo = nexItemDataSo;
+            mouseUpGridData.GetComponent<IScaleUpDown>().ScaleUpDownAsync(_scaleUpDownDataSo).Forget();
+
+            var iItem = mouseUpGridData.GetComponent<IItem>();
+            iItem.SetSprite(nexItemDataSo.icon);
+            iItem.SetItemDataSo(mouseUpGridData.itemDataSo);
+            iItem.FetchItemData();
+
+            mouseDownGridData.itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
+            mouseDownGridData.GetComponent<IPool>().PlayDespawnPool();
+            mouseDownGridData.item = null;
+        }
+
         #region Parameters
 
         [Inject] private AllItemDataSo _allItemDataSo;
+        [Inject] private ScaleUpDownDataSo _scaleUpDownDataSo;
 
         #endregion
-
-        public void TryMerge(GridData gridData, GridData clickedGridData)
-        {
-            var nexItemDataSo = gridData.itemDataSo.nextItemDataSo;
-
-            gridData.itemDataSo = nexItemDataSo;
-            var iItem = gridData.GetComponent<IItem>();
-            iItem.SetSprite(nexItemDataSo.icon);
-
-            clickedGridData.itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
-            clickedGridData.GetComponent<IPool>().PlayDespawnPool();
-            clickedGridData.item = null;
-        }
     }
 }

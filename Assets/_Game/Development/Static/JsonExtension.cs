@@ -6,17 +6,23 @@ namespace _Game.Development.Static
 {
     public static class JsonExtension
     {
-        public static BoardJsonData ConvertToBoardJsonData(this TextAsset json)
+        public static string ConvertToJson(this BoardJsonData boardJsonData)
         {
-            return JsonConvert.DeserializeObject<BoardJsonData>(json.text, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All
-            });
+            return JsonConvert.SerializeObject(boardJsonData, Formatting.None,
+                new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
         }
 
         public static BoardJsonData ConvertToBoardJsonData(this string json)
         {
             return JsonConvert.DeserializeObject<BoardJsonData>(json, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+        }
+
+        public static BoardJsonData ConvertToBoardJsonData(this TextAsset json)
+        {
+            return JsonConvert.DeserializeObject<BoardJsonData>(json.text, new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All
             });

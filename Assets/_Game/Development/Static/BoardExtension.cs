@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using _Game.Development.Enum.Grid;
 using _Game.Development.Serializable.Board;
@@ -12,7 +13,7 @@ namespace _Game.Development.Static
     public static class BoardExtension
     {
         public static string JsonPath => Application.dataPath + "/Board.json";
-        
+
         public static GridData GetGridDataByCoordinate(Vector2 coordinate)
         {
             return Statics.GridDataList.FirstOrDefault(tileData =>
@@ -34,23 +35,36 @@ namespace _Game.Development.Static
 
             return gridDataArray;
         }
-        
-        
+
+
         public static class Statics
         {
             public static List<GridData> GridDataList { get; set; }
             public static BoardJsonData BoardJsonData { get; set; }
             public static bool IsBoardInitialized { get; set; }
         }
-        
-     
-        
-        
+
         public abstract class Selector
         {
             public static Action<bool> RequestChangeVisibility { get; set; }
             public static Action<Vector2> RequestSetPosition { get; set; }
             public static Func<UniTask> RequestScaleUpDown { get; set; }
         }
+
+        #region PlayerPrefs
+
+        public static void SaveBoardJson(string json)
+        {
+            PlayerPrefs.SetString("BoardJsonData", json);
+        }
+
+        public static string GetBoardJson()
+        {
+            return !PlayerPrefs.HasKey("BoardJsonData")
+                ? File.ReadAllText(JsonPath)
+                : PlayerPrefs.GetString("BoardJsonData");
+        }
+
+        #endregion
     }
 }

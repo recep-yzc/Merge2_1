@@ -3,13 +3,14 @@ using System.Threading;
 using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
 using _Game.Development.Scriptable.Ability;
+using _Game.Development.Scriptable.Item;
 using _Game.Development.Static;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Game.Development.Object.Item
 {
-    public abstract class Item : MonoBehaviour, IItem, IPool, IClickable, IScaleUpDown, IMove
+    public abstract class Item : MonoBehaviour, IItem, IPool, IClickable, IDraggable, IScaleUpDown, IMoveable
     {
         [Header("References")] [SerializeField]
         private SpriteRenderer sprIcon;
@@ -26,9 +27,10 @@ namespace _Game.Development.Object.Item
 
         #region Parameters
 
-        protected bool IsHolding { get; set; }
-        private Action _backPoolAction;
         protected readonly float DragMoveSpeed = 15f;
+        protected ItemDataSo ItemDataSo { get; set; }
+
+        private Action _backPoolAction;
         private CancellationTokenSource _cancellationScaleUpDownToken;
         private CancellationTokenSource _cancellationMoveToken;
 
@@ -49,6 +51,15 @@ namespace _Game.Development.Object.Item
         public void SetSprite(Sprite icon)
         {
             sprIcon.sprite = icon;
+        }
+
+        public virtual void SetItemDataSo(ItemDataSo itemDataSo)
+        {
+            ItemDataSo = itemDataSo;
+        }
+
+        public virtual void FetchItemData()
+        {
         }
 
         protected void SetSpriteOrder(int order)
@@ -79,17 +90,9 @@ namespace _Game.Development.Object.Item
 
         #region Clickable
 
-        public virtual void OnDown()
-        {
-            IsHolding = true;
-        }
-
-        public virtual void OnUp()
-        {
-            IsHolding = false;
-        }
-
-        public abstract void OnDrag(Vector2 vector2);
+        public abstract void MouseDown();
+        public abstract void MouseUp();
+        public abstract void Drag(Vector2 vector2);
 
         #endregion
 
