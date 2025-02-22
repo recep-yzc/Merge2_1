@@ -139,7 +139,7 @@
       },
       {
         "$type": "_Game.Development.Serializable.Item.GeneratorItemSaveData, Assembly-CSharp",
-        "lastUsingDate": "01/01/0001 00:00:00",
+        "lastUsingDate": "0001-01-01T00:00:00Z",
         "coordinate": {
           "$type": "_Game.Development.Static.VectorExtension+JsonVector2, Assembly-CSharp",
           "x": 0.0,
@@ -151,7 +151,7 @@
       },
       {
         "$type": "_Game.Development.Serializable.Item.GeneratorItemSaveData, Assembly-CSharp",
-        "lastUsingDate": "01/01/0001 00:00:00",
+        "lastUsingDate": "0001-01-01T00:00:00Z",
         "coordinate": {
           "$type": "_Game.Development.Static.VectorExtension+JsonVector2, Assembly-CSharp",
           "x": 0.0,
@@ -185,7 +185,7 @@
       },
       {
         "$type": "_Game.Development.Serializable.Item.GeneratorItemSaveData, Assembly-CSharp",
-        "lastUsingDate": "01/01/0001 00:00:00",
+        "lastUsingDate": "0001-01-01T00:00:00Z",
         "coordinate": {
           "$type": "_Game.Development.Static.VectorExtension+JsonVector2, Assembly-CSharp",
           "x": 1.0,
@@ -197,7 +197,7 @@
       },
       {
         "$type": "_Game.Development.Serializable.Item.GeneratorItemSaveData, Assembly-CSharp",
-        "lastUsingDate": "01/01/0001 00:00:00",
+        "lastUsingDate": "0001-01-01T00:00:00Z",
         "coordinate": {
           "$type": "_Game.Development.Static.VectorExtension+JsonVector2, Assembly-CSharp",
           "x": 1.0,
@@ -242,7 +242,7 @@
       },
       {
         "$type": "_Game.Development.Serializable.Item.GeneratorItemSaveData, Assembly-CSharp",
-        "lastUsingDate": "01/01/0001 00:00:00",
+        "lastUsingDate": "0001-01-01T00:00:00Z",
         "coordinate": {
           "$type": "_Game.Development.Static.VectorExtension+JsonVector2, Assembly-CSharp",
           "x": 2.0,

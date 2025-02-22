@@ -8,9 +8,9 @@ namespace _Game.Development.Object.Item
     {
         #region Item
 
-        public override ItemSaveData GetItemSaveData()
+        public override ItemSaveData CreateItemSaveData()
         {
-            var gridData = BoardExtension.GetGridDataByCoordinate(Position);
+            var gridData = BoardExtension.GetGridDataByCoordinate(SelfCoordinate);
             return new EmptyItemSaveData(gridData.coordinate.ToJsonVector2(), gridData.itemDataSo.level,
                 gridData.itemDataSo.itemType.ToInt(), gridData.itemDataSo.GetSpecialId());
         }

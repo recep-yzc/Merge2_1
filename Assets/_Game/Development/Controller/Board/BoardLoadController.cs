@@ -12,11 +12,10 @@ namespace _Game.Development.Controller.Board
 {
     public class BoardLoadController : MonoBehaviour
     {
-        public List<GridData> GridDataList = new();
-
         #region Parameters
 
         [Inject] private AllItemDataSo _allItemDataSo;
+        public List<GridData> gridDataList = new();
 
         #endregion
 
@@ -46,7 +45,7 @@ namespace _Game.Development.Controller.Board
                 if (gridData != null) BoardExtension.Statics.GridDataList.Add(gridData);
             }
 
-            GridDataList = BoardExtension.Statics.GridDataList;
+            gridDataList = BoardExtension.Statics.GridDataList;
         }
 
         private static void FetchGridNeighbors()

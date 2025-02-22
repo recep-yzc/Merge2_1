@@ -99,10 +99,9 @@ namespace _Game.Development.Controller.Board
 
         private ItemSaveData GetItemSaveDataByCoordinate(Vector3 coordinate, out int index)
         {
-            for (var i = 0; i < _boardJsonData?.itemSaveDataList.Count; i++)
+            for (var i = 0; i < _boardJsonData.itemSaveDataList.Count; i++)
             {
                 var itemSaveData = _boardJsonData.itemSaveDataList[i];
-
                 var bottomLeft = itemSaveData.coordinate.ToVector2() - VectorExtension.HalfSize;
                 var topRight = itemSaveData.coordinate.ToVector2() + VectorExtension.HalfSize;
 

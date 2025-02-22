@@ -14,13 +14,12 @@ namespace _Game.Development.Scriptable.Item
         public int spawnAmount;
 
         [Tooltip("In seconds")] public int chargeDuration;
-
-        [Space(5)] public PercentageData[] generateItemDataList;
+        [Space(5)] public PercentageData[] spawnableItemDataList;
 
         protected GeneratorItemDataSo()
         {
             itemType = ItemType.Generator;
-            generateItemDataList = Array.Empty<PercentageData>();
+            spawnableItemDataList = Array.Empty<PercentageData>();
         }
 
         public override int GetSpecialId()

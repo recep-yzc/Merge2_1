@@ -19,7 +19,7 @@ namespace _Game.Development.Object.Item
 
         #region Item
 
-        public override ItemSaveData GetItemSaveData()
+        public override ItemSaveData CreateItemSaveData()
         {
             var gridData = BoardExtension.GetGridDataByCoordinate(transform.position);
             return new ProductItemSaveData(gridData.coordinate.ToJsonVector2(), gridData.itemDataSo.level,

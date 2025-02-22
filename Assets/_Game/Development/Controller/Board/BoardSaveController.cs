@@ -23,7 +23,7 @@ namespace _Game.Development.Controller.Board
             var itemSaveDataList = new List<ItemSaveData>();
             foreach (var gridData in BoardExtension.Statics.GridDataList)
             {
-                var itemSaveData = gridData.GetComponent<IItem>().GetItemSaveData();
+                var itemSaveData = gridData.GetComponent<IItem>().CreateItemSaveData();
                 itemSaveDataList.Add(itemSaveData);
             }
 

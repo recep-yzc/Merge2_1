@@ -13,16 +13,25 @@ namespace _Game.Development.Controller.Board
         {
             var generator = mouseDownGridData.item.GetComponent<IGenerator>();
             if (generator is null) return;
-
-            var selectedGridData = BoardExtension.Statics.GridDataList.FirstOrDefault(x => x.IsEmpty());
-            if (selectedGridData == null)
+            
+            var canGenerate = generator.CanGenerate();
+            if (!canGenerate) return;
+            
+            var spawnAmount = generator.GetSpawnAmount();
+            if (spawnAmount <= 0)
             {
-                Debug.Log("Board Full");
+                Debug.Log("Charging!");
                 return;
             }
 
-            var spawnAmount = generator.GetSpawnAmount();
-            if (spawnAmount <= 0) return;
+
+            var selectedGridData = BoardExtension.Statics.GridDataList.Where(x => x.IsEmpty()).GetRandomItem();
+            if (selectedGridData == null)
+            {
+                Debug.Log("Board Full!");
+                return;
+            }
+
 
             var itemDataSo = generator.Generate();
 

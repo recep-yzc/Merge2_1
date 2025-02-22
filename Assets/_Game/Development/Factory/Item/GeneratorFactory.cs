@@ -65,7 +65,7 @@ namespace _Game.Development.Factory.Item
         #region Parameters
 
         [Inject] private AllItemDataSo _allItemDataSo;
-        private static readonly string MinDateTimeStr = DateTime.MinValue.ToString(CultureExtension.CurrentCultureInfo);
+        private static readonly string MinDateTimeStr = DateTime.MinValue.DateTimeToString();
 
         #endregion
     }

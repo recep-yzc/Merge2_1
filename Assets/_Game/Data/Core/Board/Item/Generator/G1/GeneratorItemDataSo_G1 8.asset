@@ -19,7 +19,7 @@ MonoBehaviour:
   generatorType: 1
   spawnAmount: 8
   chargeDuration: 24
-  generateItemDataList:
+  spawnableItemDataList:
   - percentage: 86
     itemDataSo: {fileID: 11400000, guid: 2e77857af95a5e949bbe383ae60730cd, type: 2}
   - percentage: 8

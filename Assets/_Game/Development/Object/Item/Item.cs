@@ -29,7 +29,7 @@ namespace _Game.Development.Object.Item
         #region Parameters
 
         protected readonly float DragMoveSpeed = 15f;
-        protected Vector2 Position;
+        protected Vector2 SelfCoordinate;
         protected ItemDataSo ItemDataSo { get; private set; }
 
         private Action _backPoolAction;
@@ -48,6 +48,7 @@ namespace _Game.Development.Object.Item
         public void SetPosition(Vector2 position)
         {
             transform.position = position;
+            SelfCoordinate = position;
         }
 
         public void SetSprite(Sprite icon)
@@ -61,7 +62,7 @@ namespace _Game.Development.Object.Item
         }
 
 
-        public void SetItemDataSo(ItemDataSo itemDataSo)
+        public virtual void SetItemDataSo(ItemDataSo itemDataSo)
         {
             ItemDataSo = itemDataSo;
         }
@@ -70,7 +71,7 @@ namespace _Game.Development.Object.Item
         {
         }
 
-        public abstract ItemSaveData GetItemSaveData();
+        public abstract ItemSaveData CreateItemSaveData();
 
         #endregion
 
@@ -118,7 +119,7 @@ namespace _Game.Development.Object.Item
 
         public async UniTask MoveAsync(Vector2 coordinate, MoveDataSo moveDataSo)
         {
-            Position = coordinate;
+            SelfCoordinate = coordinate;
             DisposeMoveToken();
 
             _cancellationMoveTokenSource = new CancellationTokenSource();

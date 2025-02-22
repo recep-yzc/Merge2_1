@@ -7,12 +7,14 @@ using _Game.Development.Serializable.Board;
 using _Game.Development.Serializable.Grid;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Random = System.Random;
 
 namespace _Game.Development.Static
 {
     public static class BoardExtension
     {
         public static string JsonPath => Application.dataPath + "/Board.json";
+        private static readonly Random Random = new();
 
         public static GridData GetGridDataByCoordinate(Vector2 coordinate)
         {
@@ -36,6 +38,24 @@ namespace _Game.Development.Static
             return gridDataArray;
         }
 
+        public static T GetRandomItem<T>(this IEnumerable<T> enumerable)
+        {
+            using var enumerator = enumerable.GetEnumerator();
+            
+            var selected = enumerator.Current;
+            var count = 1;
+
+            while (enumerator.MoveNext())
+            {
+                count++;
+                if (Random.Next(count) == 0)
+                {
+                    selected = enumerator.Current;
+                }
+            }
+
+            return selected;
+        }
 
         public static class Statics
         {

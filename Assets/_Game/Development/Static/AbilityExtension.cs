@@ -56,10 +56,10 @@ namespace _Game.Development.Static
         }
 
 
-        public static async UniTask Regenerating(float duration, Image imgBar,
+        public static async UniTask Regenerating(float duration, float totalDuration, Image imgBar,
             CancellationToken cancellationToken)
         {
-            var elapsedTime = 0f;
+            var elapsedTime = totalDuration - duration;
 
             while (elapsedTime < duration)
             {

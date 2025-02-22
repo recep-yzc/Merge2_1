@@ -1,4 +1,5 @@
-﻿using _Game.Development.Static;
+﻿using System.Globalization;
+using _Game.Development.Static;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -17,6 +18,7 @@ namespace _Game.Development.Controller.Board
         {
             Application.targetFrameRate = 60;
             Input.multiTouchEnabled = false;
+            CultureInfo.CurrentCulture = CultureExtension.CurrentCultureInfo;
 
             await Initialize();
 

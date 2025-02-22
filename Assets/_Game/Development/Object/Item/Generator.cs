@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using _Game.Development.Interface.Ability;
@@ -43,23 +44,40 @@ namespace _Game.Development.Object.Item
 
         private int _spawnAmount;
         private string _lastUsingDate;
-
+        private GeneratorItemDataSo _generatorItemDataSo;
         private CancellationTokenSource _regenerateCancellationTokenSource;
 
         #endregion
 
         #region Item
 
-        public override ItemSaveData GetItemSaveData()
+        public override void SetItemDataSo(ItemDataSo itemDataSo)
         {
-            var gridData = BoardExtension.GetGridDataByCoordinate(Position);
+            base.SetItemDataSo(itemDataSo);
+            _generatorItemDataSo = (GeneratorItemDataSo)itemDataSo;
+        }
+
+        public override ItemSaveData CreateItemSaveData()
+        {
+            var gridData = BoardExtension.GetGridDataByCoordinate(SelfCoordinate);
             return new GeneratorItemSaveData(gridData.coordinate.ToJsonVector2(), gridData.itemDataSo.level,
                 gridData.itemDataSo.itemType.ToInt(), gridData.itemDataSo.GetSpecialId(), _lastUsingDate);
         }
 
         public override void FetchItemData()
         {
-            RefillSpawnAmount();
+            var lastUsingData = _lastUsingDate.StringToDateTime();
+            var totalSeconds = (DateTime.Now - lastUsingData).TotalSeconds;
+            var leftDuration = totalSeconds - _generatorItemDataSo.chargeDuration;
+            if (leftDuration > 0)
+            {
+                FetchLastUsingDate(DateTime.Now.DateTimeToString());
+                RefillSpawnAmount();
+            }
+            else
+            {
+                StartRegenerate(Mathf.Abs((float)leftDuration)).Forget();
+            }
         }
 
         #endregion
@@ -71,6 +89,11 @@ namespace _Game.Development.Object.Item
             _lastUsingDate = date;
         }
 
+        public bool CanGenerate()
+        {
+            return _generatorItemDataSo.spawnableItemDataList.Length > 0;
+        }
+
         public int GetSpawnAmount()
         {
             return _spawnAmount;
@@ -78,40 +101,48 @@ namespace _Game.Development.Object.Item
 
         private void RefillSpawnAmount()
         {
-            _spawnAmount = ((GeneratorItemDataSo)ItemDataSo).spawnAmount;
+            _spawnAmount = _generatorItemDataSo.spawnAmount;
         }
 
         public ItemDataSo Generate()
         {
             _spawnAmount--;
-            if (_spawnAmount <= 0) StartRegenerate().Forget();
+            if (_spawnAmount <= 0)
+            {
+                var duration = _generatorItemDataSo.chargeDuration;
+                StartRegenerate(duration).Forget();
+            }
 
-            _lastUsingDate = DateTime.Now.ToString(CultureExtension.CurrentCultureInfo);
+            _lastUsingDate = DateTime.Now.DateTimeToString();
 
-            var generateItemDataList = ((GeneratorItemDataSo)ItemDataSo).generateItemDataList;
-            var percentage = generateItemDataList.Sum(x => x.percentage);
+            return GetRandomGeneratedItemDataSo();
+        }
+
+        private ItemDataSo GetRandomGeneratedItemDataSo()
+        {
+            var percentageDataList = _generatorItemDataSo.spawnableItemDataList;
+            var percentage = percentageDataList.Sum(x => x.percentage);
 
             var randomValue = Random.Range(0f, percentage);
             var cumulative = 0f;
 
-            foreach (var data in generateItemDataList)
+            foreach (var percentageData in percentageDataList)
             {
-                cumulative += data.percentage;
-                if (randomValue <= cumulative) return data.itemDataSo;
+                cumulative += percentageData.percentage;
+                if (randomValue <= cumulative) return percentageData.itemDataSo;
             }
 
             return null;
         }
 
-        private async UniTask StartRegenerate()
+        private async UniTask StartRegenerate(float leftDuration)
         {
             regenerateCanvas.SetActive(true);
 
             DisposeRegenerateToken();
             _regenerateCancellationTokenSource = new CancellationTokenSource();
 
-            await AbilityExtension.Regenerating(((GeneratorItemDataSo)ItemDataSo).chargeDuration, imgRegenerate,
-                _regenerateCancellationTokenSource.Token);
+            await AbilityExtension.Regenerating(leftDuration, _generatorItemDataSo.chargeDuration, imgRegenerate, _regenerateCancellationTokenSource.Token);
 
             regenerateCanvas.SetActive(false);
             RefillSpawnAmount();

@@ -13,6 +13,6 @@ namespace _Game.Development.Interface.Item
 
         public void SetItemDataSo(ItemDataSo itemDataSo);
         public void FetchItemData();
-        public ItemSaveData GetItemSaveData();
+        public ItemSaveData CreateItemSaveData();
     }
 }
