@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using _Game.Development.Scriptable.Item;
+using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
 using UnityEngine;
 
@@ -21,6 +22,8 @@ namespace _Game.Development.Serializable.Grid
             this.item = item;
             this.itemDataSo = itemDataSo;
         }
+
+        public bool IsEmpty() => item == null;
 
         public Vector2 BottomLeft => coordinate - VectorExtension.HalfSize;
         public Vector2 TopRight => coordinate + VectorExtension.HalfSize;

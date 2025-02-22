@@ -2,6 +2,7 @@
 using _Game.Development.Scriptable.Ability;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace _Game.Development.Static
 {
@@ -52,6 +53,22 @@ namespace _Game.Development.Static
             }
 
             transform.position = targetPosition;
+        }
+
+
+        public static async UniTask Regenerating(float duration, Image imgBar,
+            CancellationToken cancellationToken)
+        {
+            var elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                var normalizedTime = elapsedTime / duration;
+                imgBar.fillAmount = normalizedTime;
+
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken);
+            }
         }
     }
 }

@@ -41,12 +41,15 @@ namespace _Game.Development.Factory.Item
 
             iPool.AddDespawnPool(DespawnPoolAction);
 
-            var generatorItemDataSo =
+            var itemDataSo =
                 _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
 
             iGenerator.SetParent(transform);
             iGenerator.SetPosition(itemSaveData.coordinate.ToVector2());
-            iGenerator.SetSprite(generatorItemDataSo.icon);
+            iGenerator.SetSprite(itemDataSo.icon);
+
+            iGenerator.SetItemDataSo(itemDataSo);
+            iGenerator.FetchItemData();
 
             return item;
         }

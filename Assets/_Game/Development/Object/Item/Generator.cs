@@ -1,12 +1,24 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using _Game.Development.Interface.Item;
 using _Game.Development.Scriptable.Item;
+using _Game.Development.Serializable.Item;
+using _Game.Development.Static;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace _Game.Development.Object.Item
 {
     public class Generator : Item, IGenerator
     {
+        [Header("References")] [SerializeField]
+        private GameObject regenerateCanvas;
+
+        [SerializeField] private Image imgRegenerate;
+
         #region Draggable
 
         public override void Drag(Vector2 vector2)
@@ -20,6 +32,20 @@ namespace _Game.Development.Object.Item
 
         private int _spawnAmount;
         private GeneratorItemDataSo _generatorItemDataSo;
+        private string _lastUsingDate;
+
+        private CancellationTokenSource _regenerateCancellationTokenSource;
+
+        #endregion
+
+
+        #region Unity Action
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            DisposeRegenerateToken();
+        }
 
         #endregion
 
@@ -30,14 +56,13 @@ namespace _Game.Development.Object.Item
             base.SetItemDataSo(itemDataSo);
             _generatorItemDataSo = (GeneratorItemDataSo)itemDataSo;
         }
-
+        
         public override void FetchItemData()
         {
-            _spawnAmount = _generatorItemDataSo.spawnAmount;
+            RefillSpawnAmount();
         }
-
+        
         #endregion
-
 
         #region Generator
 
@@ -46,8 +71,21 @@ namespace _Game.Development.Object.Item
             return _spawnAmount;
         }
 
+        private void RefillSpawnAmount()
+        {
+            _spawnAmount = _generatorItemDataSo.spawnAmount;
+        }
+
         public ItemDataSo Generate()
         {
+            _spawnAmount--;
+            if (_spawnAmount <= 0)
+            {
+                StartRegenerate().Forget();
+            }
+
+           _lastUsingDate = DateTime.Now.ToString(CultureExtension.CurrentCultureInfo);
+
             var generateItemDataList = _generatorItemDataSo.generateItemDataList;
             var percentage = generateItemDataList.Sum(x => x.percentage);
 
@@ -61,6 +99,26 @@ namespace _Game.Development.Object.Item
             }
 
             return null;
+        }
+
+        private async UniTask StartRegenerate()
+        {
+            regenerateCanvas.SetActive(true);
+
+            DisposeRegenerateToken();
+            _regenerateCancellationTokenSource = new CancellationTokenSource();
+
+            await AbilityExtension.Regenerating(_generatorItemDataSo.chargeDuration, imgRegenerate,
+                _regenerateCancellationTokenSource.Token);
+
+            regenerateCanvas.SetActive(false);
+            RefillSpawnAmount();
+        }
+
+        private void DisposeRegenerateToken()
+        {
+            _regenerateCancellationTokenSource?.Cancel();
+            _regenerateCancellationTokenSource?.Dispose();
         }
 
         #endregion

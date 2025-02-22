@@ -11,8 +11,14 @@ namespace _Game.Development.Zenject
         {
             Container.BindInstance(FindObjectOfType<Camera>());
 
+            #region Factory
+
             Container.BindInstance(FindObjectOfType<GeneratorFactory>());
             Container.BindInstance(FindObjectOfType<ProductFactory>());
+
+            #endregion
+            
+            #region Board
 
             Container.BindInstance(FindObjectOfType<BoardEditController>());
 
@@ -20,9 +26,12 @@ namespace _Game.Development.Zenject
             Container.BindInstance(FindObjectOfType<BoardLoadController>());
             Container.BindInstance(FindObjectOfType<BoardSaveController>());
 
+            Container.BindInstance(FindObjectOfType<BoardGenerateController>());
             Container.BindInstance(FindObjectOfType<BoardTransferController>());
             Container.BindInstance(FindObjectOfType<BoardMergeController>());
             Container.BindInstance(FindObjectOfType<BoardScaleUpDownController>());
+
+            #endregion
         }
     }
 }

@@ -4,6 +4,7 @@ using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
 using _Game.Development.Scriptable.Ability;
 using _Game.Development.Scriptable.Item;
+using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace _Game.Development.Object.Item
 
         #region Unity Action
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             DisposeScaleUpDownToken();
             DisposeMoveToken();
@@ -31,8 +32,8 @@ namespace _Game.Development.Object.Item
         protected ItemDataSo ItemDataSo { get; set; }
 
         private Action _backPoolAction;
-        private CancellationTokenSource _cancellationScaleUpDownToken;
-        private CancellationTokenSource _cancellationMoveToken;
+        private CancellationTokenSource _cancellationScaleUpDownTokenSource;
+        private CancellationTokenSource _cancellationMoveTokenSource;
 
         #endregion
 
@@ -52,7 +53,13 @@ namespace _Game.Development.Object.Item
         {
             sprIcon.sprite = icon;
         }
+        
+        protected void SetSpriteOrder(int order)
+        {
+            sprIcon.sortingOrder = order;
+        }
 
+        
         public virtual void SetItemDataSo(ItemDataSo itemDataSo)
         {
             ItemDataSo = itemDataSo;
@@ -60,13 +67,9 @@ namespace _Game.Development.Object.Item
 
         public virtual void FetchItemData()
         {
+            
         }
-
-        protected void SetSpriteOrder(int order)
-        {
-            sprIcon.sortingOrder = order;
-        }
-
+        
         #endregion
 
         #region Pool
@@ -104,15 +107,15 @@ namespace _Game.Development.Object.Item
         {
             DisposeScaleUpDownToken();
 
-            _cancellationScaleUpDownToken = new CancellationTokenSource();
+            _cancellationScaleUpDownTokenSource = new CancellationTokenSource();
             return AbilityExtension.ScaleUpDownHandle(transform, scaleUpDownDataSo,
-                _cancellationScaleUpDownToken.Token);
+                _cancellationScaleUpDownTokenSource.Token);
         }
 
         private void DisposeScaleUpDownToken()
         {
-            _cancellationScaleUpDownToken?.Cancel();
-            _cancellationScaleUpDownToken?.Dispose();
+            _cancellationScaleUpDownTokenSource?.Cancel();
+            _cancellationScaleUpDownTokenSource?.Dispose();
         }
 
         #endregion
@@ -123,15 +126,15 @@ namespace _Game.Development.Object.Item
         {
             DisposeMoveToken();
 
-            _cancellationMoveToken = new CancellationTokenSource();
+            _cancellationMoveTokenSource = new CancellationTokenSource();
             await AbilityExtension.MoveHandle(transform, coordinate, moveDataSo,
-                _cancellationMoveToken.Token);
+                _cancellationMoveTokenSource.Token);
         }
 
         private void DisposeMoveToken()
         {
-            _cancellationMoveToken?.Cancel();
-            _cancellationMoveToken?.Dispose();
+            _cancellationMoveTokenSource?.Cancel();
+            _cancellationMoveTokenSource?.Dispose();
         }
 
         #endregion

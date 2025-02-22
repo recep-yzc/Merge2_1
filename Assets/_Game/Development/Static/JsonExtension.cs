@@ -8,7 +8,7 @@ namespace _Game.Development.Static
     {
         public static string ConvertToJson(this BoardJsonData boardJsonData)
         {
-            return JsonConvert.SerializeObject(boardJsonData, Formatting.None,
+            return JsonConvert.SerializeObject(boardJsonData, Formatting.Indented,
                 new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
         }
 

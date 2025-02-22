@@ -18,10 +18,13 @@ namespace _Game.Development.Controller.Board
             if (gridData?.item is null)
             {
                 _mouseDownGridData = null;
+                _isDoubleClick = false;
 
                 BoardExtension.Selector.RequestChangeVisibility.Invoke(false);
                 return;
             }
+
+            _isDoubleClick = _mouseDownGridData == gridData;
 
             BoardExtension.Selector.RequestSetPosition.Invoke(gridData.coordinate);
             BoardExtension.Selector.RequestChangeVisibility.Invoke(true);
@@ -51,15 +54,10 @@ namespace _Game.Development.Controller.Board
         }
 
         private void OnMouseUpEvent(Vector2 vector2)
-        {
-            _isDragActive = false;
-            _draggable = null;
-
-            if (_mouseDownGridData?.item is null) return;
+        { 
             var mouseDownGridData = _mouseDownGridData;
-
-            _mouseDownGridData = null;
-
+            if (mouseDownGridData?.item is null) return;
+            
             var cameraPosition = _mainCamera.GetCameraPosition();
             var mouseUpGridData = BoardExtension.GetGridDataByCoordinate(cameraPosition);
 
@@ -76,8 +74,15 @@ namespace _Game.Development.Controller.Board
                 BoardExtension.Selector.RequestSetPosition.Invoke(mouseDownGridData.coordinate);
                 BoardExtension.Selector.RequestChangeVisibility.Invoke(true);
                 BoardExtension.Selector.RequestScaleUpDown.Invoke();
-
-                HandleMouseUpOnSameGrid(mouseDownGridData);
+                
+                if (!_isDragActive && _isDoubleClick)
+                {
+                    HandleGenerateItem(mouseDownGridData);
+                }
+                else
+                {
+                    HandleMouseUpOnSameGrid(mouseDownGridData);
+                }
                 return;
             }
 
@@ -92,9 +97,20 @@ namespace _Game.Development.Controller.Board
             _boardSaveController.TrySaveBoardData();
         }
 
+        private void HandleGenerateItem(GridData mouseDownGridData)
+        {
+            _boardGenerateController.TryGenerate(mouseDownGridData);
+            
+            _isDragActive = false;
+            _draggable = null;
+        }
+
         private void HandleMouseUpOnEmptyGrid(GridData mouseDownGridData)
         {
             _boardTransferController.TryTransfer(TransferAction.Move, mouseDownGridData);
+            
+            _isDragActive = false;
+            _draggable = null;
         }
 
         private void HandleMouseUpOnSameGrid(GridData mouseDownGridData)
@@ -103,6 +119,9 @@ namespace _Game.Development.Controller.Board
             _boardScaleUpDownController.TryScaleUpDown(mouseDownGridData);
 
             mouseDownGridData.GetComponent<IClickable>().MouseUp();
+            
+            _isDragActive = false;
+            _draggable = null;
         }
 
         private bool ShouldSwapItems(GridData mouseDownGridData, GridData mouseUpGridData)
@@ -124,11 +143,17 @@ namespace _Game.Development.Controller.Board
             _boardScaleUpDownController.TryScaleUpDown(mouseUpGridData);
 
             mouseUpGridData.GetComponent<IClickable>().MouseUp();
+            
+            _isDragActive = false;
+            _draggable = null;
         }
 
         private void HandleItemMerge(GridData mouseDownGridData, GridData mouseUpGridData)
         {
             _boardMergeController.TryMerge(mouseDownGridData, mouseUpGridData);
+            
+            _isDragActive = false;
+            _draggable = null;
         }
 
         #region Unity Action
@@ -156,6 +181,7 @@ namespace _Game.Development.Controller.Board
         private Vector2 _firstClickedPosition;
 
         private GridData _mouseDownGridData;
+        private bool _isDoubleClick;
 
         private readonly float _moveThreshold = 0.1f;
 
@@ -163,6 +189,7 @@ namespace _Game.Development.Controller.Board
 
         [Inject] private BoardTransferController _boardTransferController;
         [Inject] private BoardScaleUpDownController _boardScaleUpDownController;
+        [Inject] private BoardGenerateController _boardGenerateController;
         [Inject] private BoardMergeController _boardMergeController;
         [Inject] private BoardSaveController _boardSaveController;
 

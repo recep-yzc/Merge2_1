@@ -1,5 +1,6 @@
 ﻿using _Game.Development.Interface.Item;
 using _Game.Development.Scriptable.Item;
+using _Game.Development.Serializable.Item;
 using UnityEngine;
 
 namespace _Game.Development.Object.Item
@@ -19,7 +20,7 @@ namespace _Game.Development.Object.Item
             base.SetItemDataSo(itemDataSo);
             _productItemDataSo = (ProductItemDataSo)itemDataSo;
         }
-
+        
         #endregion
 
         #region Draggable

@@ -46,13 +46,15 @@ namespace _Game.Development.Factory.Item
 
             iPool.AddDespawnPool(DespawnPoolAction);
 
-            var productItemDataSo =
-                _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
+            var itemDataSo = _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
 
             iProduct.SetParent(transform);
             iProduct.SetPosition(itemSaveData.coordinate.ToVector2());
-            iProduct.SetSprite(productItemDataSo.icon);
+            iProduct.SetSprite(itemDataSo.icon);
 
+            iProduct.SetItemDataSo(itemDataSo);
+            iProduct.FetchItemData();
+            
             return item;
         }
 
