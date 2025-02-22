@@ -1,4 +1,5 @@
-﻿using _Game.Development.Interface.Ability;
+﻿using _Game.Development.Factory.Item;
+using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
 using _Game.Development.Scriptable.Ability;
 using _Game.Development.Scriptable.Item;
@@ -24,7 +25,9 @@ namespace _Game.Development.Controller.Board
 
             mouseDownGridData.itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
             mouseDownGridData.GetComponent<IPool>().PlayDespawnPool();
-            mouseDownGridData.item = null;
+            
+           var itemSaveData= ItemFactory.CreateItemSaveDataByItemId[0].Invoke(new SerializableVector2(mouseDownGridData.coordinate),mouseDownGridData.itemDataSo);
+           mouseDownGridData.item = ItemFactory.CreateItemByItemId[0].Invoke(itemSaveData);
         }
 
         #region Parameters

@@ -1,4 +1,5 @@
 ﻿using _Game.Development.Scriptable.Item;
+using _Game.Development.Serializable.Item;
 using UnityEngine;
 
 namespace _Game.Development.Interface.Item
@@ -12,5 +13,8 @@ namespace _Game.Development.Interface.Item
         
         public void SetItemDataSo(ItemDataSo itemDataSo);
         public void FetchItemData();
+
+        public void FetchCustomParameters(params object[] parameters);
+        public ItemSaveData GetItemSaveData();
     }
 }

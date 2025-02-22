@@ -27,7 +27,7 @@ namespace _Game.Development.Factory.Item
         {
             ItemType = ItemType.Product;
 
-            CreateItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateItemSaveData);
+            CreateItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateItemSaveData<ProductItemSaveData>);
             CreateItemByItemId.TryAdd(ItemType.ToInt(), CreateItem);
         }
 
@@ -46,7 +46,8 @@ namespace _Game.Development.Factory.Item
 
             iPool.AddDespawnPool(DespawnPoolAction);
 
-            var itemDataSo = _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
+            var itemDataSo =
+                _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
 
             iProduct.SetParent(transform);
             iProduct.SetPosition(itemSaveData.coordinate.ToVector2());
@@ -54,15 +55,14 @@ namespace _Game.Development.Factory.Item
 
             iProduct.SetItemDataSo(itemDataSo);
             iProduct.FetchItemData();
-            
+
             return item;
         }
 
-        protected override ItemSaveData CreateItemSaveData(SerializableVector2 coordinate, ItemDataSo itemDataSo)
+        protected override T CreateItemSaveData<T>(SerializableVector2 coordinate, ItemDataSo itemDataSo)
         {
             var dataSo = (ProductItemDataSo)itemDataSo;
-            return new ProductItemSaveData(coordinate, dataSo.level, dataSo.itemType.ToInt(),
-                dataSo.productType.ToInt());
+            return new ProductItemSaveData(coordinate, dataSo.level, dataSo.itemType.ToInt(), dataSo.productType.ToInt()) as T;
         }
     }
 }

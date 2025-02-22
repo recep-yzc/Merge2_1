@@ -53,13 +53,13 @@ namespace _Game.Development.Object.Item
         {
             sprIcon.sprite = icon;
         }
-        
+
         protected void SetSpriteOrder(int order)
         {
             sprIcon.sortingOrder = order;
         }
 
-        
+
         public virtual void SetItemDataSo(ItemDataSo itemDataSo)
         {
             ItemDataSo = itemDataSo;
@@ -67,9 +67,14 @@ namespace _Game.Development.Object.Item
 
         public virtual void FetchItemData()
         {
-            
         }
-        
+
+        public virtual void FetchCustomParameters(params object[] parameters)
+        {
+        }
+
+        public abstract ItemSaveData GetItemSaveData();
+
         #endregion
 
         #region Pool

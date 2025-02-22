@@ -22,7 +22,7 @@ namespace _Game.Development.Factory.Item
         {
             ItemType = ItemType.Generator;
 
-            CreateItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateItemSaveData);
+            CreateItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateItemSaveData<GeneratorItemSaveData>);
             CreateItemByItemId.TryAdd(ItemType.ToInt(), CreateItem);
         }
 
@@ -41,24 +41,24 @@ namespace _Game.Development.Factory.Item
 
             iPool.AddDespawnPool(DespawnPoolAction);
 
-            var itemDataSo =
-                _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
+            var generatorItemSaveData = (GeneratorItemSaveData)itemSaveData;
+            var itemDataSo = _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
 
             iGenerator.SetParent(transform);
             iGenerator.SetPosition(itemSaveData.coordinate.ToVector2());
             iGenerator.SetSprite(itemDataSo.icon);
 
+            iGenerator.FetchCustomParameters(generatorItemSaveData.lastUsingDate);
             iGenerator.SetItemDataSo(itemDataSo);
             iGenerator.FetchItemData();
 
             return item;
         }
-
-        protected override ItemSaveData CreateItemSaveData(SerializableVector2 coordinate, ItemDataSo itemDataSo)
+        
+        protected override T CreateItemSaveData<T>(SerializableVector2 coordinate, ItemDataSo itemDataSo)
         {
-            var dataSo = (GeneratorItemDataSo)itemDataSo;
-            return new GeneratorItemSaveData(coordinate, dataSo.level, dataSo.itemType.ToInt(),
-                dataSo.generatorType.ToInt(), MinDateTimeStr);
+             var dataSo = (GeneratorItemDataSo)itemDataSo;
+             return new GeneratorItemSaveData(coordinate, dataSo.level, dataSo.itemType.ToInt(), dataSo.generatorType.ToInt(), MinDateTimeStr) as T;
         }
 
         #region Parameters

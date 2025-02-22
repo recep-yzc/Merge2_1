@@ -63,8 +63,7 @@ namespace _Game.Development.Controller.Board
             for (var y = 0; y < _boardJsonData.columns; y++)
             {
                 var itemDataSo = _allItemDataSo.GetItemDataByIds(itemId, specialId, level);
-                var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemId]
-                    .Invoke(new SerializableVector2(new Vector2(x, y) - offset), itemDataSo);
+                var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemId].Invoke(new SerializableVector2(new Vector2(x, y) - offset), itemDataSo);
                 _boardJsonData.itemSaveDataList.Add(itemSaveData);
             }
         }

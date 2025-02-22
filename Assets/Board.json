@@ -6,26 +6,26 @@
     "$type": "System.Collections.Generic.List`1[[_Game.Development.Serializable.Item.ItemSaveData, Assembly-CSharp]], mscorlib",
     "$values": [
       {
-        "$type": "_Game.Development.Serializable.Item.ProductItemSaveData, Assembly-CSharp",
+        "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
         "coordinate": {
           "$type": "_Game.Development.Serializable.Grid.SerializableVector2, Assembly-CSharp",
           "x": -2.0,
           "y": -2.0
         },
-        "level": 2,
-        "specialId": 1,
-        "itemId": 2
+        "level": 0,
+        "specialId": 0,
+        "itemId": 0
       },
       {
-        "$type": "_Game.Development.Serializable.Item.ProductItemSaveData, Assembly-CSharp",
+        "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
         "coordinate": {
           "$type": "_Game.Development.Serializable.Grid.SerializableVector2, Assembly-CSharp",
           "x": -2.0,
           "y": -1.0
         },
-        "level": 2,
-        "specialId": 1,
-        "itemId": 2
+        "level": 0,
+        "specialId": 0,
+        "itemId": 0
       },
       {
         "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
@@ -50,26 +50,26 @@
         "itemId": 0
       },
       {
-        "$type": "_Game.Development.Serializable.Item.ProductItemSaveData, Assembly-CSharp",
+        "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
         "coordinate": {
           "$type": "_Game.Development.Serializable.Grid.SerializableVector2, Assembly-CSharp",
           "x": -2.0,
           "y": 2.0
         },
-        "level": 2,
-        "specialId": 1,
-        "itemId": 2
+        "level": 0,
+        "specialId": 0,
+        "itemId": 0
       },
       {
-        "$type": "_Game.Development.Serializable.Item.ProductItemSaveData, Assembly-CSharp",
+        "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
         "coordinate": {
           "$type": "_Game.Development.Serializable.Grid.SerializableVector2, Assembly-CSharp",
           "x": -1.0,
           "y": -2.0
         },
-        "level": 2,
-        "specialId": 1,
-        "itemId": 2
+        "level": 0,
+        "specialId": 0,
+        "itemId": 0
       },
       {
         "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
@@ -116,15 +116,15 @@
         "itemId": 0
       },
       {
-        "$type": "_Game.Development.Serializable.Item.ProductItemSaveData, Assembly-CSharp",
+        "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
         "coordinate": {
           "$type": "_Game.Development.Serializable.Grid.SerializableVector2, Assembly-CSharp",
           "x": 0.0,
           "y": -2.0
         },
-        "level": 2,
-        "specialId": 1,
-        "itemId": 2
+        "level": 0,
+        "specialId": 0,
+        "itemId": 0
       },
       {
         "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
@@ -219,15 +219,15 @@
         "itemId": 0
       },
       {
-        "$type": "_Game.Development.Serializable.Item.ProductItemSaveData, Assembly-CSharp",
+        "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
         "coordinate": {
           "$type": "_Game.Development.Serializable.Grid.SerializableVector2, Assembly-CSharp",
           "x": 1.0,
           "y": 2.0
         },
-        "level": 1,
-        "specialId": 1,
-        "itemId": 2
+        "level": 0,
+        "specialId": 0,
+        "itemId": 0
       },
       {
         "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
@@ -275,15 +275,15 @@
         "itemId": 0
       },
       {
-        "$type": "_Game.Development.Serializable.Item.ProductItemSaveData, Assembly-CSharp",
+        "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
         "coordinate": {
           "$type": "_Game.Development.Serializable.Grid.SerializableVector2, Assembly-CSharp",
           "x": 2.0,
           "y": 2.0
         },
-        "level": 1,
-        "specialId": 1,
-        "itemId": 2
+        "level": 0,
+        "specialId": 0,
+        "itemId": 0
       }
     ]
   }

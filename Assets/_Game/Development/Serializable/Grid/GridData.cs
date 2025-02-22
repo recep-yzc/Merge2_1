@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using _Game.Development.Enum.Item;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
@@ -23,7 +24,7 @@ namespace _Game.Development.Serializable.Grid
             this.itemDataSo = itemDataSo;
         }
 
-        public bool IsEmpty() => item == null;
+        public bool IsEmpty() => itemDataSo.itemType is ItemType.None;
 
         public Vector2 BottomLeft => coordinate - VectorExtension.HalfSize;
         public Vector2 TopRight => coordinate + VectorExtension.HalfSize;

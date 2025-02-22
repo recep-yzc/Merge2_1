@@ -83,6 +83,7 @@ namespace _Game.Development.Controller.Board
                 {
                     HandleMouseUpOnSameGrid(mouseDownGridData);
                 }
+                _boardSaveController.TrySaveBoardData();
                 return;
             }
 

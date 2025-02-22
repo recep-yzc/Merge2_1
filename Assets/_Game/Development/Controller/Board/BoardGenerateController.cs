@@ -26,8 +26,7 @@ namespace _Game.Development.Controller.Board
 
             var itemDataSo = generator.Generate();
             
-            var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemDataSo.itemType.ToInt()]
-                .Invoke(new SerializableVector2(selectedGridData.coordinate), itemDataSo);
+            var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemDataSo.itemType.ToInt()].Invoke(new SerializableVector2(selectedGridData.coordinate), itemDataSo);
             var item = ItemFactory.CreateItemByItemId[itemDataSo.itemType.ToInt()].Invoke(itemSaveData);
             
             selectedGridData.item = item;
