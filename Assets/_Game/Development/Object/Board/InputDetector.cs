@@ -18,13 +18,13 @@ namespace _Game.Development.Object.Board
             switch (GetMouseAction())
             {
                 case MouseAction.Down:
-                    InputExtension.MouseDownRequested?.Invoke(mousePosition);
+                    InputExtension.MouseDownRequest?.Invoke(mousePosition);
                     break;
                 case MouseAction.Hold:
-                    InputExtension.MouseDragRequested?.Invoke(mousePosition);
+                    InputExtension.MouseDragRequest?.Invoke(mousePosition);
                     break;
                 case MouseAction.Up:
-                    InputExtension.MouseUpRequested?.Invoke(mousePosition);
+                    InputExtension.MouseUpRequest?.Invoke(mousePosition);
                     break;
             }
         }

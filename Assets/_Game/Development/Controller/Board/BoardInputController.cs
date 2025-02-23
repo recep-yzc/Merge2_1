@@ -10,39 +10,39 @@ namespace _Game.Development.Controller.Board
 {
     public class BoardInputController : MonoBehaviour
     {
-        private void MouseDownRequested(Vector2 vector2)
+        private void MouseDownRequest(Vector2 position)
         {
             _firstClickedPosition = _mainCamera.GetCameraPosition();
-            var gridData = BoardExtension.GetGridDataByCoordinate(_firstClickedPosition);
+            _sourceGridDataData = BoardExtension.GetGridDataByCoordinate(_firstClickedPosition);
 
-            if (gridData?.item is null)
+            if (_sourceGridDataData?.item == null)
             {
-                _mouseDownGridData = null;
-                _isDoubleClick = false;
-
-                BoardExtension.Selector.VisibilityRequest.Invoke(false);
+                ResetSelection();
                 return;
             }
 
-            _mouseDownGridData = gridData;
-
-            var iClickable = gridData.GetComponent<IClickable>();
-            if (iClickable is null)
-            {
-                BoardExtension.Selector.VisibilityRequest.Invoke(false);
-                return;
-            }
-
-            _isDoubleClick = _mouseDownGridData == gridData;
-
-            BoardExtension.Selector.SetPositionRequest.Invoke(gridData.Coordinate);
-            BoardExtension.Selector.VisibilityRequest.Invoke(true);
-
-            iClickable.MouseDown();
-            _draggable = gridData.GetComponent<IDraggable>();
+            HandleSelection(_sourceGridDataData);
         }
 
-        private void MouseDragRequested(Vector2 vector2)
+        private void HandleSelection(GridData sourceGridDataData)
+        {
+            var clickable = sourceGridDataData.GetComponent<IClickable>();
+            if (clickable == null)
+            {
+                BoardExtension.Selector.VisibilityRequest.Invoke(false);
+                return;
+            }
+
+            _isDoubleClick = _sourceGridDataData == sourceGridDataData;
+
+            BoardExtension.Selector.SetPositionRequest.Invoke(sourceGridDataData.Coordinate);
+            BoardExtension.Selector.VisibilityRequest.Invoke(true);
+
+            clickable.MouseDown();
+            _draggable = sourceGridDataData.GetComponent<IDraggable>();
+        }
+
+        private void MouseDragRequest(Vector2 position)
         {
             var cameraPosition = _mainCamera.GetCameraPosition();
 
@@ -52,136 +52,121 @@ namespace _Game.Development.Controller.Board
                 return;
             }
 
-            var magnitude = (_firstClickedPosition - cameraPosition).magnitude;
-            if (magnitude > _moveThreshold)
-            {
-                _isDragActive = true;
-                BoardExtension.Selector.VisibilityRequest.Invoke(false);
-            }
+            if (!(Vector2.Distance(_firstClickedPosition, cameraPosition) > _moveThreshold)) return;
+
+            _isDragActive = true;
+            BoardExtension.Selector.VisibilityRequest.Invoke(false);
         }
 
-        private void MouseUpRequested(Vector2 vector2)
+        private void ResetSelection()
         {
-            var mouseDownGridData = _mouseDownGridData;
-            if (mouseDownGridData?.item is null) return;
+            _sourceGridDataData = null;
+            _isDoubleClick = false;
+            BoardExtension.Selector.VisibilityRequest.Invoke(false);
+        }
 
-            var iClickable = mouseDownGridData.GetComponent<IClickable>();
-            if (iClickable is null)
+        private void MouseUpRequest(Vector2 vector2)
+        {
+            var sourceGridData = _sourceGridDataData;
+            if (sourceGridData?.item is null) return;
+
+            if (!TryHandleEmptyOrNonClickable(sourceGridData)) return;
+
+            var targetGridData = BoardExtension.GetGridDataByCoordinate(_mainCamera.GetCameraPosition());
+            if (targetGridData is null)
             {
-                BoardExtension.Selector.VisibilityRequest.Invoke(false);
+                HandleMouseUpOnEmptyGrid(sourceGridData);
                 return;
             }
 
-            var cameraPosition = _mainCamera.GetCameraPosition();
-            var mouseUpGridData = BoardExtension.GetGridDataByCoordinate(cameraPosition);
-
-            if (mouseUpGridData is null)
+            if (sourceGridData.Coordinate == targetGridData.Coordinate)
             {
-                BoardExtension.Selector.VisibilityRequest.Invoke(true);
-                HandleMouseUpOnEmptyGrid(mouseDownGridData);
+                HandleMouseUpOnSameGrid(sourceGridData);
                 return;
             }
 
-            var isSameGrid = mouseUpGridData.Coordinate == mouseDownGridData.Coordinate;
-            if (isSameGrid)
-            {
-                BoardExtension.Selector.SetPositionRequest.Invoke(mouseDownGridData.Coordinate);
-                BoardExtension.Selector.VisibilityRequest.Invoke(true);
-                BoardExtension.Selector.ScaleUpDownRequest.Invoke();
+            HandleGridInteraction(sourceGridData, targetGridData);
+        }
 
-                if (!_isDragActive && _isDoubleClick)
-                    HandleGenerateItem(mouseDownGridData);
-                else
-                    HandleMouseUpOnSameGrid(mouseDownGridData);
-                return;
-            }
+        private bool TryHandleEmptyOrNonClickable(GridData sourceGridData)
+        {
+            var iClickable = sourceGridData.GetComponent<IClickable>();
+            if (iClickable is not null) return true;
 
-            if (ShouldSwapItems(mouseDownGridData, mouseUpGridData))
-                HandleItemSwap(mouseDownGridData, mouseUpGridData);
-            else
-                HandleItemMerge(mouseDownGridData, mouseUpGridData);
+            BoardExtension.Selector.VisibilityRequest.Invoke(false);
+            return false;
+        }
 
-            BoardExtension.Selector.SetPositionRequest.Invoke(mouseUpGridData.Coordinate);
+        private void HandleMouseUpOnEmptyGrid(GridData sourceGridData)
+        {
+            _boardTransferController.TryTransfer(TransferAction.Move, sourceGridData);
+            FinalizeMouseUp(sourceGridData);
+        }
+
+        private void HandleMouseUpOnSameGrid(GridData sourceGridData)
+        {
+            BoardExtension.Selector.SetPositionRequest.Invoke(sourceGridData.Coordinate);
             BoardExtension.Selector.VisibilityRequest.Invoke(true);
+            BoardExtension.Selector.ScaleUpDownRequest.Invoke();
+
+            if (!_isDragActive && _isDoubleClick)
+                _boardGenerateController.TryGenerate(sourceGridData);
+            else
+                _boardTransferController.TryTransfer(TransferAction.Move, sourceGridData);
+
+            _boardScaleUpDownController.TryScaleUpDown(sourceGridData);
+            FinalizeMouseUp(sourceGridData);
         }
 
-        private void HandleGenerateItem(GridData mouseDownGridData)
+        private void HandleGridInteraction(GridData sourceGridData, GridData targetGridData)
         {
-            _boardGenerateController.TryGenerate(mouseDownGridData);
+            if (ShouldSwapItems(sourceGridData, targetGridData))
+                _boardTransferController.TryTransfer(TransferAction.Swap, sourceGridData, targetGridData);
+            else
+                _boardMergeController.Merge(sourceGridData, targetGridData);
 
-            mouseDownGridData.GetComponent<IClickable>()?.MouseUp();
+            BoardExtension.Selector.SetPositionRequest.Invoke(targetGridData.Coordinate);
+            BoardExtension.Selector.VisibilityRequest.Invoke(true);
 
+            _boardScaleUpDownController.TryScaleUpDown(targetGridData);
+            FinalizeMouseUp(targetGridData);
+        }
+
+        private bool ShouldSwapItems(GridData sourceGridData, GridData targetGridData)
+        {
+            var sourceItemDataSo = sourceGridData.itemDataSo;
+            var targetItemDataSo = targetGridData.itemDataSo;
+
+            var differentTypes = sourceItemDataSo.itemType != targetItemDataSo.itemType;
+            var differentSpecialId = sourceItemDataSo.GetSpecialId() != targetItemDataSo.GetSpecialId();
+            var differentLevels = sourceItemDataSo.level != targetItemDataSo.level;
+            var targetCannotEvolve = targetItemDataSo.nextItemDataSo == null;
+
+            return differentTypes || differentSpecialId || differentLevels || targetCannotEvolve;
+        }
+
+        private void FinalizeMouseUp(GridData gridData)
+        {
+            gridData.GetComponent<IClickable>()?.MouseUp();
             _isDragActive = false;
             _draggable = null;
         }
 
-        private void HandleMouseUpOnEmptyGrid(GridData mouseDownGridData)
-        {
-            _boardTransferController.TryTransfer(TransferAction.Move, mouseDownGridData);
-
-            mouseDownGridData.GetComponent<IClickable>()?.MouseUp();
-
-            _isDragActive = false;
-            _draggable = null;
-        }
-
-        private void HandleMouseUpOnSameGrid(GridData mouseDownGridData)
-        {
-            _boardTransferController.TryTransfer(TransferAction.Move, mouseDownGridData);
-            _boardScaleUpDownController.TryScaleUpDown(mouseDownGridData);
-
-            mouseDownGridData.GetComponent<IClickable>()?.MouseUp();
-
-            _isDragActive = false;
-            _draggable = null;
-        }
-
-        private bool ShouldSwapItems(GridData mouseDownGridData, GridData mouseUpGridData)
-        {
-            var downItemData = mouseDownGridData.itemDataSo;
-            var upItemData = mouseUpGridData.itemDataSo;
-
-            var hasDifferentItemType = downItemData.itemType != upItemData.itemType;
-            var hasDifferentSpecialId = downItemData.GetSpecialId() != upItemData.GetSpecialId();
-            var hasDifferentLevel = downItemData.level != upItemData.level;
-            var isMaxLevel = upItemData.nextItemDataSo == null;
-
-            return hasDifferentItemType || hasDifferentSpecialId || hasDifferentLevel || isMaxLevel;
-        }
-
-        private void HandleItemSwap(GridData mouseDownGridData, GridData mouseUpGridData)
-        {
-            _boardTransferController.TryTransfer(TransferAction.Swap, mouseDownGridData, mouseUpGridData);
-            _boardScaleUpDownController.TryScaleUpDown(mouseUpGridData);
-
-            mouseUpGridData.GetComponent<IClickable>()?.MouseUp();
-
-            _isDragActive = false;
-            _draggable = null;
-        }
-
-        private void HandleItemMerge(GridData mouseDownGridData, GridData mouseUpGridData)
-        {
-            _boardMergeController.Merge(mouseDownGridData, mouseUpGridData);
-
-            _isDragActive = false;
-            _draggable = null;
-        }
 
         #region Unity Action
 
         private void OnEnable()
         {
-            InputExtension.MouseUpRequested += MouseUpRequested;
-            InputExtension.MouseDragRequested += MouseDragRequested;
-            InputExtension.MouseDownRequested += MouseDownRequested;
+            InputExtension.MouseUpRequest += MouseUpRequest;
+            InputExtension.MouseDragRequest += MouseDragRequest;
+            InputExtension.MouseDownRequest += MouseDownRequest;
         }
 
         private void OnDisable()
         {
-            InputExtension.MouseUpRequested -= MouseUpRequested;
-            InputExtension.MouseDragRequested -= MouseDragRequested;
-            InputExtension.MouseDownRequested -= MouseDownRequested;
+            InputExtension.MouseUpRequest -= MouseUpRequest;
+            InputExtension.MouseDragRequest -= MouseDragRequest;
+            InputExtension.MouseDownRequest -= MouseDownRequest;
         }
 
         #endregion
@@ -192,7 +177,7 @@ namespace _Game.Development.Controller.Board
         private bool _isDragActive;
         private Vector2 _firstClickedPosition;
 
-        private GridData _mouseDownGridData;
+        private GridData _sourceGridDataData;
         private bool _isDoubleClick;
 
         private readonly float _moveThreshold = 0.1f;

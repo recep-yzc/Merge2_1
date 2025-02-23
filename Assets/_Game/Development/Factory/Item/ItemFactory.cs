@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Game.Development.Enum.Item;
-using _Game.Development.Scriptable.Factory;
+using _Game.Development.Serializable.Factory;
 using _Game.Development.Serializable.Item;
 using UnityEngine;
 
@@ -31,10 +31,16 @@ namespace _Game.Development.Factory.Item
 
         #region Parameters
 
-        public static Dictionary<int, Func<DefaultSaveParameters, ItemSaveData>> CreateDefaultItemSaveDataByItemId { get; } =
+        public static Dictionary<int, Func<DefaultSaveParameters, ItemSaveData>> CreateDefaultItemSaveDataByItemId
+        {
+            get;
+        } =
             new();
 
-        public static Dictionary<int, Func<EditedSaveParameters, ItemSaveData>> CreateEditedItemSaveDataByItemId { get; } = new();
+        public static Dictionary<int, Func<EditedSaveParameters, ItemSaveData>> CreateEditedItemSaveDataByItemId
+        {
+            get;
+        } = new();
 
         public static Dictionary<int, Func<ItemSaveData, GameObject>> CreateItemByItemId { get; } = new();
 

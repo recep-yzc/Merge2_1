@@ -3,7 +3,7 @@ using Zenject;
 
 namespace _Game.Development.Scriptable.Ability
 {
-    [CreateAssetMenu(fileName = "ScaleUpDownDataSo", menuName = "Game/Core/Board/Item/Ability/ScaleUpDown/Data")]
+    [CreateAssetMenu(fileName = "ScaleUpDownDataSo", menuName = "Game/Board/Item/Ability/ScaleUpDown/Data")]
     public class ScaleUpDownDataSo : ScriptableObjectInstaller<ScaleUpDownDataSo>
     {
         public AnimationCurve animationCurve;

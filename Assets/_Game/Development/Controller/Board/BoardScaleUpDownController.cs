@@ -17,7 +17,9 @@ namespace _Game.Development.Controller.Board
         public void TryScaleUpDown(GridData gridData)
         {
             if (gridData?.item is null) return;
-            gridData.GetComponent<IScaleUpDown>()?.ScaleUpDownAsync(_scaleUpDownDataSo).Forget();
+            var scaleUpDown = gridData.GetComponent<IScaleUpDown>();
+
+            scaleUpDown?.ScaleUpDownAsync(_scaleUpDownDataSo).Forget();
         }
     }
 }

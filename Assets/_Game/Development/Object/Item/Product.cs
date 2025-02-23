@@ -3,8 +3,8 @@ using _Game.Development.Factory.Item;
 using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
 using _Game.Development.Scriptable.Ability;
-using _Game.Development.Scriptable.Factory;
 using _Game.Development.Scriptable.Item;
+using _Game.Development.Serializable.Factory;
 using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
 using Cysharp.Threading.Tasks;
@@ -48,9 +48,9 @@ namespace _Game.Development.Object.Item
             var itemDataSo = gridData.itemDataSo;
             var itemId = itemDataSo.GetItemId();
 
-            var func = ItemFactory.CreateEditedItemSaveDataByItemId[itemId];
+            var createEditedItemSaveDataFunc = ItemFactory.CreateEditedItemSaveDataByItemId[itemId];
             var editedItemSaveParameters = new EditedSaveParameters(coordinate, itemDataSo);
-            return func.Invoke(editedItemSaveParameters);
+            return createEditedItemSaveDataFunc.Invoke(editedItemSaveParameters);
         }
 
         #endregion

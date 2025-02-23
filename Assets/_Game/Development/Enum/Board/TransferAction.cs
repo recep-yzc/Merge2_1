@@ -3,6 +3,7 @@
     public enum TransferAction
     {
         Swap,
-        Move
+        Move,
+        SpecificMove
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Game.Development.Scriptable.Item
 {
-    [CreateAssetMenu(fileName = "ProductItemDataSo", menuName = "Game/Core/Board/Item/Product/Data")]
+    [CreateAssetMenu(fileName = "ProductItemDataSo", menuName = "Game/Board/Item/Product/Data")]
     public class ProductItemDataSo : ItemDataSo
     {
         [Header("ProductItemData")] public ProductType productType;

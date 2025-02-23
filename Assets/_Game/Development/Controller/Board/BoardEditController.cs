@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using _Game.Development.Factory.Item;
-using _Game.Development.Scriptable.Factory;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Board;
+using _Game.Development.Serializable.Factory;
 using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
 using _Game.Development.Ui.Grid;
@@ -61,10 +61,10 @@ namespace _Game.Development.Controller.Board
             for (var y = 0; y < _boardJsonData.Columns; y++)
             {
                 var coordinate = new Vector2(x, y) - offset;
-                var func = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId];
+                var createDefaultItemSaveDataFunc = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId];
                 var defaultParameters = new DefaultSaveParameters(coordinate, itemDataSo);
-                var newItemSaveData = func.Invoke(defaultParameters);
-                
+                var newItemSaveData = createDefaultItemSaveDataFunc.Invoke(defaultParameters);
+
                 _boardJsonData.ItemSaveDataList.Add(newItemSaveData);
             }
         }
@@ -72,7 +72,8 @@ namespace _Game.Development.Controller.Board
         [Button]
         public void SaveBoardJson()
         {
-            var json = new BoardJsonData(_boardJsonData.Rows, _boardJsonData.Columns, _boardJsonData.ItemSaveDataList).ConvertToJson();
+            var json = new BoardJsonData(_boardJsonData.Rows, _boardJsonData.Columns, _boardJsonData.ItemSaveDataList)
+                .ConvertToJson();
             File.WriteAllText(BoardExtension.Parameters.JsonPath, json);
             AssetDatabase.SaveAssets();
         }
@@ -180,9 +181,9 @@ namespace _Game.Development.Controller.Board
 
             var itemId = itemDataSo.GetItemId();
             var coordinate = itemSaveData.coordinate.ToVector2();
-            var func = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId];
+            var createDefaultItemSaveDataFunc = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId];
             var defaultParameters = new DefaultSaveParameters(coordinate, itemDataSo);
-            var newItemSaveData = func.Invoke(defaultParameters);
+            var newItemSaveData = createDefaultItemSaveDataFunc.Invoke(defaultParameters);
 
             _boardJsonData.ItemSaveDataList[index] = newItemSaveData;
 

@@ -8,7 +8,7 @@ using Zenject;
 
 namespace _Game.Development.Scriptable.Item
 {
-    [CreateAssetMenu(fileName = "AllItemDataSo", menuName = "Game/Core/Board/Item/AllItemDataSo")]
+    [CreateAssetMenu(fileName = "AllItemDataSo", menuName = "Game/Board/Item/AllItemDataSo")]
     public class AllItemDataSo : ScriptableObjectInstaller<AllItemDataSo>
     {
         public List<ItemTypeData> itemDataSoList = new();

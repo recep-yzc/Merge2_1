@@ -1,6 +1,5 @@
 {
   "$type": "_Game.Development.Serializable.Board.BoardJsonData, Assembly-CSharp",
-  "Rows": 5,
   "Columns": 5,
   "ItemSaveDataList": {
     "$type": "System.Collections.Generic.List`1[[_Game.Development.Serializable.Item.ItemSaveData, Assembly-CSharp]], mscorlib",
@@ -286,5 +285,6 @@
         "itemId": 0
       }
     ]
-  }
+  },
+  "Rows": 5
 }

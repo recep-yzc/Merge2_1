@@ -12,42 +12,59 @@ namespace _Game.Development.Controller.Board
 {
     public class BoardTransferController : MonoBehaviour
     {
+        private void Move(object[] parameters)
+        {
+            var gridData = (GridData)parameters[0];
+            if (gridData == null) return;
+
+            var moveable = gridData.GetComponent<IMoveable>();
+            moveable?.MoveAsync(gridData.Coordinate, _moveDataSo).Forget();
+        }
+
+        private void Swap(object[] parameters)
+        {
+            var gridDataFirst = (GridData)parameters[0];
+            var gridDataSecond = (GridData)parameters[1];
+
+            if (gridDataFirst == null || gridDataSecond == null) return;
+
+            (gridDataSecond.item, gridDataFirst.item) = (gridDataFirst.item, gridDataSecond.item);
+            (gridDataSecond.itemDataSo, gridDataFirst.itemDataSo) =
+                (gridDataFirst.itemDataSo, gridDataSecond.itemDataSo);
+
+            foreach (GridData gridData in parameters)
+            {
+                var moveable = gridData.GetComponent<IMoveable>();
+                moveable?.MoveAsync(gridData.Coordinate, _moveDataSo).Forget();
+            }
+        }
+
+        public void TryTransfer(TransferAction transferAction, params object[] parameters)
+        {
+            var action = _transferActionDict[transferAction];
+            action?.Invoke(parameters);
+        }
+
         #region Unity Action
 
         private void Start()
         {
             _transferActionDict.Add(TransferAction.Move, Move);
             _transferActionDict.Add(TransferAction.Swap, Swap);
+            _transferActionDict.Add(TransferAction.SpecificMove, SpecificMove);
+        }
+
+        private void SpecificMove(object[] parameters)
+        {
+            var gridData = (GridData)parameters[0];
+            var coordinate = (Vector2)parameters[1];
+            if (gridData == null) return;
+
+            var moveable = gridData.GetComponent<IMoveable>();
+            moveable?.MoveAsync(coordinate, _moveDataSo).Forget();
         }
 
         #endregion
-
-        private void Move(params object[] parameters)
-        {
-            if (parameters[0] is not GridData gridData) return;
-
-            gridData.GetComponent<IMoveable>().MoveAsync(gridData.Coordinate, _moveDataSo).Forget();
-        }
-
-        private void Swap(params object[] parameters)
-        {
-            if (parameters[0] is not GridData gridDataFirst || parameters[1] is not GridData gridDataSecond) return;
-
-            (gridDataSecond.item, gridDataFirst.item) = (gridDataFirst.item, gridDataSecond.item);
-            (gridDataSecond.itemDataSo, gridDataFirst.itemDataSo) =
-                (gridDataFirst.itemDataSo, gridDataSecond.itemDataSo);
-
-            if (gridDataFirst.item is not null)
-                gridDataFirst.GetComponent<IMoveable>().MoveAsync(gridDataFirst.Coordinate, _moveDataSo).Forget();
-
-            if (gridDataSecond.item is not null)
-                gridDataSecond.GetComponent<IMoveable>().MoveAsync(gridDataSecond.Coordinate, _moveDataSo).Forget();
-        }
-
-        public void TryTransfer(TransferAction transferAction, params object[] parameters)
-        {
-            _transferActionDict[transferAction]?.Invoke(parameters);
-        }
 
         #region Parameters
 

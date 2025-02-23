@@ -54,8 +54,7 @@ namespace _Game.Development.Controller.Board
 
         private GridData CreateGridDataByItemSaveData(ItemSaveData itemSaveData)
         {
-            if (!ItemFactory.CreateItemByItemId.TryGetValue(itemSaveData.itemId, out var createItemFunc))
-                return null;
+            var createItemFunc = ItemFactory.CreateItemByItemId[itemSaveData.itemId];
 
             var itemDataSo = _allItemDataSo.GetItemDataSoByItemSaveData(itemSaveData);
             var itemGameObject = createItemFunc.Invoke(itemSaveData);

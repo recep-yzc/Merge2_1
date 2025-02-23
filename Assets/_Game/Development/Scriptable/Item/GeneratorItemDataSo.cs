@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace _Game.Development.Scriptable.Item
 {
-    [CreateAssetMenu(fileName = "GeneratorItemDataSo", menuName = "Game/Core/Board/Item/Generator/Data")]
+    [CreateAssetMenu(fileName = "GeneratorItemDataSo", menuName = "Game/Board/Item/Generator/Data")]
     public class GeneratorItemDataSo : ItemDataSo
     {
         [Header("GeneratorItemData")] public GeneratorType generatorType;

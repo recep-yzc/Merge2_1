@@ -19,8 +19,8 @@ namespace _Game.Development.Controller.Board
             var columns = BoardExtension.Parameters.BoardJsonData.Columns;
             var newBoardJsonData = new BoardJsonData(rows, columns, itemSaveDataList);
 
-            var json = newBoardJsonData.ConvertToJson();
             BoardExtension.Parameters.BoardJsonData = newBoardJsonData;
+            var json = newBoardJsonData.ConvertToJson();
 
             BoardExtension.SaveBoardJson(json);
         }
@@ -30,7 +30,8 @@ namespace _Game.Development.Controller.Board
             var itemSaveDataList = new List<ItemSaveData>();
             foreach (var gridData in BoardExtension.Parameters.GridDataList)
             {
-                var itemSaveData = gridData.GetComponent<IItem>().CreateEditedItemSaveData();
+                var item = gridData.GetComponent<IItem>();
+                var itemSaveData = item.CreateEditedItemSaveData();
                 itemSaveDataList.Add(itemSaveData);
             }
 
