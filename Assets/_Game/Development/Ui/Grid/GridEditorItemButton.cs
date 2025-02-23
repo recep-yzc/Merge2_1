@@ -12,7 +12,7 @@ namespace _Game.Development.Ui.Grid
 
         [SerializeField] private Button btnIcon;
 
-        #region First
+        #region Unity Action
 
         private void Awake()
         {

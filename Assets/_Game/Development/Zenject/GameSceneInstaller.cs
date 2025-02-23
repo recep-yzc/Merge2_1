@@ -13,6 +13,7 @@ namespace _Game.Development.Zenject
 
             #region Factory
 
+            Container.BindInstance(FindObjectOfType<EmptyFactory>());
             Container.BindInstance(FindObjectOfType<GeneratorFactory>());
             Container.BindInstance(FindObjectOfType<ProductFactory>());
 

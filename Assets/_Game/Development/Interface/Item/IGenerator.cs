@@ -5,9 +5,9 @@ namespace _Game.Development.Interface.Item
     public interface IGenerator : IItem
     {
         public bool CanGenerate();
-        public int GetSpawnAmount();
+        public int GetSpawnCount();
         public ItemDataSo Generate();
 
-        public void FetchLastUsingDate(string date);
+        public void SetLastUsingDate(string date);
     }
 }

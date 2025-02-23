@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using _Game.Development.Factory.Item;
 using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
+using _Game.Development.Scriptable.Ability;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
@@ -13,70 +15,38 @@ using Random = UnityEngine.Random;
 
 namespace _Game.Development.Object.Item
 {
-    public class Generator : Item, IGenerator, IDraggable, IClickable
+    public class Generator : Item, IGenerator, IDraggable, IClickable, IScaleUpDown
     {
         [Header("References")] [SerializeField]
-        private GameObject regenerateCanvas;
+        private Canvas regenerateCanvas;
 
         [SerializeField] private Image imgRegenerate;
+        
+        #region Parameters
 
+        private readonly float _dragMoveSpeed = 15f;
+
+        private int _spawnAmount;
+        private string _lastUsingDate;
+        private GeneratorItemDataSo _generatorItemDataSo;
+
+        private CancellationTokenSource _regenerateCancellationTokenSource;
+        private CancellationTokenSource _scaleUpDownCancellationTokenSource;
+        
+        #endregion
+        
         #region Unity Action
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            DisposeRegenerateToken();
+            DisposeScaleUpDownTokenSource();
+            DisposeRegenerateTokenSource();
         }
 
         #endregion
-
-        #region Draggable
-
-        public void Drag(Vector2 vector2)
-        {
-            transform.position = Vector2.Lerp(transform.position, vector2, Time.deltaTime * DragMoveSpeed);
-        }
-
-        #endregion
-
-        #region Parameters
-
-        private int _spawnAmount;
-        private string _lastUsingDate;
-        private GeneratorItemDataSo _generatorItemDataSo;
-        private CancellationTokenSource _regenerateCancellationTokenSource;
-
-        #endregion
-
+        
         #region Item
-
-        public override void SetItemDataSo(ItemDataSo itemDataSo)
-        {
-            base.SetItemDataSo(itemDataSo);
-            _generatorItemDataSo = (GeneratorItemDataSo)itemDataSo;
-        }
-
-        public override ItemSaveData CreateItemSaveData()
-        {
-            var gridData = BoardExtension.GetGridDataByCoordinate(SelfCoordinate);
-            return new GeneratorItemSaveData(gridData.coordinate.ToJsonVector2(), gridData.itemDataSo.level,
-                gridData.itemDataSo.itemType.ToInt(), gridData.itemDataSo.GetSpecialId(), _lastUsingDate);
-        }
-
-        public override void FetchItemData()
-        {
-            var lastUsingData = _lastUsingDate.StringToDateTime();
-            var totalSeconds = (DateTime.Now - lastUsingData).TotalSeconds;
-            var leftDuration = totalSeconds - _generatorItemDataSo.chargeDuration;
-            if (leftDuration > 0)
-                RefillSpawnAmount();
-            else
-                StartRegenerate(Mathf.Abs((float)leftDuration)).Forget();
-        }
-
-        #endregion
-
-        #region Generator
 
         public override void LevelUp()
         {
@@ -84,23 +54,78 @@ namespace _Game.Development.Object.Item
             ResetLastUsingDate();
             RefillSpawnAmount();
         }
-
-        private void ResetLastUsingDate()
+        
+        public override void SetItemDataSo(ItemDataSo itemDataSo)
         {
-            _lastUsingDate = DateTime.Now.AddSeconds(_generatorItemDataSo.chargeDuration).DateTimeToString();
+            _generatorItemDataSo = (GeneratorItemDataSo)itemDataSo;
         }
 
-        public void FetchLastUsingDate(string date)
+        public override ItemSaveData CreateEditedItemSaveData()
+        {
+            var gridData = BoardExtension.GetGridDataByCoordinate(transform.position);
+
+            var coordinate = gridData.Coordinate;
+            var itemDataSo = gridData.itemDataSo;
+            var itemId = itemDataSo.GetItemId();
+
+            return ItemFactory.CreateEditedItemSaveDataByItemId[itemId].Invoke(new ItemFactory.EditedSave(coordinate, itemDataSo, _lastUsingDate));
+        }
+
+        public override void FetchItemData()
+        {
+            CheckGenerateStatus();
+        }
+        
+        #endregion
+
+        #region Generator
+
+        private void CheckGenerateStatus()
+        {
+            var lastUseTime = _lastUsingDate.StringToDateTime();
+            var elapsedTime = (float)(DateTime.Now - lastUseTime).TotalSeconds;
+            var remainingTime = _generatorItemDataSo.regenerateDuration - elapsedTime;
+
+            if (remainingTime <= 0)
+            {
+                RefillSpawnAmount();
+                return;
+            }
+
+            StartRegenerate(remainingTime).Forget();
+        }
+        private void UpdateGenerateStatus()
+        {
+            var spawnCountOver = _spawnAmount <= 0;
+            if (spawnCountOver)
+            {
+                var regenerateDuration = _generatorItemDataSo.regenerateDuration;
+                StartRegenerate(regenerateDuration).Forget();
+            }
+
+            _lastUsingDate = DateTime.Now.DateTimeToString();
+        }
+        
+        private void SetCanvasOrder(sbyte order)
+        {
+            regenerateCanvas.sortingOrder = order;
+        }
+        public void SetLastUsingDate(string date)
         {
             _lastUsingDate = date;
         }
-
+        
+        private void ResetLastUsingDate()
+        {
+            _lastUsingDate = DateTime.Now.AddSeconds(_generatorItemDataSo.regenerateDuration).DateTimeToString();
+        }
+        
         public bool CanGenerate()
         {
             return _generatorItemDataSo.spawnableItemDataList.Length > 0;
         }
 
-        public int GetSpawnAmount()
+        public int GetSpawnCount()
         {
             return _spawnAmount;
         }
@@ -113,17 +138,10 @@ namespace _Game.Development.Object.Item
         public ItemDataSo Generate()
         {
             _spawnAmount--;
-            if (_spawnAmount <= 0)
-            {
-                var duration = _generatorItemDataSo.chargeDuration;
-                StartRegenerate(duration).Forget();
-            }
-
-            _lastUsingDate = DateTime.Now.DateTimeToString();
-
+            UpdateGenerateStatus();
             return GetRandomGeneratedItemDataSo();
         }
-
+        
         private ItemDataSo GetRandomGeneratedItemDataSo()
         {
             var percentageDataList = _generatorItemDataSo.spawnableItemDataList;
@@ -141,27 +159,35 @@ namespace _Game.Development.Object.Item
             return null;
         }
 
-        private async UniTask StartRegenerate(float leftDuration)
+        private async UniTask StartRegenerate(float duration)
         {
-            regenerateCanvas.SetActive(true);
+            SetCanvasVisibility(true);
 
-            DisposeRegenerateToken();
-            _regenerateCancellationTokenSource = new CancellationTokenSource();
+            DisposeRegenerateTokenSource();
+            NewRegenerateTokenSource();
+            await AbilityExtension.Regenerating(duration, _generatorItemDataSo.regenerateDuration, imgRegenerate, _regenerateCancellationTokenSource.Token);
 
-            await AbilityExtension.Regenerating(leftDuration, _generatorItemDataSo.chargeDuration, imgRegenerate,
-                _regenerateCancellationTokenSource.Token);
-
-            regenerateCanvas.SetActive(false);
+            SetCanvasVisibility(false);
             RefillSpawnAmount();
+        }
+        
+        private void SetCanvasVisibility(bool isVisible)
+        {
+            regenerateCanvas.gameObject.SetActive(isVisible);
         }
 
         private void StopRegenerate()
         {
-            DisposeRegenerateToken();
-            regenerateCanvas.SetActive(false);
+            DisposeRegenerateTokenSource();
+            SetCanvasVisibility(false);
         }
-
-        private void DisposeRegenerateToken()
+        
+        private void NewRegenerateTokenSource()
+        {
+            _regenerateCancellationTokenSource = new CancellationTokenSource();
+        }
+        
+        private void DisposeRegenerateTokenSource()
         {
             if (_regenerateCancellationTokenSource is not { IsCancellationRequested: false }) return;
 
@@ -171,19 +197,60 @@ namespace _Game.Development.Object.Item
         }
 
         #endregion
+        
+        #region Ability
 
+        #region Draggable
+
+        public void Drag(Vector2 vector2)
+        {
+            transform.position = Vector2.Lerp(transform.position, vector2, Time.deltaTime * _dragMoveSpeed);
+        }
+
+        #endregion
+        
         #region Clickable
 
         public void MouseDown()
         {
             SetSpriteOrder(1);
+            SetCanvasOrder(1);
         }
-
+        
         public void MouseUp()
         {
             SetSpriteOrder(0);
+            SetCanvasOrder(0);
         }
 
+        #endregion
+        
+        #region ScaleUpDown
+
+        public UniTaskVoid ScaleUpDownAsync(ScaleUpDownDataSo scaleUpDownDataSo)
+        {
+            DisposeScaleUpDownTokenSource();
+            NewScaleUpTokenSource();
+            
+            return AbilityExtension.ScaleUpDownHandle(transform, scaleUpDownDataSo, _scaleUpDownCancellationTokenSource.Token);
+        }
+
+        private void NewScaleUpTokenSource()
+        {
+            _scaleUpDownCancellationTokenSource = new CancellationTokenSource();
+        }
+
+        private void DisposeScaleUpDownTokenSource()
+        {
+            if (_scaleUpDownCancellationTokenSource is not { IsCancellationRequested: false }) return;
+
+            _scaleUpDownCancellationTokenSource.Cancel();
+            _scaleUpDownCancellationTokenSource.Dispose();
+            _scaleUpDownCancellationTokenSource = null;
+        }
+
+        #endregion
+        
         #endregion
     }
 }

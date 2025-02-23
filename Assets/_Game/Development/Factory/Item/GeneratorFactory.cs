@@ -1,6 +1,8 @@
 ﻿using System;
 using _Game.Development.Enum.Item;
+using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
+using _Game.Development.Interface.Property;
 using _Game.Development.Object.Item;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Item;
@@ -21,13 +23,14 @@ namespace _Game.Development.Factory.Item
         {
             ItemType = ItemType.Generator;
 
-            CreateItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateItemSaveData<GeneratorItemSaveData>);
+            CreateDefaultItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateDefaultItemSaveData);
+            CreateEditedItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateEditedItemSaveData);
             CreateItemByItemId.TryAdd(ItemType.ToInt(), CreateItem);
         }
 
         #endregion
 
-        protected override GameObject CreateItem(ItemSaveData itemSaveData)
+        private GameObject CreateItem(ItemSaveData itemSaveData)
         {
             var item = GetOrCreateItemInPool(generatorPrefab.gameObject);
 
@@ -42,28 +45,44 @@ namespace _Game.Development.Factory.Item
                 Despawn(item);
             }
 
-            iPool.AddDespawnPool(DespawnPoolAction);
+            iPool.RegisterDespawnCallback(DespawnPoolAction);
 
             var generatorItemSaveData = (GeneratorItemSaveData)itemSaveData;
-            var itemDataSo =
-                _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
+            var itemDataSo = _allItemDataSo.GetItemDataSoByItemSaveData(itemSaveData);
 
             iGenerator.SetParent(transform);
             iGenerator.SetPosition(itemSaveData.coordinate.ToVector2());
             iGenerator.SetSprite(itemDataSo.icon);
 
-            iGenerator.FetchLastUsingDate(generatorItemSaveData.lastUsingDate);
+            iGenerator.SetLastUsingDate(generatorItemSaveData.lastUsingDate);
             iGenerator.SetItemDataSo(itemDataSo);
             iGenerator.FetchItemData();
 
             return item;
         }
 
-        protected override T CreateItemSaveData<T>(Vector2 coordinate, ItemDataSo itemDataSo)
+        private ItemSaveData CreateDefaultItemSaveData(DefaultSave defaultSave)
         {
-            var dataSo = (GeneratorItemDataSo)itemDataSo;
-            return new GeneratorItemSaveData(coordinate.ToJsonVector2(), dataSo.level, dataSo.itemType.ToInt(),
-                dataSo.generatorType.ToInt(), MinDateTimeStr) as T;
+            var editedSave = new EditedSave(defaultSave.coordinate, defaultSave.itemDataSo, MinDateTimeStr);
+            return CreateItemSaveData(editedSave);
+        }
+
+        private ItemSaveData CreateEditedItemSaveData(EditedSave editedSave)
+        {
+            return CreateItemSaveData(editedSave);
+        }
+
+        private ItemSaveData CreateItemSaveData(EditedSave editedSave)
+        {
+            if (editedSave.itemDataSo is not GeneratorItemDataSo generatorItemDataSo) return default;
+
+            var jsonCoordinate = editedSave.coordinate.ToJsonVector2();
+            var level = generatorItemDataSo.level;
+            var itemId = generatorItemDataSo.GetItemId();
+            var specialId = generatorItemDataSo.GetSpecialId();
+            var lastUsingDate = (string)editedSave.Parameters[0];
+
+            return new GeneratorItemSaveData(jsonCoordinate, level, itemId, specialId, lastUsingDate);
         }
 
         #region Parameters

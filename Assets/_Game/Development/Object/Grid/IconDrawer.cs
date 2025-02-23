@@ -13,7 +13,7 @@ namespace _Game.Development.Object.Grid
 
         #endregion
 
-        #region Unity Actions
+        #region Unity Action
 
         private void OnDrawGizmos()
         {
@@ -30,7 +30,7 @@ namespace _Game.Development.Object.Grid
             var boardJsonData = _boardEditController.GetBoardJsonData();
             if (boardJsonData == null) return;
 
-            foreach (var itemSaveData in boardJsonData.itemSaveDataList)
+            foreach (var itemSaveData in boardJsonData.ItemSaveDataList)
             {
                 var itemDataSo = _boardEditController.GetItemDataSoByItemSaveData(itemSaveData);
 
@@ -38,7 +38,7 @@ namespace _Game.Development.Object.Grid
                 var coordinate = itemSaveData.coordinate.ToVector2();
 
                 Gizmos.DrawIcon(coordinate, iconPath, true);
-                Gizmos.DrawWireCube(coordinate, VectorExtension.Size);
+                Gizmos.DrawWireCube(coordinate, VectorExtension.Parameters.Size);
             }
         }
 
@@ -51,7 +51,7 @@ namespace _Game.Development.Object.Grid
             var iconPath = itemDataSo.GetIconPath();
 
             Gizmos.DrawIcon(coordinate, iconPath, true);
-            Gizmos.DrawWireCube(coordinate, VectorExtension.Size);
+            Gizmos.DrawWireCube(coordinate, VectorExtension.Parameters.Size);
         }
     }
 }

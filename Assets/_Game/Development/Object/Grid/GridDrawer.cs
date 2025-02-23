@@ -13,7 +13,7 @@ namespace _Game.Development.Object.Grid
 
         #endregion
 
-        #region Unity Actions
+        #region Unity Action
 
         private void OnDrawGizmos()
         {
@@ -27,17 +27,17 @@ namespace _Game.Development.Object.Grid
         private void DrawGrid()
         {
             var boardJsonData = _boardEditController.GetBoardJsonData();
-            if (boardJsonData == null) return;
+            if (boardJsonData is null) return;
 
-            var row = (float)boardJsonData.rows;
-            var column = (float)boardJsonData.columns;
+            var row = (float)boardJsonData.Rows;
+            var column = (float)boardJsonData.Columns;
 
             var gridCenterOffset = new Vector2(-row / 2, -column / 2);
             for (var x = 0; x < row; x++)
             for (var y = 0; y < column; y++)
             {
-                var gridCenter = new Vector2(x, y) + gridCenterOffset + VectorExtension.HalfSize;
-                Gizmos.DrawWireCube(gridCenter, VectorExtension.Size);
+                var gridCenter = new Vector2(x, y) + gridCenterOffset + VectorExtension.Parameters.HalfSize;
+                Gizmos.DrawWireCube(gridCenter, VectorExtension.Parameters.Size);
             }
         }
     }

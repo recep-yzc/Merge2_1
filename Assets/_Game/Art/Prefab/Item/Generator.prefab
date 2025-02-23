@@ -312,7 +312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprIcon: {fileID: 2099389758898167643}
-  regenerateCanvas: {fileID: 2046327284004045415}
+  regenerateCanvas: {fileID: 654616025814106609}
   imgRegenerate: {fileID: 6636400483119274605}
 --- !u!4 &6119910259018638681 stripped
 Transform:

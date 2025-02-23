@@ -7,18 +7,14 @@ using _Game.Development.Serializable.Board;
 using _Game.Development.Serializable.Grid;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Random = System.Random;
 
 namespace _Game.Development.Static
 {
     public static class BoardExtension
     {
-        private static readonly Random Random = new();
-        public static string JsonPath => Application.dataPath + "/Board.json";
-
         public static GridData GetGridDataByCoordinate(Vector2 coordinate)
         {
-            return Statics.GridDataList.FirstOrDefault(tileData =>
+            return Parameters.GridDataList.FirstOrDefault(tileData =>
                 VectorExtension.CheckOverlapWithDot(tileData.BottomLeft, tileData.TopRight, coordinate));
         }
 
@@ -38,8 +34,9 @@ namespace _Game.Development.Static
             return gridDataArray;
         }
 
-        public static class Statics
+        public static class Parameters
         {
+            public static string JsonPath => Application.dataPath + "/Board.json"; // Test amaçlı konum
             public static List<GridData> GridDataList { get; set; }
             public static BoardJsonData BoardJsonData { get; set; }
             public static bool IsBoardInitialized { get; set; }
@@ -47,9 +44,9 @@ namespace _Game.Development.Static
 
         public abstract class Selector
         {
-            public static Action<bool> RequestChangeVisibility { get; set; }
-            public static Action<Vector2> RequestSetPosition { get; set; }
-            public static Func<UniTask> RequestScaleUpDown { get; set; }
+            public static Action<bool> VisibilityRequest { get; set; }
+            public static Action<Vector2> SetPositionRequest { get; set; }
+            public static Func<UniTask> ScaleUpDownRequest { get; set; }
         }
 
         #region PlayerPrefs
@@ -62,7 +59,7 @@ namespace _Game.Development.Static
         public static string GetBoardJson()
         {
             return !PlayerPrefs.HasKey("BoardJsonData")
-                ? File.ReadAllText(JsonPath)
+                ? File.ReadAllText(Parameters.JsonPath)
                 : PlayerPrefs.GetString("BoardJsonData");
         }
 

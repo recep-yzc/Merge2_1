@@ -23,14 +23,5 @@ namespace _Game.Development.Static
                     TypeNameHandling = TypeNameHandling.All
                 });
         }
-
-        public static BoardJsonData ConvertToBoardJsonData(this TextAsset json)
-        {
-            return JsonConvert.DeserializeObject<BoardJsonData>(json.text,
-                new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                });
-        }
     }
 }

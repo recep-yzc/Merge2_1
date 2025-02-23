@@ -26,7 +26,7 @@ namespace _Game.Development.Controller.Board
         {
             if (parameters[0] is not GridData gridData) return;
 
-            gridData.GetComponent<IMoveable>().MoveAsync(gridData.coordinate, _moveDataSo).Forget();
+            gridData.GetComponent<IMoveable>().MoveAsync(gridData.Coordinate, _moveDataSo).Forget();
         }
 
         private void Swap(params object[] parameters)
@@ -38,10 +38,10 @@ namespace _Game.Development.Controller.Board
                 (gridDataFirst.itemDataSo, gridDataSecond.itemDataSo);
 
             if (gridDataFirst.item is not null)
-                gridDataFirst.GetComponent<IMoveable>().MoveAsync(gridDataFirst.coordinate, _moveDataSo).Forget();
+                gridDataFirst.GetComponent<IMoveable>().MoveAsync(gridDataFirst.Coordinate, _moveDataSo).Forget();
 
             if (gridDataSecond.item is not null)
-                gridDataSecond.GetComponent<IMoveable>().MoveAsync(gridDataSecond.coordinate, _moveDataSo).Forget();
+                gridDataSecond.GetComponent<IMoveable>().MoveAsync(gridDataSecond.Coordinate, _moveDataSo).Forget();
         }
 
         public void TryTransfer(TransferAction transferAction, params object[] parameters)

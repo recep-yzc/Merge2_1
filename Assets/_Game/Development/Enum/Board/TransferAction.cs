@@ -2,7 +2,7 @@
 {
     public enum TransferAction
     {
-        Swap = 0,
-        Move = 1
+        Swap,
+        Move
     }
 }

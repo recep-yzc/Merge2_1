@@ -7,13 +7,13 @@ namespace _Game.Development.Static
     {
         public static string DateTimeToString(this DateTime dateTime)
         {
-            return dateTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture);
+            return dateTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.CurrentCulture);
         }
 
         public static DateTime StringToDateTime(this string dateTimeString)
         {
             var success = DateTime.TryParseExact(dateTimeString, "yyyy-MM-ddTHH:mm:ssZ",
-                CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var dateTime);
+                CultureInfo.CurrentCulture, DateTimeStyles.AssumeUniversal, out var dateTime);
 
             if (success)
                 return dateTime;

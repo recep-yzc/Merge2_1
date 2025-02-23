@@ -18,7 +18,7 @@ namespace _Game.Development.Controller.Board
         {
             Application.targetFrameRate = 60;
             Input.multiTouchEnabled = false;
-            CultureInfo.CurrentCulture = CultureExtension.CurrentCultureInfo;
+            CultureInfo.CurrentCulture = CultureExtension.Parameters.CurrentCultureInfo;
 
             await Initialize();
 
@@ -29,7 +29,7 @@ namespace _Game.Development.Controller.Board
         {
             await _boardLoadController.InitializeBoardJsonData();
             await _boardLoadController.InitializeBoard(); // board oluşturulmasını bekler 
-            BoardExtension.Statics.IsBoardInitialized = true;
+            BoardExtension.Parameters.IsBoardInitialized = true;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace _Game.Development.Controller.Board
                 return;
             }
 
-            _boardJsonData = json.ConvertToBoardJsonData();
+            _boardJsonData = json.text.ConvertToBoardJsonData();
         }
 
         [Button]
@@ -49,31 +49,29 @@ namespace _Game.Development.Controller.Board
 
             _boardJsonData = new BoardJsonData(rows, columns, new List<ItemSaveData>());
 
-            var halfOfRows = _boardJsonData.rows * 0.5f;
-            var halfOfColumns = _boardJsonData.columns * 0.5f;
-            var offset = new Vector2(halfOfRows, halfOfColumns) - VectorExtension.HalfSize;
+            var halfOfRows = _boardJsonData.Rows * 0.5f;
+            var halfOfColumns = _boardJsonData.Columns * 0.5f;
+            var offset = new Vector2(halfOfRows, halfOfColumns) - VectorExtension.Parameters.HalfSize;
 
             var emptyItemDataSo = _allItemDataSo.GetEmptyItemDataSo();
-            var level = emptyItemDataSo.level;
-            var itemId = emptyItemDataSo.itemType.ToInt();
-            var specialId = emptyItemDataSo.GetSpecialId();
+            var itemId = emptyItemDataSo.GetItemId();
 
-            for (var x = 0; x < _boardJsonData.rows; x++)
-            for (var y = 0; y < _boardJsonData.columns; y++)
+            for (var x = 0; x < _boardJsonData.Rows; x++)
+            for (var y = 0; y < _boardJsonData.Columns; y++)
             {
-                var itemDataSo = _allItemDataSo.GetItemDataByIds(itemId, specialId, level);
                 var coordinate = new Vector2(x, y) - offset;
-                var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemId].Invoke(coordinate, itemDataSo);
-                _boardJsonData.itemSaveDataList.Add(itemSaveData);
+                var itemSaveData = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId]
+                    .Invoke(new ItemFactory.DefaultSave(coordinate, emptyItemDataSo));
+                _boardJsonData.ItemSaveDataList.Add(itemSaveData);
             }
         }
 
         [Button]
         public void SaveBoardJson()
         {
-            var json = new BoardJsonData(_boardJsonData.rows, _boardJsonData.columns, _boardJsonData.itemSaveDataList)
+            var json = new BoardJsonData(_boardJsonData.Rows, _boardJsonData.Columns, _boardJsonData.ItemSaveDataList)
                 .ConvertToJson();
-            File.WriteAllText(BoardExtension.JsonPath, json);
+            File.WriteAllText(BoardExtension.Parameters.JsonPath, json);
             AssetDatabase.SaveAssets();
         }
 
@@ -99,11 +97,11 @@ namespace _Game.Development.Controller.Board
 
         private ItemSaveData GetItemSaveDataByCoordinate(Vector3 coordinate, out int index)
         {
-            for (var i = 0; i < _boardJsonData.itemSaveDataList.Count; i++)
+            for (var i = 0; i < _boardJsonData.ItemSaveDataList.Count; i++)
             {
-                var itemSaveData = _boardJsonData.itemSaveDataList[i];
-                var bottomLeft = itemSaveData.coordinate.ToVector2() - VectorExtension.HalfSize;
-                var topRight = itemSaveData.coordinate.ToVector2() + VectorExtension.HalfSize;
+                var itemSaveData = _boardJsonData.ItemSaveDataList[i];
+                var bottomLeft = itemSaveData.coordinate.ToVector2() - VectorExtension.Parameters.HalfSize;
+                var topRight = itemSaveData.coordinate.ToVector2() + VectorExtension.Parameters.HalfSize;
 
                 var isDotIn = VectorExtension.CheckOverlapWithDot(bottomLeft, topRight, coordinate);
                 if (!isDotIn) continue;
@@ -141,10 +139,10 @@ namespace _Game.Development.Controller.Board
         {
             return _selectedItemDataSo;
         }
-
+        
         public ItemDataSo GetItemDataSoByItemSaveData(ItemSaveData itemSaveData)
         {
-            return _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
+            return _allItemDataSo.GetItemDataSoByItemSaveData(itemSaveData);
         }
 
         #endregion
@@ -166,29 +164,28 @@ namespace _Game.Development.Controller.Board
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
             {
-                var itemSaveData = GetItemSaveData(out var index);
-                if (itemSaveData == null || index == -1) return;
-
-                var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[_selectedItemDataSo.itemType.ToInt()]
-                    .Invoke(itemSaveData.coordinate.ToVector2(), _selectedItemDataSo);
-                _boardJsonData.itemSaveDataList[index] = newItemSaveData;
-
-                SaveBoardJson();
+                HandleItemPlacement();
             }
-            else if (Input.GetMouseButtonDown(1))
-            {
-                var itemSaveData = GetItemSaveData(out var index);
-                if (itemSaveData == null || index == -1) return;
+        }
 
-                var itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
-                var newItemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemDataSo.itemType.ToInt()]
-                    .Invoke(itemSaveData.coordinate.ToVector2(), itemDataSo);
-                _boardJsonData.itemSaveDataList[index] = newItemSaveData;
+        private void HandleItemPlacement()
+        {
+            var itemSaveData = GetItemSaveData(out var index);
+            if (itemSaveData == null || index == -1) return;
 
-                SaveBoardJson();
-            }
+            var itemId = Input.GetMouseButtonDown(0)
+                ? _selectedItemDataSo.GetItemId()
+                : _allItemDataSo.GetEmptyItemDataSo().GetItemId();
+            
+            var coordinate = itemSaveData.coordinate.ToVector2();
+
+            var newItemSaveData = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId]
+                .Invoke(new ItemFactory.DefaultSave(coordinate, _selectedItemDataSo));
+            _boardJsonData.ItemSaveDataList[index] = newItemSaveData;
+
+            SaveBoardJson();
         }
 
         #endregion

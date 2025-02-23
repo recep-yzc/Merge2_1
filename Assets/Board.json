@@ -1,8 +1,8 @@
 {
   "$type": "_Game.Development.Serializable.Board.BoardJsonData, Assembly-CSharp",
-  "rows": 5,
-  "columns": 5,
-  "itemSaveDataList": {
+  "Rows": 5,
+  "Columns": 5,
+  "ItemSaveDataList": {
     "$type": "System.Collections.Generic.List`1[[_Game.Development.Serializable.Item.ItemSaveData, Assembly-CSharp]], mscorlib",
     "$values": [
       {
@@ -17,28 +17,26 @@
         "itemId": 0
       },
       {
-        "$type": "_Game.Development.Serializable.Item.GeneratorItemSaveData, Assembly-CSharp",
-        "lastUsingDate": "0001-01-01T00:00:00Z",
+        "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
         "coordinate": {
           "$type": "_Game.Development.Static.VectorExtension+JsonVector2, Assembly-CSharp",
           "x": -2.0,
           "y": -1.0
         },
-        "level": 4,
-        "specialId": 1,
-        "itemId": 1
+        "level": 0,
+        "specialId": 0,
+        "itemId": 0
       },
       {
-        "$type": "_Game.Development.Serializable.Item.GeneratorItemSaveData, Assembly-CSharp",
-        "lastUsingDate": "0001-01-01T00:00:00Z",
+        "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",
         "coordinate": {
           "$type": "_Game.Development.Static.VectorExtension+JsonVector2, Assembly-CSharp",
           "x": -2.0,
           "y": 0.0
         },
-        "level": 4,
-        "specialId": 1,
-        "itemId": 1
+        "level": 0,
+        "specialId": 0,
+        "itemId": 0
       },
       {
         "$type": "_Game.Development.Serializable.Item.EmptyItemSaveData, Assembly-CSharp",

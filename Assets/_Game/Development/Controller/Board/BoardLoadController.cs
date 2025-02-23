@@ -16,13 +16,13 @@ namespace _Game.Development.Controller.Board
         {
             var json = BoardExtension.GetBoardJson();
             var boardJsonData = await UniTask.RunOnThreadPool(() => json.ConvertToBoardJsonData());
-            BoardExtension.Statics.BoardJsonData = boardJsonData;
+            BoardExtension.Parameters.BoardJsonData = boardJsonData;
             await UniTask.DelayFrame(1);
         }
 
         public async UniTask InitializeBoard()
         {
-            BoardExtension.Statics.GridDataList = new List<GridData>();
+            BoardExtension.Parameters.GridDataList = new List<GridData>();
 
             CreateGrid();
             FetchGridNeighbors();
@@ -32,28 +32,25 @@ namespace _Game.Development.Controller.Board
 
         private void CreateGrid()
         {
-            foreach (var itemSaveData in BoardExtension.Statics.BoardJsonData.itemSaveDataList)
+            foreach (var itemSaveData in BoardExtension.Parameters.BoardJsonData.ItemSaveDataList)
             {
                 var gridData = CreateGridDataByItemSaveData(itemSaveData);
-                if (gridData != null) BoardExtension.Statics.GridDataList.Add(gridData);
+                if (gridData != null) BoardExtension.Parameters.GridDataList.Add(gridData);
             }
-
-            gridDataList = BoardExtension.Statics.GridDataList;
         }
 
         private static void FetchGridNeighbors()
         {
-            foreach (var gridData in BoardExtension.Statics.GridDataList)
-                gridData.CopyNeighborGridData(BoardExtension.GetGridDataNeighborArrayByCoordinate(gridData.coordinate));
+            foreach (var gridData in BoardExtension.Parameters.GridDataList)
+                gridData.CopyNeighborGridData(BoardExtension.GetGridDataNeighborArrayByCoordinate(gridData.Coordinate));
         }
 
         private GridData CreateGridDataByItemSaveData(ItemSaveData itemSaveData)
         {
             if (!ItemFactory.CreateItemByItemId.TryGetValue(itemSaveData.itemId, out var createItemFunc))
                 return null;
-
-            var itemDataSo =
-                _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
+            
+            var itemDataSo = _allItemDataSo.GetItemDataSoByItemSaveData(itemSaveData);
             var itemGameObject = createItemFunc.Invoke(itemSaveData);
 
             return new GridData(itemSaveData.coordinate.ToVector2(), itemGameObject, itemDataSo);
@@ -62,7 +59,6 @@ namespace _Game.Development.Controller.Board
         #region Parameters
 
         [Inject] private AllItemDataSo _allItemDataSo;
-        public List<GridData> gridDataList = new();
 
         #endregion
     }

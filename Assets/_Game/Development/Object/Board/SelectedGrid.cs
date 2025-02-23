@@ -10,23 +10,22 @@ namespace _Game.Development.Object.Board
         [Header("References")] [SerializeField]
         private SpriteRenderer sprIcon;
 
-        [Header("Properties")] [SerializeField]
-        private float duration = 0.15f;
+        [Header("Properties")]
+        [SerializeField] private float duration;
+        [SerializeField] private float force;
+        [SerializeField] private Ease ease;
 
-        [SerializeField] private float force = 0.9f;
-        [SerializeField] private Ease ease = Ease.InOutQuad;
-
-        private void RequestChangeVisibility(bool isVisible)
+        private void VisibilityRequest(bool isVisible)
         {
             sprIcon.enabled = isVisible;
         }
 
-        private void RequestSetPosition(Vector2 position)
+        private void SetPositionRequest(Vector2 position)
         {
             transform.position = position;
         }
 
-        private async UniTask RequestScaleUpDown()
+        private async UniTask ScaleUpDownRequest()
         {
             var tween = transform.DOScale(force, duration)
                 .From(1)
@@ -41,16 +40,16 @@ namespace _Game.Development.Object.Board
 
         private void OnEnable()
         {
-            BoardExtension.Selector.RequestChangeVisibility += RequestChangeVisibility;
-            BoardExtension.Selector.RequestSetPosition += RequestSetPosition;
-            BoardExtension.Selector.RequestScaleUpDown += RequestScaleUpDown;
+            BoardExtension.Selector.VisibilityRequest += VisibilityRequest;
+            BoardExtension.Selector.SetPositionRequest += SetPositionRequest;
+            BoardExtension.Selector.ScaleUpDownRequest += ScaleUpDownRequest;
         }
 
         private void OnDisable()
         {
-            BoardExtension.Selector.RequestChangeVisibility -= RequestChangeVisibility;
-            BoardExtension.Selector.RequestSetPosition -= RequestSetPosition;
-            BoardExtension.Selector.RequestScaleUpDown -= RequestScaleUpDown;
+            BoardExtension.Selector.VisibilityRequest -= VisibilityRequest;
+            BoardExtension.Selector.SetPositionRequest -= SetPositionRequest;
+            BoardExtension.Selector.ScaleUpDownRequest -= ScaleUpDownRequest;
         }
 
         #endregion

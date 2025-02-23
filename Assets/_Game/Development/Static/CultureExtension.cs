@@ -4,6 +4,9 @@ namespace _Game.Development.Static
 {
     public static class CultureExtension
     {
-        public static readonly CultureInfo CurrentCultureInfo = CultureInfo.InvariantCulture;
+        public static class Parameters
+        {
+            public static readonly CultureInfo CurrentCultureInfo = CultureInfo.InvariantCulture;
+        }
     }
 }

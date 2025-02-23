@@ -2,6 +2,7 @@
 using _Game.Development.Factory.Item;
 using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
+using _Game.Development.Interface.Property;
 using _Game.Development.Scriptable.Ability;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Grid;
@@ -21,13 +22,17 @@ namespace _Game.Development.Controller.Board
 
         private void CreateEmptyItem(GridData gridData)
         {
-            gridData.GetComponent<IPool>().PlayDespawnPool();
-            gridData.itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
+            gridData.GetComponent<IPool>().InvokeDespawn();
+            var itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
 
-            var itemId = ItemType.Empty.ToInt();
-            var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemId]
-                .Invoke(gridData.coordinate, gridData.itemDataSo);
+            var itemId = itemDataSo.GetItemId();
+            var func = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId];
+            
+            var defaultSave = new ItemFactory.DefaultSave(gridData.Coordinate, itemDataSo);
+            var itemSaveData = func.Invoke(defaultSave);
+            
             gridData.item = ItemFactory.CreateItemByItemId[itemId].Invoke(itemSaveData);
+            gridData.itemDataSo = itemDataSo;
         }
 
         private void UpgradeItem(GridData gridData)

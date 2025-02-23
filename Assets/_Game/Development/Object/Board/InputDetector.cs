@@ -10,7 +10,7 @@ namespace _Game.Development.Object.Board
 
         private void Update()
         {
-            if (!BoardExtension.Statics.IsBoardInitialized) return;
+            if (!BoardExtension.Parameters.IsBoardInitialized) return;
             if (!Input.GetMouseButton(0) && !Input.GetMouseButtonDown(0) && !Input.GetMouseButtonUp(0))
                 return;
 
@@ -18,13 +18,13 @@ namespace _Game.Development.Object.Board
             switch (GetMouseAction())
             {
                 case MouseAction.Down:
-                    InputExtension.OnMouseDownEvent?.Invoke(mousePosition);
+                    InputExtension.MouseDownRequested?.Invoke(mousePosition);
                     break;
                 case MouseAction.Hold:
-                    InputExtension.OnMouseDragEvent?.Invoke(mousePosition);
+                    InputExtension.MouseDragRequested?.Invoke(mousePosition);
                     break;
                 case MouseAction.Up:
-                    InputExtension.OnMouseUpEvent?.Invoke(mousePosition);
+                    InputExtension.MouseUpRequested?.Invoke(mousePosition);
                     break;
             }
         }

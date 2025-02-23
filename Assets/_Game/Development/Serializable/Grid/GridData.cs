@@ -10,7 +10,7 @@ namespace _Game.Development.Serializable.Grid
     [Serializable]
     public class GridData
     {
-        public Vector2 coordinate;
+        public readonly Vector2 Coordinate;
         public GameObject item;
         public ItemDataSo itemDataSo;
 
@@ -18,13 +18,13 @@ namespace _Game.Development.Serializable.Grid
 
         public GridData(Vector2 coordinate, GameObject item, ItemDataSo itemDataSo)
         {
-            this.coordinate = coordinate;
+            Coordinate = coordinate;
             this.item = item;
             this.itemDataSo = itemDataSo;
         }
 
-        public Vector2 BottomLeft => coordinate - VectorExtension.HalfSize;
-        public Vector2 TopRight => coordinate + VectorExtension.HalfSize;
+        public Vector2 BottomLeft => Coordinate - VectorExtension.Parameters.HalfSize;
+        public Vector2 TopRight => Coordinate + VectorExtension.Parameters.HalfSize;
 
         public bool IsEmpty()
         {

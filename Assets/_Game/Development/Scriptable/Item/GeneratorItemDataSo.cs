@@ -13,7 +13,7 @@ namespace _Game.Development.Scriptable.Item
 
         public int spawnAmount;
 
-        [Tooltip("In seconds")] public int chargeDuration;
+        [Tooltip("In seconds")] public int regenerateDuration;
         [Space(5)] public PercentageData[] spawnableItemDataList;
 
         protected GeneratorItemDataSo()

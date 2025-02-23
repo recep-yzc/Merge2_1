@@ -18,7 +18,7 @@ MonoBehaviour:
   nextItemDataSo: {fileID: 11400000, guid: 222b15e12d1d5f541998e48e74630417, type: 2}
   generatorType: 1
   spawnAmount: 7
-  chargeDuration: 18
+  regenerateDuration: 17
   spawnableItemDataList:
   - percentage: 86
     itemDataSo: {fileID: 11400000, guid: 2e77857af95a5e949bbe383ae60730cd, type: 2}

@@ -10,7 +10,7 @@ namespace _Game.Development.Controller.Board
 {
     public class BoardInputController : MonoBehaviour
     {
-        private void OnMouseDownEvent(Vector2 vector2)
+        private void MouseDownRequested(Vector2 vector2)
         {
             _firstClickedPosition = _mainCamera.GetCameraPosition();
             var gridData = BoardExtension.GetGridDataByCoordinate(_firstClickedPosition);
@@ -20,7 +20,7 @@ namespace _Game.Development.Controller.Board
                 _mouseDownGridData = null;
                 _isDoubleClick = false;
 
-                BoardExtension.Selector.RequestChangeVisibility.Invoke(false);
+                BoardExtension.Selector.VisibilityRequest.Invoke(false);
                 return;
             }
 
@@ -29,20 +29,20 @@ namespace _Game.Development.Controller.Board
             var iClickable = gridData.GetComponent<IClickable>();
             if (iClickable is null)
             {
-                BoardExtension.Selector.RequestChangeVisibility.Invoke(false);
+                BoardExtension.Selector.VisibilityRequest.Invoke(false);
                 return;
             }
 
             _isDoubleClick = _mouseDownGridData == gridData;
 
-            BoardExtension.Selector.RequestSetPosition.Invoke(gridData.coordinate);
-            BoardExtension.Selector.RequestChangeVisibility.Invoke(true);
+            BoardExtension.Selector.SetPositionRequest.Invoke(gridData.Coordinate);
+            BoardExtension.Selector.VisibilityRequest.Invoke(true);
 
             iClickable.MouseDown();
             _draggable = gridData.GetComponent<IDraggable>();
         }
 
-        private void OnMouseDragEvent(Vector2 vector2)
+        private void MouseDragRequested(Vector2 vector2)
         {
             var cameraPosition = _mainCamera.GetCameraPosition();
 
@@ -56,11 +56,11 @@ namespace _Game.Development.Controller.Board
             if (magnitude > _moveThreshold)
             {
                 _isDragActive = true;
-                BoardExtension.Selector.RequestChangeVisibility.Invoke(false);
+                BoardExtension.Selector.VisibilityRequest.Invoke(false);
             }
         }
 
-        private void OnMouseUpEvent(Vector2 vector2)
+        private void MouseUpRequested(Vector2 vector2)
         {
             var mouseDownGridData = _mouseDownGridData;
             if (mouseDownGridData?.item is null) return;
@@ -68,7 +68,7 @@ namespace _Game.Development.Controller.Board
             var iClickable = mouseDownGridData.GetComponent<IClickable>();
             if (iClickable is null)
             {
-                BoardExtension.Selector.RequestChangeVisibility.Invoke(false);
+                BoardExtension.Selector.VisibilityRequest.Invoke(false);
                 return;
             }
 
@@ -77,17 +77,17 @@ namespace _Game.Development.Controller.Board
 
             if (mouseUpGridData is null)
             {
-                BoardExtension.Selector.RequestChangeVisibility.Invoke(true);
+                BoardExtension.Selector.VisibilityRequest.Invoke(true);
                 HandleMouseUpOnEmptyGrid(mouseDownGridData);
                 return;
             }
 
-            var isSameGrid = mouseUpGridData.coordinate == mouseDownGridData.coordinate;
+            var isSameGrid = mouseUpGridData.Coordinate == mouseDownGridData.Coordinate;
             if (isSameGrid)
             {
-                BoardExtension.Selector.RequestSetPosition.Invoke(mouseDownGridData.coordinate);
-                BoardExtension.Selector.RequestChangeVisibility.Invoke(true);
-                BoardExtension.Selector.RequestScaleUpDown.Invoke();
+                BoardExtension.Selector.SetPositionRequest.Invoke(mouseDownGridData.Coordinate);
+                BoardExtension.Selector.VisibilityRequest.Invoke(true);
+                BoardExtension.Selector.ScaleUpDownRequest.Invoke();
 
                 if (!_isDragActive && _isDoubleClick)
                     HandleGenerateItem(mouseDownGridData);
@@ -101,13 +101,15 @@ namespace _Game.Development.Controller.Board
             else
                 HandleItemMerge(mouseDownGridData, mouseUpGridData);
 
-            BoardExtension.Selector.RequestSetPosition.Invoke(mouseUpGridData.coordinate);
-            BoardExtension.Selector.RequestChangeVisibility.Invoke(true);
+            BoardExtension.Selector.SetPositionRequest.Invoke(mouseUpGridData.Coordinate);
+            BoardExtension.Selector.VisibilityRequest.Invoke(true);
         }
 
         private void HandleGenerateItem(GridData mouseDownGridData)
         {
             _boardGenerateController.TryGenerate(mouseDownGridData);
+            
+            mouseDownGridData.GetComponent<IClickable>()?.MouseUp();
 
             _isDragActive = false;
             _draggable = null;
@@ -116,6 +118,8 @@ namespace _Game.Development.Controller.Board
         private void HandleMouseUpOnEmptyGrid(GridData mouseDownGridData)
         {
             _boardTransferController.TryTransfer(TransferAction.Move, mouseDownGridData);
+            
+            mouseDownGridData.GetComponent<IClickable>()?.MouseUp();
 
             _isDragActive = false;
             _draggable = null;
@@ -168,16 +172,16 @@ namespace _Game.Development.Controller.Board
 
         private void OnEnable()
         {
-            InputExtension.OnMouseUpEvent += OnMouseUpEvent;
-            InputExtension.OnMouseDragEvent += OnMouseDragEvent;
-            InputExtension.OnMouseDownEvent += OnMouseDownEvent;
+            InputExtension.MouseUpRequested += MouseUpRequested;
+            InputExtension.MouseDragRequested += MouseDragRequested;
+            InputExtension.MouseDownRequested += MouseDownRequested;
         }
 
         private void OnDisable()
         {
-            InputExtension.OnMouseUpEvent -= OnMouseUpEvent;
-            InputExtension.OnMouseDragEvent -= OnMouseDragEvent;
-            InputExtension.OnMouseDownEvent -= OnMouseDownEvent;
+            InputExtension.MouseUpRequested -= MouseUpRequested;
+            InputExtension.MouseDragRequested -= MouseDragRequested;
+            InputExtension.MouseDownRequested -= MouseDownRequested;
         }
 
         #endregion

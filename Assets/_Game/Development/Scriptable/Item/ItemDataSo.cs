@@ -1,4 +1,5 @@
 ﻿using _Game.Development.Enum.Item;
+using _Game.Development.Static;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -20,5 +21,6 @@ namespace _Game.Development.Scriptable.Item
         }
 
         public abstract int GetSpecialId();
+        public int GetItemId() => itemType.ToInt();
     }
 }

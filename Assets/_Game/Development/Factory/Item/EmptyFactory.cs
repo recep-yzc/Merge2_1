@@ -1,5 +1,7 @@
 ﻿using _Game.Development.Enum.Item;
+using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
+using _Game.Development.Interface.Property;
 using _Game.Development.Object.Item;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Item;
@@ -22,13 +24,14 @@ namespace _Game.Development.Factory.Item
         {
             ItemType = ItemType.Empty;
 
-            CreateItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateItemSaveData<EmptyItemSaveData>);
+            CreateDefaultItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateDefaultItemSaveData);
+            CreateEditedItemSaveDataByItemId.TryAdd(ItemType.ToInt(), CreateEditedItemSaveData);
             CreateItemByItemId.TryAdd(ItemType.ToInt(), CreateItem);
         }
 
         #endregion
 
-        protected override GameObject CreateItem(ItemSaveData itemSaveData)
+        private GameObject CreateItem(ItemSaveData itemSaveData)
         {
             var item = GetOrCreateItemInPool(itemPrefab.gameObject);
 
@@ -43,10 +46,9 @@ namespace _Game.Development.Factory.Item
                 Despawn(item);
             }
 
-            iPool.AddDespawnPool(DespawnPoolAction);
+            iPool.RegisterDespawnCallback(DespawnPoolAction);
 
-            var itemDataSo =
-                _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
+            var itemDataSo = _allItemDataSo.GetItemDataSoByItemSaveData(itemSaveData);
 
             iEmpty.SetParent(transform);
             iEmpty.SetPosition(itemSaveData.coordinate.ToVector2());
@@ -58,10 +60,27 @@ namespace _Game.Development.Factory.Item
             return item;
         }
 
-        protected override T CreateItemSaveData<T>(Vector2 coordinate, ItemDataSo itemDataSo)
+        private ItemSaveData CreateDefaultItemSaveData(DefaultSave defaultSave)
         {
-            var dataSo = (EmptyItemDataSo)itemDataSo;
-            return new EmptyItemSaveData(coordinate.ToJsonVector2(), dataSo.level, dataSo.itemType.ToInt(), 0) as T;
+            var editedSave = new EditedSave(defaultSave.coordinate, defaultSave.itemDataSo);
+            return CreateItemSaveData(editedSave);
+        }
+
+        private ItemSaveData CreateEditedItemSaveData(EditedSave editedSave)
+        {
+            return CreateItemSaveData(editedSave);
+        }
+
+        private ItemSaveData CreateItemSaveData(EditedSave editedSave)
+        {
+            if (editedSave.itemDataSo is not EmptyItemDataSo emptyItemDataSo) return default;
+
+            var jsonCoordinate = editedSave.coordinate.ToJsonVector2();
+            var level = emptyItemDataSo.level;
+            var itemId = emptyItemDataSo.GetItemId();
+            var specialId = 0;
+
+            return new EmptyItemSaveData(jsonCoordinate, level, itemId, specialId);
         }
     }
 }

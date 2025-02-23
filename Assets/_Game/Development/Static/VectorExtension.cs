@@ -6,8 +6,11 @@ namespace _Game.Development.Static
 {
     public static class VectorExtension
     {
-        public static readonly Vector2 HalfSize = new(0.5f, 0.5f);
-        public static readonly Vector2 Size = Vector2.one;
+        public static class Parameters
+        {
+            public static readonly Vector2 HalfSize = new(0.5f, 0.5f);
+            public static readonly Vector2 Size = Vector2.one;
+        }
 
         public static bool CheckOverlapWithDot(Vector2 bottomLeft, Vector2 topRight, Vector2 coordinate)
         {
@@ -42,7 +45,7 @@ namespace _Game.Development.Static
         }
 
         [Serializable]
-        public class JsonVector2
+        public record JsonVector2
         {
             public float x;
             public float y;
@@ -51,11 +54,6 @@ namespace _Game.Development.Static
             {
                 this.x = x;
                 this.y = y;
-            }
-
-            public Vector2 ToVector2()
-            {
-                return new Vector2(x, y);
             }
         }
     }

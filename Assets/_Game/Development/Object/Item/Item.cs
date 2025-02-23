@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
+using _Game.Development.Interface.Property;
 using _Game.Development.Scriptable.Ability;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Item;
@@ -11,7 +12,7 @@ using UnityEngine;
 
 namespace _Game.Development.Object.Item
 {
-    public abstract class Item : MonoBehaviour, IItem, IPool, IScaleUpDown, IMoveable
+    public abstract class Item : MonoBehaviour, IItem, IPool, IMoveable
     {
         [Header("References")] [SerializeField]
         private SpriteRenderer sprIcon;
@@ -20,24 +21,18 @@ namespace _Game.Development.Object.Item
 
         protected virtual void OnDestroy()
         {
-            DisposeScaleUpDownToken();
-            DisposeMoveToken();
-            DisposeJumpToken();
+            DisposeMoveTokenSource();
+
         }
 
         #endregion
 
         #region Parameters
-
-        protected readonly float DragMoveSpeed = 15f;
+        
+        private CancellationTokenSource _moveCancellationTokenSource;
         protected Vector2 SelfCoordinate;
-        protected ItemDataSo ItemDataSo { get; private set; }
-
         private Action _backPoolAction;
-        private CancellationTokenSource _cancellationScaleUpDownTokenSource;
-        private CancellationTokenSource _cancellationMoveTokenSource;
-        private CancellationTokenSource _cancellationJumpTokenSource;
-
+        
         #endregion
 
         #region Item
@@ -63,15 +58,12 @@ namespace _Game.Development.Object.Item
             SetSpriteOrder(0);
         }
 
-        protected void SetSpriteOrder(int order)
+        protected void SetSpriteOrder(sbyte order)
         {
             sprIcon.sortingOrder = order;
         }
 
-        public virtual void SetItemDataSo(ItemDataSo itemDataSo)
-        {
-            ItemDataSo = itemDataSo;
-        }
+        public abstract void SetItemDataSo(ItemDataSo itemDataSo);
 
         public virtual void FetchItemData()
         {
@@ -81,23 +73,23 @@ namespace _Game.Development.Object.Item
         {
         }
 
-        public abstract ItemSaveData CreateItemSaveData();
+        public abstract ItemSaveData CreateEditedItemSaveData();
 
         #endregion
 
         #region Pool
 
-        public void AddDespawnPool(Action action)
+        public void RegisterDespawnCallback(Action action)
         {
             _backPoolAction += action;
         }
 
-        public void RemoveDespawnPool(Action action)
+        public void UnregisterDespawnCallback(Action action)
         {
             _backPoolAction -= action;
         }
 
-        public void PlayDespawnPool()
+        public void InvokeDespawn()
         {
             _backPoolAction?.Invoke();
         }
@@ -106,57 +98,31 @@ namespace _Game.Development.Object.Item
 
         #region Ability
 
-        #region ScaleUpDown
-
-        public UniTaskVoid ScaleUpDownAsync(ScaleUpDownDataSo scaleUpDownDataSo)
-        {
-            DisposeScaleUpDownToken();
-
-            _cancellationScaleUpDownTokenSource = new CancellationTokenSource();
-            return AbilityExtension.ScaleUpDownHandle(transform, scaleUpDownDataSo,
-                _cancellationScaleUpDownTokenSource.Token);
-        }
-
-        private void DisposeScaleUpDownToken()
-        {
-            if (_cancellationScaleUpDownTokenSource is not { IsCancellationRequested: false }) return;
-
-            _cancellationScaleUpDownTokenSource.Cancel();
-            _cancellationScaleUpDownTokenSource.Dispose();
-            _cancellationScaleUpDownTokenSource = null;
-        }
-
-        #endregion
-
         #region Move
 
         public async UniTask MoveAsync(Vector2 coordinate, MoveDataSo moveDataSo)
         {
             SelfCoordinate = coordinate;
-            DisposeMoveToken();
-
-            _cancellationMoveTokenSource = new CancellationTokenSource();
-            await AbilityExtension.MoveHandle(transform, coordinate, moveDataSo, _cancellationMoveTokenSource.Token);
+            DisposeMoveTokenSource();
+            NewMoveTokenSource();
+            
+            await AbilityExtension.MoveHandle(transform, coordinate, moveDataSo, _moveCancellationTokenSource.Token);
         }
 
-        private void DisposeMoveToken()
+        private void NewMoveTokenSource()
         {
-            if (_cancellationMoveTokenSource is not { IsCancellationRequested: false }) return;
-
-            _cancellationMoveTokenSource.Cancel();
-            _cancellationMoveTokenSource.Dispose();
-            _cancellationMoveTokenSource = null;
+            _moveCancellationTokenSource = new CancellationTokenSource();
         }
 
-        private void DisposeJumpToken()
+        private void DisposeMoveTokenSource()
         {
-            if (_cancellationJumpTokenSource is not { IsCancellationRequested: false }) return;
+            if (_moveCancellationTokenSource is not { IsCancellationRequested: false }) return;
 
-            _cancellationJumpTokenSource.Cancel();
-            _cancellationJumpTokenSource.Dispose();
-            _cancellationJumpTokenSource = null;
+            _moveCancellationTokenSource.Cancel();
+            _moveCancellationTokenSource.Dispose();
+            _moveCancellationTokenSource = null;
         }
-
+        
         #endregion
 
         #endregion

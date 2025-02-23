@@ -1,29 +1,64 @@
-﻿using _Game.Development.Interface.Ability;
+﻿using System.Threading;
+using _Game.Development.Factory.Item;
+using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
+using _Game.Development.Scriptable.Ability;
+using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Game.Development.Object.Item
 {
-    public class Product : Item, IProduct, IDraggable, IClickable
+    public class Product : Item, IProduct, IDraggable, IClickable, IScaleUpDown
     {
-        #region Draggable
+        #region Parameters
 
-        public void Drag(Vector2 vector2)
+        private readonly float _dragMoveSpeed = 15f;
+        private ProductItemDataSo _productItemDataSo;
+
+        private CancellationTokenSource _scaleUpDownCancellationTokenSource;
+
+        #endregion
+
+        #region Unity Action
+
+        protected override void OnDestroy()
         {
-            transform.position = Vector2.Lerp(transform.position, vector2, Time.deltaTime * DragMoveSpeed);
+            base.OnDestroy();
+            DisposeScaleUpDownTokenSource();
         }
 
         #endregion
 
         #region Item
 
-        public override ItemSaveData CreateItemSaveData()
+        public override void SetItemDataSo(ItemDataSo itemDataSo)
+        {
+            _productItemDataSo = (ProductItemDataSo)itemDataSo;
+        }
+
+        public override ItemSaveData CreateEditedItemSaveData()
         {
             var gridData = BoardExtension.GetGridDataByCoordinate(transform.position);
-            return new ProductItemSaveData(gridData.coordinate.ToJsonVector2(), gridData.itemDataSo.level,
-                gridData.itemDataSo.itemType.ToInt(), gridData.itemDataSo.GetSpecialId());
+
+            var coordinate = gridData.Coordinate;
+            var itemDataSo = gridData.itemDataSo;
+            var itemId = itemDataSo.GetItemId();
+
+            return ItemFactory.CreateEditedItemSaveDataByItemId[itemId].Invoke(new ItemFactory.EditedSave(coordinate, itemDataSo));
+        }
+
+        #endregion
+
+        #region Ability
+
+        #region Draggable
+
+        public void Drag(Vector2 vector2)
+        {
+            transform.position = Vector2.Lerp(transform.position, vector2, Time.deltaTime * _dragMoveSpeed);
         }
 
         #endregion
@@ -39,6 +74,35 @@ namespace _Game.Development.Object.Item
         {
             SetSpriteOrder(0);
         }
+
+        #endregion
+
+        #region ScaleUpDown
+
+        public UniTaskVoid ScaleUpDownAsync(ScaleUpDownDataSo scaleUpDownDataSo)
+        {
+            DisposeScaleUpDownTokenSource();
+            NewScaleUpTokenSource();
+
+            return AbilityExtension.ScaleUpDownHandle(transform, scaleUpDownDataSo,
+                _scaleUpDownCancellationTokenSource.Token);
+        }
+
+        private void NewScaleUpTokenSource()
+        {
+            _scaleUpDownCancellationTokenSource = new CancellationTokenSource();
+        }
+
+        private void DisposeScaleUpDownTokenSource()
+        {
+            if (_scaleUpDownCancellationTokenSource is not { IsCancellationRequested: false }) return;
+
+            _scaleUpDownCancellationTokenSource.Cancel();
+            _scaleUpDownCancellationTokenSource.Dispose();
+            _scaleUpDownCancellationTokenSource = null;
+        }
+
+        #endregion
 
         #endregion
     }
