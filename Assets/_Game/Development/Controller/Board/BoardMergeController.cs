@@ -23,9 +23,10 @@ namespace _Game.Development.Controller.Board
         {
             gridData.GetComponent<IPool>().PlayDespawnPool();
             gridData.itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
-            
+
             var itemId = ItemType.Empty.ToInt();
-            var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemId].Invoke(gridData.coordinate, gridData.itemDataSo);
+            var itemSaveData = ItemFactory.CreateItemSaveDataByItemId[itemId]
+                .Invoke(gridData.coordinate, gridData.itemDataSo);
             gridData.item = ItemFactory.CreateItemByItemId[itemId].Invoke(itemSaveData);
         }
 
@@ -33,7 +34,7 @@ namespace _Game.Development.Controller.Board
         {
             gridData.GetComponent<IScaleUpDown>().ScaleUpDownAsync(_scaleUpDownDataSo).Forget();
             gridData.itemDataSo = gridData.itemDataSo.nextItemDataSo;
-            
+
             var iItem = gridData.GetComponent<IItem>();
             iItem.SetItemDataSo(gridData.itemDataSo);
             iItem.SetSprite(gridData.itemDataSo.icon);

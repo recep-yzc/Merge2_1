@@ -30,6 +30,10 @@ namespace _Game.Development.Factory.Item
         protected override GameObject CreateItem(ItemSaveData itemSaveData)
         {
             var item = GetOrCreateItemInPool(generatorPrefab.gameObject);
+
+            var iItem = item.GetComponent<IItem>();
+            iItem.ResetParameters();
+
             var iGenerator = item.GetComponent<IGenerator>();
             var iPool = item.GetComponent<IPool>();
 
@@ -54,7 +58,7 @@ namespace _Game.Development.Factory.Item
 
             return item;
         }
-        
+
         protected override T CreateItemSaveData<T>(Vector2 coordinate, ItemDataSo itemDataSo)
         {
             var dataSo = (GeneratorItemDataSo)itemDataSo;

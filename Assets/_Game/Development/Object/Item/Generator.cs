@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using _Game.Development.Interface.Ability;
@@ -70,13 +69,9 @@ namespace _Game.Development.Object.Item
             var totalSeconds = (DateTime.Now - lastUsingData).TotalSeconds;
             var leftDuration = totalSeconds - _generatorItemDataSo.chargeDuration;
             if (leftDuration > 0)
-            {
                 RefillSpawnAmount();
-            }
             else
-            {
                 StartRegenerate(Mathf.Abs((float)leftDuration)).Forget();
-            }
         }
 
         #endregion
@@ -153,7 +148,8 @@ namespace _Game.Development.Object.Item
             DisposeRegenerateToken();
             _regenerateCancellationTokenSource = new CancellationTokenSource();
 
-            await AbilityExtension.Regenerating(leftDuration, _generatorItemDataSo.chargeDuration, imgRegenerate, _regenerateCancellationTokenSource.Token);
+            await AbilityExtension.Regenerating(leftDuration, _generatorItemDataSo.chargeDuration, imgRegenerate,
+                _regenerateCancellationTokenSource.Token);
 
             regenerateCanvas.SetActive(false);
             RefillSpawnAmount();
@@ -168,10 +164,10 @@ namespace _Game.Development.Object.Item
         private void DisposeRegenerateToken()
         {
             if (_regenerateCancellationTokenSource is not { IsCancellationRequested: false }) return;
-            
+
             _regenerateCancellationTokenSource.Cancel();
             _regenerateCancellationTokenSource.Dispose();
-            _regenerateCancellationTokenSource = null;  
+            _regenerateCancellationTokenSource = null;
         }
 
         #endregion

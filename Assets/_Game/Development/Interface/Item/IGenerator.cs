@@ -7,7 +7,7 @@ namespace _Game.Development.Interface.Item
         public bool CanGenerate();
         public int GetSpawnAmount();
         public ItemDataSo Generate();
-        
+
         public void FetchLastUsingDate(string date);
     }
 }

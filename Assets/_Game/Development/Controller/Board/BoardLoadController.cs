@@ -12,13 +12,6 @@ namespace _Game.Development.Controller.Board
 {
     public class BoardLoadController : MonoBehaviour
     {
-        #region Parameters
-
-        [Inject] private AllItemDataSo _allItemDataSo;
-        public List<GridData> gridDataList = new();
-
-        #endregion
-
         public async UniTask InitializeBoardJsonData()
         {
             var json = BoardExtension.GetBoardJson();
@@ -65,5 +58,12 @@ namespace _Game.Development.Controller.Board
 
             return new GridData(itemSaveData.coordinate.ToVector2(), itemGameObject, itemDataSo);
         }
+
+        #region Parameters
+
+        [Inject] private AllItemDataSo _allItemDataSo;
+        public List<GridData> gridDataList = new();
+
+        #endregion
     }
 }

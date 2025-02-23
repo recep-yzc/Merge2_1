@@ -11,7 +11,7 @@ namespace _Game.Development.Static
             return JsonConvert.SerializeObject(boardJsonData, Formatting.Indented,
                 new JsonSerializerSettings
                 {
-                    TypeNameHandling = TypeNameHandling.All,
+                    TypeNameHandling = TypeNameHandling.All
                 });
         }
 
@@ -20,7 +20,7 @@ namespace _Game.Development.Static
             return JsonConvert.DeserializeObject<BoardJsonData>(json,
                 new JsonSerializerSettings
                 {
-                    TypeNameHandling = TypeNameHandling.All,
+                    TypeNameHandling = TypeNameHandling.All
                 });
         }
 
@@ -29,7 +29,7 @@ namespace _Game.Development.Static
             return JsonConvert.DeserializeObject<BoardJsonData>(json.text,
                 new JsonSerializerSettings
                 {
-                    TypeNameHandling = TypeNameHandling.All,
+                    TypeNameHandling = TypeNameHandling.All
                 });
         }
     }

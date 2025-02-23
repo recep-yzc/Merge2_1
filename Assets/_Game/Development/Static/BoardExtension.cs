@@ -13,8 +13,8 @@ namespace _Game.Development.Static
 {
     public static class BoardExtension
     {
-        public static string JsonPath => Application.dataPath + "/Board.json";
         private static readonly Random Random = new();
+        public static string JsonPath => Application.dataPath + "/Board.json";
 
         public static GridData GetGridDataByCoordinate(Vector2 coordinate)
         {
@@ -37,7 +37,7 @@ namespace _Game.Development.Static
 
             return gridDataArray;
         }
-        
+
         public static class Statics
         {
             public static List<GridData> GridDataList { get; set; }

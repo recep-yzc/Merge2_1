@@ -8,6 +8,7 @@ using _Game.Development.Static;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
+using Random = System.Random;
 
 namespace _Game.Development.Controller.Board
 {
@@ -40,13 +41,10 @@ namespace _Game.Development.Controller.Board
                 Debug.Log("Board Full!");
                 return;
             }
-            
-            var random = new System.Random();
+
+            var random = new Random();
             var selectedGridData = emptyGridData[random.Next(emptyGridData.Count)];
-            if (selectedGridData == null)
-            {
-                return;
-            }
+            if (selectedGridData == null) return;
 
             var generatorCoordinate = mouseDownGridData.coordinate;
             Create(generator, generatorCoordinate, selectedGridData);
@@ -54,6 +52,8 @@ namespace _Game.Development.Controller.Board
 
         private void Create(IGenerator generator, Vector2 generatorCoordinate, GridData gridData)
         {
+            gridData.GetComponent<IPool>().PlayDespawnPool();
+
             var itemDataSo = generator.Generate();
             var itemId = itemDataSo.itemType.ToInt();
 

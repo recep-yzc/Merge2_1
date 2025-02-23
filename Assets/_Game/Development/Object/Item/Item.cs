@@ -58,11 +58,16 @@ namespace _Game.Development.Object.Item
             sprIcon.sprite = icon;
         }
 
+        public virtual void ResetParameters()
+        {
+            SetSpriteOrder(0);
+        }
+
         protected void SetSpriteOrder(int order)
         {
             sprIcon.sortingOrder = order;
         }
-        
+
         public virtual void SetItemDataSo(ItemDataSo itemDataSo)
         {
             ItemDataSo = itemDataSo;
@@ -74,7 +79,6 @@ namespace _Game.Development.Object.Item
 
         public virtual void LevelUp()
         {
-            
         }
 
         public abstract ItemSaveData CreateItemSaveData();
@@ -116,10 +120,10 @@ namespace _Game.Development.Object.Item
         private void DisposeScaleUpDownToken()
         {
             if (_cancellationScaleUpDownTokenSource is not { IsCancellationRequested: false }) return;
-            
+
             _cancellationScaleUpDownTokenSource.Cancel();
             _cancellationScaleUpDownTokenSource.Dispose();
-            _cancellationScaleUpDownTokenSource = null;  
+            _cancellationScaleUpDownTokenSource = null;
         }
 
         #endregion
@@ -134,23 +138,23 @@ namespace _Game.Development.Object.Item
             _cancellationMoveTokenSource = new CancellationTokenSource();
             await AbilityExtension.MoveHandle(transform, coordinate, moveDataSo, _cancellationMoveTokenSource.Token);
         }
-        
+
         private void DisposeMoveToken()
         {
             if (_cancellationMoveTokenSource is not { IsCancellationRequested: false }) return;
-            
+
             _cancellationMoveTokenSource.Cancel();
             _cancellationMoveTokenSource.Dispose();
-            _cancellationMoveTokenSource = null;  
+            _cancellationMoveTokenSource = null;
         }
 
         private void DisposeJumpToken()
         {
             if (_cancellationJumpTokenSource is not { IsCancellationRequested: false }) return;
-            
+
             _cancellationJumpTokenSource.Cancel();
             _cancellationJumpTokenSource.Dispose();
-            _cancellationJumpTokenSource = null;  
+            _cancellationJumpTokenSource = null;
         }
 
         #endregion

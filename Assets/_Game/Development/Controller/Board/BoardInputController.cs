@@ -64,14 +64,14 @@ namespace _Game.Development.Controller.Board
         {
             var mouseDownGridData = _mouseDownGridData;
             if (mouseDownGridData?.item is null) return;
-            
+
             var iClickable = mouseDownGridData.GetComponent<IClickable>();
             if (iClickable is null)
             {
                 BoardExtension.Selector.RequestChangeVisibility.Invoke(false);
                 return;
             }
-            
+
             var cameraPosition = _mainCamera.GetCameraPosition();
             var mouseUpGridData = BoardExtension.GetGridDataByCoordinate(cameraPosition);
 

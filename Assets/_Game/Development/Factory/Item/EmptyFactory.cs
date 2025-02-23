@@ -31,9 +31,20 @@ namespace _Game.Development.Factory.Item
         protected override GameObject CreateItem(ItemSaveData itemSaveData)
         {
             var item = GetOrCreateItemInPool(itemPrefab.gameObject);
-            var iEmpty = item.GetComponent<IEmpty>();
 
-            var emptyItemSaveData = (EmptyItemSaveData)itemSaveData;
+            var iItem = item.GetComponent<IItem>();
+            iItem.ResetParameters();
+
+            var iEmpty = item.GetComponent<IEmpty>();
+            var iPool = item.GetComponent<IPool>();
+
+            void DespawnPoolAction()
+            {
+                Despawn(item);
+            }
+
+            iPool.AddDespawnPool(DespawnPoolAction);
+
             var itemDataSo =
                 _allItemDataSo.GetItemDataByIds(itemSaveData.itemId, itemSaveData.specialId, itemSaveData.level);
 
