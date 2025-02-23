@@ -54,24 +54,25 @@ namespace _Game.Development.Controller.Board
             var halfOfColumns = _boardJsonData.Columns * 0.5f;
             var offset = new Vector2(halfOfRows, halfOfColumns) - VectorExtension.Parameters.HalfSize;
 
-            var emptyItemDataSo = _allItemDataSo.GetEmptyItemDataSo();
-            var itemId = emptyItemDataSo.GetItemId();
+            var itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
+            var itemId = itemDataSo.GetItemId();
 
             for (var x = 0; x < _boardJsonData.Rows; x++)
             for (var y = 0; y < _boardJsonData.Columns; y++)
             {
                 var coordinate = new Vector2(x, y) - offset;
-                var itemSaveData = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId]
-                    .Invoke(new DefaultSave(coordinate, emptyItemDataSo));
-                _boardJsonData.ItemSaveDataList.Add(itemSaveData);
+                var func = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId];
+                var defaultParameters = new DefaultSaveParameters(coordinate, itemDataSo);
+                var newItemSaveData = func.Invoke(defaultParameters);
+                
+                _boardJsonData.ItemSaveDataList.Add(newItemSaveData);
             }
         }
 
         [Button]
         public void SaveBoardJson()
         {
-            var json = new BoardJsonData(_boardJsonData.Rows, _boardJsonData.Columns, _boardJsonData.ItemSaveDataList)
-                .ConvertToJson();
+            var json = new BoardJsonData(_boardJsonData.Rows, _boardJsonData.Columns, _boardJsonData.ItemSaveDataList).ConvertToJson();
             File.WriteAllText(BoardExtension.Parameters.JsonPath, json);
             AssetDatabase.SaveAssets();
         }
@@ -173,14 +174,16 @@ namespace _Game.Development.Controller.Board
             var itemSaveData = GetItemSaveData(out var index);
             if (itemSaveData == null || index == -1) return;
 
-            var itemId = Input.GetMouseButtonDown(0)
-                ? _selectedItemDataSo.GetItemId()
-                : _allItemDataSo.GetEmptyItemDataSo().GetItemId();
+            var itemDataSo = Input.GetMouseButtonDown(0)
+                ? _selectedItemDataSo
+                : _allItemDataSo.GetEmptyItemDataSo();
 
+            var itemId = itemDataSo.GetItemId();
             var coordinate = itemSaveData.coordinate.ToVector2();
+            var func = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId];
+            var defaultParameters = new DefaultSaveParameters(coordinate, itemDataSo);
+            var newItemSaveData = func.Invoke(defaultParameters);
 
-            var newItemSaveData = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId]
-                .Invoke(new DefaultSave(coordinate, _selectedItemDataSo));
             _boardJsonData.ItemSaveDataList[index] = newItemSaveData;
 
             SaveBoardJson();

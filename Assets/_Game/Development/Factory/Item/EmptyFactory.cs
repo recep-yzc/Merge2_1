@@ -41,12 +41,12 @@ namespace _Game.Development.Factory.Item
             var iEmpty = item.GetComponent<IEmpty>();
             var iPool = item.GetComponent<IPool>();
 
-            void DespawnPoolAction()
+            void DespawnAction()
             {
                 Despawn(item);
             }
 
-            iPool.RegisterDespawnCallback(DespawnPoolAction);
+            iPool.RegisterDespawnCallback(DespawnAction);
 
             var itemDataSo = _allItemDataSo.GetItemDataSoByItemSaveData(itemSaveData);
 
@@ -60,22 +60,22 @@ namespace _Game.Development.Factory.Item
             return item;
         }
 
-        private ItemSaveData CreateDefaultItemSaveData(DefaultSave defaultSave)
+        private ItemSaveData CreateDefaultItemSaveData(DefaultSaveParameters defaultSaveParameters)
         {
-            var editedSave = new EditedSave(defaultSave.coordinate, defaultSave.itemDataSo);
+            var editedSave = new EditedSaveParameters(defaultSaveParameters.coordinate, defaultSaveParameters.itemDataSo);
             return CreateItemSaveData(editedSave);
         }
 
-        private ItemSaveData CreateEditedItemSaveData(EditedSave editedSave)
+        private ItemSaveData CreateEditedItemSaveData(EditedSaveParameters editedSaveParameters)
         {
-            return CreateItemSaveData(editedSave);
+            return CreateItemSaveData(editedSaveParameters);
         }
 
-        private ItemSaveData CreateItemSaveData(EditedSave editedSave)
+        private ItemSaveData CreateItemSaveData(EditedSaveParameters editedSaveParameters)
         {
-            if (editedSave.itemDataSo is not EmptyItemDataSo emptyItemDataSo) return default;
+            if (editedSaveParameters.itemDataSo is not EmptyItemDataSo emptyItemDataSo) return default;
 
-            var jsonCoordinate = editedSave.coordinate.ToJsonVector2();
+            var jsonCoordinate = editedSaveParameters.coordinate.ToJsonVector2();
             var level = emptyItemDataSo.level;
             var itemId = emptyItemDataSo.GetItemId();
             var specialId = 0;

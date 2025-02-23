@@ -40,12 +40,12 @@ namespace _Game.Development.Factory.Item
             var iGenerator = item.GetComponent<IGenerator>();
             var iPool = item.GetComponent<IPool>();
 
-            void DespawnPoolAction()
+            void DespawnAction()
             {
                 Despawn(item);
             }
 
-            iPool.RegisterDespawnCallback(DespawnPoolAction);
+            iPool.RegisterDespawnCallback(DespawnAction);
 
             var generatorItemSaveData = (GeneratorItemSaveData)itemSaveData;
             var itemDataSo = _allItemDataSo.GetItemDataSoByItemSaveData(itemSaveData);
@@ -61,26 +61,26 @@ namespace _Game.Development.Factory.Item
             return item;
         }
 
-        private ItemSaveData CreateDefaultItemSaveData(DefaultSave defaultSave)
+        private ItemSaveData CreateDefaultItemSaveData(DefaultSaveParameters defaultSaveParameters)
         {
-            var editedSave = new EditedSave(defaultSave.coordinate, defaultSave.itemDataSo, MinDateTimeStr);
+            var editedSave = new EditedSaveParameters(defaultSaveParameters.coordinate, defaultSaveParameters.itemDataSo, MinDateTimeStr);
             return CreateItemSaveData(editedSave);
         }
 
-        private ItemSaveData CreateEditedItemSaveData(EditedSave editedSave)
+        private ItemSaveData CreateEditedItemSaveData(EditedSaveParameters editedSaveParameters)
         {
-            return CreateItemSaveData(editedSave);
+            return CreateItemSaveData(editedSaveParameters);
         }
 
-        private ItemSaveData CreateItemSaveData(EditedSave editedSave)
+        private ItemSaveData CreateItemSaveData(EditedSaveParameters editedSaveParameters)
         {
-            if (editedSave.itemDataSo is not GeneratorItemDataSo generatorItemDataSo) return default;
+            if (editedSaveParameters.itemDataSo is not GeneratorItemDataSo generatorItemDataSo) return default;
 
-            var jsonCoordinate = editedSave.coordinate.ToJsonVector2();
+            var jsonCoordinate = editedSaveParameters.coordinate.ToJsonVector2();
             var level = generatorItemDataSo.level;
             var itemId = generatorItemDataSo.GetItemId();
             var specialId = generatorItemDataSo.GetSpecialId();
-            var lastUsingDate = (string)editedSave.Parameters[0];
+            var lastUsingDate = (string)editedSaveParameters.Parameters[0];
 
             return new GeneratorItemSaveData(jsonCoordinate, level, itemId, specialId, lastUsingDate);
         }

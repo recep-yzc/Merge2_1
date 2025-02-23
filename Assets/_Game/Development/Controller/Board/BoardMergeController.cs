@@ -25,10 +25,11 @@ namespace _Game.Development.Controller.Board
             var itemDataSo = _allItemDataSo.GetEmptyItemDataSo();
 
             var itemId = itemDataSo.GetItemId();
+            
+            var coordinate = gridData.Coordinate;
             var func = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId];
-
-            var defaultSave = new DefaultSave(gridData.Coordinate, itemDataSo);
-            var itemSaveData = func.Invoke(defaultSave);
+            var defaultParameters = new DefaultSaveParameters(coordinate, itemDataSo);
+            var itemSaveData = func.Invoke(defaultParameters);
 
             gridData.item = ItemFactory.CreateItemByItemId[itemId].Invoke(itemSaveData);
             gridData.itemDataSo = itemDataSo;

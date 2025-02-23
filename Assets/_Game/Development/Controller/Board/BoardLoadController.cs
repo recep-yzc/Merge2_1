@@ -23,17 +23,15 @@ namespace _Game.Development.Controller.Board
             var json = BoardExtension.GetBoardJson();
             var boardJsonData = await UniTask.RunOnThreadPool(() => json.ConvertToBoardJsonData());
             BoardExtension.Parameters.BoardJsonData = boardJsonData;
-            await UniTask.DelayFrame(1);
         }
 
-        public async UniTask InitializeBoard()
+        public UniTask InitializeBoard()
         {
             BoardExtension.Parameters.GridDataList = new List<GridData>();
 
             CreateGrid();
             FetchGridNeighbors();
-
-            await UniTask.DelayFrame(1);
+            return default;
         }
 
         private void CreateGrid()
@@ -48,7 +46,10 @@ namespace _Game.Development.Controller.Board
         private static void FetchGridNeighbors()
         {
             foreach (var gridData in BoardExtension.Parameters.GridDataList)
-                gridData.CopyNeighborGridData(BoardExtension.GetGridDataNeighborArrayByCoordinate(gridData.Coordinate));
+            {
+                var gridDataArray = BoardExtension.GetGridDataNeighborArrayByCoordinate(gridData.Coordinate);
+                gridData.CopyNeighborGridData(gridDataArray);
+            }
         }
 
         private GridData CreateGridDataByItemSaveData(ItemSaveData itemSaveData)

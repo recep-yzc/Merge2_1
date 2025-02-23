@@ -48,7 +48,9 @@ namespace _Game.Development.Object.Item
             var itemDataSo = gridData.itemDataSo;
             var itemId = itemDataSo.GetItemId();
 
-            return ItemFactory.CreateEditedItemSaveDataByItemId[itemId].Invoke(new EditedSave(coordinate, itemDataSo));
+            var func = ItemFactory.CreateEditedItemSaveDataByItemId[itemId];
+            var editedItemSaveParameters = new EditedSaveParameters(coordinate, itemDataSo);
+            return func.Invoke(editedItemSaveParameters);
         }
 
         #endregion

@@ -54,9 +54,12 @@ namespace _Game.Development.Controller.Board
 
             var itemDataSo = generator.Generate();
             var itemId = itemDataSo.GetItemId();
-
-            var itemSaveData = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId]
-                .Invoke(new DefaultSave(gridData.Coordinate, itemDataSo));
+            
+            var coordinate = gridData.Coordinate;
+            var func = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId];
+            var defaultParameters = new DefaultSaveParameters(coordinate, itemDataSo);
+            var itemSaveData = func.Invoke(defaultParameters);
+            
             var item = ItemFactory.CreateItemByItemId[itemId].Invoke(itemSaveData);
 
             item.GetComponent<IItem>().SetPosition(generatorCoordinate);

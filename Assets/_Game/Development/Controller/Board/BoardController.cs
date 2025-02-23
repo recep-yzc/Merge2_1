@@ -16,8 +16,8 @@ namespace _Game.Development.Controller.Board
 
         private async void Start()
         {
-            Application.targetFrameRate = 60;
             Input.multiTouchEnabled = false;
+            Application.targetFrameRate = 60;
             CultureInfo.CurrentCulture = CultureExtension.Parameters.CurrentCultureInfo;
 
             await Initialize();
@@ -29,6 +29,8 @@ namespace _Game.Development.Controller.Board
         {
             await _boardLoadController.InitializeBoardJsonData();
             await _boardLoadController.InitializeBoard(); // board oluşturulmasını bekler 
+            await UniTask.Delay(100);
+
             BoardExtension.Parameters.IsBoardInitialized = true;
         }
     }

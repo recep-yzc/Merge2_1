@@ -5,12 +5,12 @@ using UnityEngine;
 namespace _Game.Development.Scriptable.Factory
 {
     [Serializable]
-    public struct DefaultSave
+    public struct DefaultSaveParameters
     {
         public Vector2 coordinate;
         public ItemDataSo itemDataSo;
 
-        public DefaultSave(Vector2 coordinate, ItemDataSo itemDataSo)
+        public DefaultSaveParameters(Vector2 coordinate, ItemDataSo itemDataSo)
         {
             this.coordinate = coordinate;
             this.itemDataSo = itemDataSo;

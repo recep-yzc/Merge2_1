@@ -14,7 +14,7 @@ namespace _Game.Development.Serializable.Grid
         public ItemDataSo itemDataSo;
         public readonly Vector2 Coordinate;
 
-        [NonSerialized] public GridData[] NeighborGridDataArray;
+        [NonSerialized] public GridData[] NeighborGridDataArray; //Komşu işlemleri yok ama ekledim.
 
         public GridData(Vector2 coordinate, GameObject item, ItemDataSo itemDataSo)
         {
