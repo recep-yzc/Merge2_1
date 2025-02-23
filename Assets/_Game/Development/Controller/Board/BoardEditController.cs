@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using _Game.Development.Factory.Item;
+using _Game.Development.Scriptable.Factory;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Board;
 using _Game.Development.Serializable.Item;
@@ -61,7 +62,7 @@ namespace _Game.Development.Controller.Board
             {
                 var coordinate = new Vector2(x, y) - offset;
                 var itemSaveData = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId]
-                    .Invoke(new ItemFactory.DefaultSave(coordinate, emptyItemDataSo));
+                    .Invoke(new DefaultSave(coordinate, emptyItemDataSo));
                 _boardJsonData.ItemSaveDataList.Add(itemSaveData);
             }
         }
@@ -139,7 +140,7 @@ namespace _Game.Development.Controller.Board
         {
             return _selectedItemDataSo;
         }
-        
+
         public ItemDataSo GetItemDataSoByItemSaveData(ItemSaveData itemSaveData)
         {
             return _allItemDataSo.GetItemDataSoByItemSaveData(itemSaveData);
@@ -164,10 +165,7 @@ namespace _Game.Development.Controller.Board
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
-            {
-                HandleItemPlacement();
-            }
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) HandleItemPlacement();
         }
 
         private void HandleItemPlacement()
@@ -178,11 +176,11 @@ namespace _Game.Development.Controller.Board
             var itemId = Input.GetMouseButtonDown(0)
                 ? _selectedItemDataSo.GetItemId()
                 : _allItemDataSo.GetEmptyItemDataSo().GetItemId();
-            
+
             var coordinate = itemSaveData.coordinate.ToVector2();
 
             var newItemSaveData = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId]
-                .Invoke(new ItemFactory.DefaultSave(coordinate, _selectedItemDataSo));
+                .Invoke(new DefaultSave(coordinate, _selectedItemDataSo));
             _boardJsonData.ItemSaveDataList[index] = newItemSaveData;
 
             SaveBoardJson();

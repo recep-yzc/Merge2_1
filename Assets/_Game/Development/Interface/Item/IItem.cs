@@ -10,7 +10,7 @@ namespace _Game.Development.Interface.Item
         public void SetPosition(Vector2 position);
         public void SetSprite(Sprite icon);
         public void SetItemDataSo(ItemDataSo itemDataSo);
-        
+
         public void ResetParameters();
 
         public void LevelUp();

@@ -10,9 +10,9 @@ namespace _Game.Development.Serializable.Grid
     [Serializable]
     public class GridData
     {
-        public readonly Vector2 Coordinate;
         public GameObject item;
         public ItemDataSo itemDataSo;
+        public readonly Vector2 Coordinate;
 
         [NonSerialized] public GridData[] NeighborGridDataArray;
 

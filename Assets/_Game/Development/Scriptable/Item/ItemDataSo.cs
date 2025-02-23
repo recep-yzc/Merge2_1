@@ -21,6 +21,10 @@ namespace _Game.Development.Scriptable.Item
         }
 
         public abstract int GetSpecialId();
-        public int GetItemId() => itemType.ToInt();
+
+        public int GetItemId()
+        {
+            return itemType.ToInt();
+        }
     }
 }

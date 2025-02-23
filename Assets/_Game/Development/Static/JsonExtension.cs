@@ -1,6 +1,5 @@
 ﻿using _Game.Development.Serializable.Board;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace _Game.Development.Static
 {

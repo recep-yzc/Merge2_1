@@ -10,8 +10,9 @@ namespace _Game.Development.Object.Board
         [Header("References")] [SerializeField]
         private SpriteRenderer sprIcon;
 
-        [Header("Properties")]
-        [SerializeField] private float duration;
+        [Header("Properties")] [SerializeField]
+        private float duration;
+
         [SerializeField] private float force;
         [SerializeField] private Ease ease;
 

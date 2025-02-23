@@ -1,12 +1,11 @@
-﻿using _Game.Development.Enum.Item;
-using _Game.Development.Factory.Item;
+﻿using _Game.Development.Factory.Item;
 using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
 using _Game.Development.Interface.Property;
 using _Game.Development.Scriptable.Ability;
+using _Game.Development.Scriptable.Factory;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Grid;
-using _Game.Development.Static;
 using UnityEngine;
 using Zenject;
 
@@ -27,10 +26,10 @@ namespace _Game.Development.Controller.Board
 
             var itemId = itemDataSo.GetItemId();
             var func = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId];
-            
-            var defaultSave = new ItemFactory.DefaultSave(gridData.Coordinate, itemDataSo);
+
+            var defaultSave = new DefaultSave(gridData.Coordinate, itemDataSo);
             var itemSaveData = func.Invoke(defaultSave);
-            
+
             gridData.item = ItemFactory.CreateItemByItemId[itemId].Invoke(itemSaveData);
             gridData.itemDataSo = itemDataSo;
         }

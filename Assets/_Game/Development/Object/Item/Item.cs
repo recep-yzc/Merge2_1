@@ -22,17 +22,16 @@ namespace _Game.Development.Object.Item
         protected virtual void OnDestroy()
         {
             DisposeMoveTokenSource();
-
         }
 
         #endregion
 
         #region Parameters
-        
+
         private CancellationTokenSource _moveCancellationTokenSource;
         protected Vector2 SelfCoordinate;
         private Action _backPoolAction;
-        
+
         #endregion
 
         #region Item
@@ -105,7 +104,7 @@ namespace _Game.Development.Object.Item
             SelfCoordinate = coordinate;
             DisposeMoveTokenSource();
             NewMoveTokenSource();
-            
+
             await AbilityExtension.MoveHandle(transform, coordinate, moveDataSo, _moveCancellationTokenSource.Token);
         }
 
@@ -122,7 +121,7 @@ namespace _Game.Development.Object.Item
             _moveCancellationTokenSource.Dispose();
             _moveCancellationTokenSource = null;
         }
-        
+
         #endregion
 
         #endregion

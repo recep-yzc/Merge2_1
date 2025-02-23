@@ -4,6 +4,7 @@ using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
 using _Game.Development.Interface.Property;
 using _Game.Development.Scriptable.Ability;
+using _Game.Development.Scriptable.Factory;
 using _Game.Development.Serializable.Grid;
 using _Game.Development.Static;
 using Cysharp.Threading.Tasks;
@@ -15,13 +16,6 @@ namespace _Game.Development.Controller.Board
 {
     public class BoardGenerateController : MonoBehaviour
     {
-        #region Parameters
-
-        [Inject] private MoveDataSo _moveDataSo;
-        [Inject] ScaleUpDownDataSo _scaleUpDownDataSo;
-
-        #endregion
-
         public void TryGenerate(GridData mouseDownGridData)
         {
             var generator = mouseDownGridData.item.GetComponent<IGenerator>();
@@ -62,7 +56,7 @@ namespace _Game.Development.Controller.Board
             var itemId = itemDataSo.GetItemId();
 
             var itemSaveData = ItemFactory.CreateDefaultItemSaveDataByItemId[itemId]
-                .Invoke(new ItemFactory.DefaultSave(gridData.Coordinate, itemDataSo));
+                .Invoke(new DefaultSave(gridData.Coordinate, itemDataSo));
             var item = ItemFactory.CreateItemByItemId[itemId].Invoke(itemSaveData);
 
             item.GetComponent<IItem>().SetPosition(generatorCoordinate);
@@ -71,5 +65,12 @@ namespace _Game.Development.Controller.Board
             gridData.item = item;
             gridData.itemDataSo = itemDataSo;
         }
+
+        #region Parameters
+
+        [Inject] private MoveDataSo _moveDataSo;
+        [Inject] private ScaleUpDownDataSo _scaleUpDownDataSo;
+
+        #endregion
     }
 }

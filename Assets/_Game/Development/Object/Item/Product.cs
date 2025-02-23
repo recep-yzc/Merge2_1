@@ -3,6 +3,7 @@ using _Game.Development.Factory.Item;
 using _Game.Development.Interface.Ability;
 using _Game.Development.Interface.Item;
 using _Game.Development.Scriptable.Ability;
+using _Game.Development.Scriptable.Factory;
 using _Game.Development.Scriptable.Item;
 using _Game.Development.Serializable.Item;
 using _Game.Development.Static;
@@ -13,15 +14,6 @@ namespace _Game.Development.Object.Item
 {
     public class Product : Item, IProduct, IDraggable, IClickable, IScaleUpDown
     {
-        #region Parameters
-
-        private readonly float _dragMoveSpeed = 15f;
-        private ProductItemDataSo _productItemDataSo;
-
-        private CancellationTokenSource _scaleUpDownCancellationTokenSource;
-
-        #endregion
-
         #region Unity Action
 
         protected override void OnDestroy()
@@ -29,6 +21,15 @@ namespace _Game.Development.Object.Item
             base.OnDestroy();
             DisposeScaleUpDownTokenSource();
         }
+
+        #endregion
+
+        #region Parameters
+
+        private readonly float _dragMoveSpeed = 15f;
+        private ProductItemDataSo _productItemDataSo;
+
+        private CancellationTokenSource _scaleUpDownCancellationTokenSource;
 
         #endregion
 
@@ -47,7 +48,7 @@ namespace _Game.Development.Object.Item
             var itemDataSo = gridData.itemDataSo;
             var itemId = itemDataSo.GetItemId();
 
-            return ItemFactory.CreateEditedItemSaveDataByItemId[itemId].Invoke(new ItemFactory.EditedSave(coordinate, itemDataSo));
+            return ItemFactory.CreateEditedItemSaveDataByItemId[itemId].Invoke(new EditedSave(coordinate, itemDataSo));
         }
 
         #endregion

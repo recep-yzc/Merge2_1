@@ -108,7 +108,7 @@ namespace _Game.Development.Controller.Board
         private void HandleGenerateItem(GridData mouseDownGridData)
         {
             _boardGenerateController.TryGenerate(mouseDownGridData);
-            
+
             mouseDownGridData.GetComponent<IClickable>()?.MouseUp();
 
             _isDragActive = false;
@@ -118,7 +118,7 @@ namespace _Game.Development.Controller.Board
         private void HandleMouseUpOnEmptyGrid(GridData mouseDownGridData)
         {
             _boardTransferController.TryTransfer(TransferAction.Move, mouseDownGridData);
-            
+
             mouseDownGridData.GetComponent<IClickable>()?.MouseUp();
 
             _isDragActive = false;

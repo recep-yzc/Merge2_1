@@ -12,6 +12,12 @@ namespace _Game.Development.Controller.Board
 {
     public class BoardLoadController : MonoBehaviour
     {
+        #region Parameters
+
+        [Inject] private AllItemDataSo _allItemDataSo;
+
+        #endregion
+
         public async UniTask InitializeBoardJsonData()
         {
             var json = BoardExtension.GetBoardJson();
@@ -49,17 +55,11 @@ namespace _Game.Development.Controller.Board
         {
             if (!ItemFactory.CreateItemByItemId.TryGetValue(itemSaveData.itemId, out var createItemFunc))
                 return null;
-            
+
             var itemDataSo = _allItemDataSo.GetItemDataSoByItemSaveData(itemSaveData);
             var itemGameObject = createItemFunc.Invoke(itemSaveData);
 
             return new GridData(itemSaveData.coordinate.ToVector2(), itemGameObject, itemDataSo);
         }
-
-        #region Parameters
-
-        [Inject] private AllItemDataSo _allItemDataSo;
-
-        #endregion
     }
 }

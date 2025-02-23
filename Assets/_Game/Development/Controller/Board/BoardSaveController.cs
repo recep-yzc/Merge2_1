@@ -18,10 +18,10 @@ namespace _Game.Development.Controller.Board
             var rows = BoardExtension.Parameters.BoardJsonData.Rows;
             var columns = BoardExtension.Parameters.BoardJsonData.Columns;
             var newBoardJsonData = new BoardJsonData(rows, columns, itemSaveDataList);
-            
+
             var json = newBoardJsonData.ConvertToJson();
             BoardExtension.Parameters.BoardJsonData = newBoardJsonData;
-            
+
             BoardExtension.SaveBoardJson(json);
         }
 

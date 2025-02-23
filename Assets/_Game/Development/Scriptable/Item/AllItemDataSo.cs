@@ -17,7 +17,7 @@ namespace _Game.Development.Scriptable.Item
         {
             return itemDataSoList.First().specialIdDataList.First().itemItemDataSoList.First();
         }
-        
+
         public ItemDataSo GetItemDataSoByItemSaveData(ItemSaveData itemSaveData)
         {
             return GetItemDataByIds(itemSaveData.level, itemSaveData.itemId, itemSaveData.specialId);
@@ -34,7 +34,7 @@ namespace _Game.Development.Scriptable.Item
             var specialIdData = itemTypeData.specialIdDataList.First(x => x.specialId == specialId);
             return specialIdData.itemItemDataSoList.First(x => x.level == level);
         }
-        
+
         public override void InstallBindings()
         {
             Container.BindInstance(this);
